@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="busDbReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="pageSize" value="500"></property>
+        <property name="queryProvider">
+            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
+                <property name="selectClause" value="SELECT *"></property>
+                <property name="fromClause" value="FROM BUS"></property>
+                <property name="whereClause" value="WHERE CUSTTEL1 = :tel1"></property>
+                <property name="sortKey" value="CUSTHEADID"></property>
+            </bean>
+        </property>
+        <property name="parameterValues">
+            <map>
+                <entry key="tel1" value="12345678"></entry>
+            </map>
+        </property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.BusCustomerMapper"></bean>
+        </property>
+    </bean>
+
+    <bean id="a11FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/A11.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format" value="%3s%4s%11s%3s%11s%60s%8s%11s%60s%4s%6s%8s%80s%80s%17s%17s%40s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,id,idNo,headId,CName,birthDate,ceoCode,ceoName,statusCode,businessCode,createDate,originalAddress,address,tel1,tel2,email"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+</beans>
