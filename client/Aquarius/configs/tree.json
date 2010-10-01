@@ -1,194 +1,48 @@
 [
 	{
-		'text' : 'New Utility System',
+		'text' : 'CDIC Batch System',
 		'icon' : '',
 		'nodes' : [
 			{
-				'text' : 'Transaction',
+				'text' : '主機檔案檢查',
 				'icon' : '',
-				'nodes' : [
-					{
-						'text' : 'Import Utility File',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY1100/tw.com.citi.utility'
-					},
-					{
-						'text' : 'Authorize Utility File',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY1200/tw.com.citi.utility'
-					},
-					{
-						'text' : 'Manual Generate CSV File',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY1520/tw.com.citi.utility'
-					},
-					{
-						'text' : 'Regenerate Host File',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY1530/tw.com.citi.utility'
-					},
-					{
-						'text' : 'Import Host Result File',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY1600/tw.com.citi.utility'
-					},
-					{
-						'text' : 'Generate Feedback File',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY1700/tw.com.citi.utility'
-					},
-					{
-						'text' : 'Generate Report',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY2100/tw.com.citi.utility'
-					}
-				]
+				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC002Page/tw.com.citi.cdic.client'
 			},
 			{
-				'text' : 'Issue',
+				'text' : '主機檔案上傳',
 				'icon' : '',
-				'nodes' : [
-					{
-						'text' : 'Combine 北水 Issue File',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY4800/tw.com.citi.utility'
-					},
-					{
-						'text' : '維護報表',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/D003/tw.com.citi.utility'
-					}
-				]
+				'url' : ''
 			},
 			{
-				'text' : 'GCIB/GCG',
+				'text' : 'Local 檔案上傳',
 				'icon' : '',
-				'nodes' : [
-					{
-						'text' : 'ICG Account MA [Maker]',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY2D10/tw.com.citi.utility'
-					},
-					{
-						'text' : 'ICG Account MA [Checker]',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY2D20/tw.com.citi.utility'
-					},
-					{
-						'text' : 'GCG Account MA [Maker]',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY2D60/tw.com.citi.utility'
-					},
-					{
-						'text' : 'GCB Account MA [Checker]',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY2D70/tw.com.citi.utility'
-					},
-					{
-						'text' : '維護報表',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/D003/tw.com.citi.utility'
-					}
-				]
+				'url' : ''
 			},
 			{
-				'text' : 'Maintenance',
+				'text' : '檔案上傳狀態檢查',
 				'icon' : '',
-				'nodes' : [
-					{
-						'text' : 'Unit & Bureau Code Table',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY5200/tw.com.citi.utility'
-					},
-					{
-						'text' : 'Company Property Table',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY5300/tw.com.citi.utility'
-					},
-					{
-						'text' : 'Transaction Data Purge',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY2D40/tw.com.citi.utility'
-					},
-					{
-						'text' : 'Issue Data Purge',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/UTY2D50/tw.com.citi.utility'
-					},
-					{
-						'text' : '維護報表',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/D005/tw.com.citi.utility'
-					}
-				]
+				'url' : ''
 			},
 			{
-				'text' : '系統維護作業',
+				'text' : '批次產檔作業',
 				'icon' : '',
-				'nodes' : [
-					{
-						'text' : '使用者帳號維護',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/F001/tw.com.citi.utility'
-					},
-					{
-						'text' : '使用者權限維護',
-						'icon' : '',
-						'url' : 'http://127.0.0.1:8080/app/dispatch/F002/tw.com.citi.utility'
-					}
-				]
-			}
-		]
-	},
-	{
-		'text' : 'Default',
-		'icon' : '',
-		'url' : 'http://127.0.0.1:8080/app/'
-	},
-	{
-		'text' : 'Demo JS Handler',
-		'icon' : '',
-		'url' : 'http://127.0.0.1:8080/app/dispatch/DemoJSHandlerPage/tw.com.citi.utility'
-	},
-		{
-		'text' : 'Transaction',
-		'icon' : '',
-		'nodes' : [
-			{
-				'text' : 'Import Utility File',
-				'icon' : '',
-				'url' : 'http://127.0.0.1:8080/app/dispatch/IndexPage/tw.com.citi.utility'
+				'url' : ''
 			},
 			{
-				'text' : 'Authorize Utility File',
-				'icon' : '',
-				'url' : 'http://127.0.0.1:8080/app/dispatch/ImportPage/tw.com.citi.utility'
+			    'text' : '產檔狀態檢查',
+			    'icon' : '',
+			    'url' : ''
 			},
-			{
-				'text' : 'Manual Generate CSV File',
-				'icon' : '',
-				'url' : 'http://127.0.0.1:8080/app/dispatch/UpdatePage/tw.com.citi.utility'
-			},
-			{
-				'text' : 'Regenerate Host File',
-				'icon' : '',
-				'url' : 'http://127.0.0.1:8080/app/dispatch/QueryPage/tw.com.citi.utility'
-			},
-			{
-				'text' : 'Import Host Result File',
-				'icon' : '',
-				'url' : 'http://127.0.0.1:8080/app/dispatch/UTY1600_S/tw.com.citi.utility'
-			},
-			{
-				'text' : 'Generate Feedback File',
-				'icon' : '',
-				'url' : 'http://127.0.0.1:8080/app/dispatch/ReportPage/tw.com.citi.utility'
-			},
-			{
-				'text' : 'Generate Report',
-				'icon' : '',
-				'url' : 'http://127.0.0.1:8080/app/dispatch/ReportPage/tw.com.citi.utility'
-			}
+            {
+                'text' : '檢核報表下載',
+                'icon' : '',
+                'url' : ''
+            },
+            {
+                'text' : '批次產檔作業重新作業',
+                'icon' : '',
+                'url' : ''
+            }
 		]
 	}
 ]

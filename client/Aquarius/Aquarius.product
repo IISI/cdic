@@ -3,7 +3,6 @@
 
 <product name="Aquarius Platform" uid="Aquarius.product" id="platform.aquarius.product" application="platform.aquarius.application" version="1.0.0.alpha" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -27,15 +26,12 @@
       </win>
    </launcher>
 
-
    <vm>
    </vm>
-
 
    <plugins>
       <plugin id="com.google.gson"/>
       <plugin id="com.ibm.icu"/>
-      <plugin id="com.iisi.fixed.length.util"/>
       <plugin id="com.springsource.net.sf.cglib"/>
       <plugin id="com.springsource.org.aopalliance"/>
       <plugin id="com.springsource.org.apache.commons.collections"/>
@@ -109,8 +105,7 @@
       <plugin id="platform.aquarius.resources"/>
       <plugin id="slf4j.api"/>
       <plugin id="slf4j.log4j12" fragment="true"/>
-      <plugin id="tw.com.citi.utility"/>
-      <plugin id="tw.com.citi.utility.report"/>
+      <plugin id="tw.com.citi.cdic.client"/>
    </plugins>
 
    <configurations>
