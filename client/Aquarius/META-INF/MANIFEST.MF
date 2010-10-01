@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Aquarius.Platform
+Bundle-SymbolicName: platform.aquarius; singleton:=true
+Bundle-Version: 1.0.0.alpha
+Bundle-Activator: aquarius.Activator
+Bundle-Vendor: Hsien Chih Wang
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ platform.aquarius.embedserver;bundle-version="1.0.0",
+ com.google.gson;bundle-version="1.4.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: libs/MozillaGlue.jar,
+ libs/MozillaInterfaces.jar,
+ .
+Export-Package: org.mozilla.interfaces,
+ org.mozilla.xpcom

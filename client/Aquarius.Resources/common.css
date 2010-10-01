@@ -1,0 +1,47 @@
+body {
+    margin: 2px;
+}
+
+.top-banner {
+    border-width: 0px 0px 1px 0px;
+    border-color: #AAAAAA;
+    border-style: solid;
+}
+
+.txn-area {
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 20px;
+    min-height: 350px;
+    background: #EAEAEA;
+}
+
+.item-col {
+    padding: 10px;
+    width: 100%;
+}
+
+input.ui-button {
+    padding: 0.2em 1em;
+    margin: 0em 0.5em;
+}
+
+input[type = text], input[type = password] {
+    height: 1.9em;
+    padding: 0em 0.2em;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #AAAAAA;
+}
+
+select {
+    height: 1.9em;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #AAAAAA;
+}
+
+.r-btn {
+    float: right;
+    right: 10px;
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- 
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="org.h2.Driver"></property>
+        <property name="jdbcUrl" value="jdbc:h2:mem:db1"></property>
+        <property name="user" value="sa"></property>
+        <property name="password" value=""></property>
+    </bean>
+     -->
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+        <property name="jdbcUrl" value="jdbc:sqlserver://192.168.0.1:2360;databaseName=bus"></property>
+        <property name="user" value="sa"></property>
+        <property name="password" value="p@ssw0rd"></property>
+    </bean>
+
+    <bean id="dao" class="platform.aquarius.embedserver.jdbc.Dao">
+        <constructor-arg ref="dataSource"></constructor-arg>
+    </bean>
+
+    <bean id="svrStarter" class="platform.aquarius.embedserver.AquariusServerStarter"></bean>
+
+</beans>

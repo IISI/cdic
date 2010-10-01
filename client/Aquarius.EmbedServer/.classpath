@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="libs/jetty-server-7.0.2.v20100331.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/rhino/js.jar" sourcepath="C:/Users/Tony/.m2/repository/rhino/js/1.7R2/js-1.7R2-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jetty-continuation-7.0.2.v20100331.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jetty-http-7.0.2.v20100331.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jetty-io-7.0.2.v20100331.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jetty-security-7.0.2.v20100331.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jetty-servlet-7.0.2.v20100331.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jetty-util-7.0.2.v20100331.jar" sourcepath="C:/Users/Tony/.m2/repository/org/eclipse/jetty/jetty-util/7.0.2.v20100331/jetty-util-7.0.2.v20100331-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/bcprov-jdk14-1.38.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/itext-2.1.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jasperreports-3.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/c3p0-0.9.1.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

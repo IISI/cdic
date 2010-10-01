@@ -1,0 +1,32 @@
+[
+	{
+		'text' : '&Menu1',
+		'id' : 'menu1',
+		'actions' : [
+			{
+				'type' : 'action',
+				'id' : 'menu1.action1',
+				'text' : 'action1Text中文',
+				'class' : 'platform.aquarius.menu.DemoMenu'
+			},
+			{
+				'type' : 'submenu',
+				'id' : 'menu1.submenu1',
+				'text' : 'SUB MENU',
+				'actions' : [
+					{
+						'type' : 'action',
+						'id' : 'menu1.submenu1.action1',
+						'text' : 'SUB MENU ACTION',
+						'class' : 'platform.aquarius.menu.DemoMenu'
+					}	
+				]
+			}
+		]
+	},
+	{
+		'text' : 'Menu2',
+		'id' : 'menu2',
+		'actions' : []
+	}
+]

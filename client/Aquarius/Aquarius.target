@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="AquariusDefaultPlugin">
+<locations>
+<location path="${workspace_loc:/Aquarius.Platform.Libs/spring}" type="Directory"/>
+<location path="${workspace_loc:/Aquarius.Platform.Libs/springdm}" type="Directory"/>
+<location path="${workspace_loc:/Aquarius.Platform.Libs/h2database}" type="Directory"/>
+<location path="${workspace_loc}\Aquarius.Platform.Libs\wicket" type="Directory"/>
+<location path="${workspace_loc}\Aquarius.Platform.Libs\plugins" type="Directory"/>
+<location path="${workspace_loc:/Aquarius.Platform.Libs/grovvy}" type="Directory"/>
+</locations>
+<environment>
+<os>win32</os>
+<ws>win32</ws>
+<arch>x86</arch>
+<nl>zh_TW</nl>
+</environment>
+</target>

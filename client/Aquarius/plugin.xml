@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    
+    <extension
+     id="application"
+     point="org.eclipse.core.runtime.applications">
+        <application>
+            <run
+             class="platform.aquarius.Application">
+            </run>
+        </application>
+    </extension>
+    <extension
+     point="org.eclipse.ui.perspectives">
+        <perspective
+         name="功能模組(一)"
+         class="platform.aquarius.AquariusDefaultPerspective"
+         id="platform.aquarius.perspective">
+        </perspective>
+    </extension>
+    <extension
+     point="org.eclipse.ui.views">
+        <view
+         allowMultiple="false"
+         class="platform.aquarius.tree.TreeView"
+         id="platform.aquarius.tree.TreeView"
+         name="系統功能(1)"
+         restorable="true">
+        </view>
+    </extension>
+    <extension
+     id="product"
+     point="org.eclipse.core.runtime.products">
+        <product
+         application="platform.aquarius.application"
+         name="Aquarius Platform">
+            <property
+             name="windowImages"
+             value="icons/alt_window_16.gif,icons/alt_window_32.gif">
+            </property>
+            <property
+             name="appName"
+             value="Aquarius Platform">
+            </property>
+            <property
+             name="startupForegroundColor"
+             value="000000">
+            </property>
+            <property
+             name="startupMessageRect"
+             value="7,252,445,20">
+            </property>
+            <property
+             name="startupProgressRect"
+             value="5,275,445,15">
+            </property>
+            <property
+             name="preferenceCustomization"
+             value="plugin_customization.ini">
+            </property>
+        </product>
+    </extension>
+    <extension point="org.eclipse.ui.editors">
+        <editor
+         name="交易視窗"
+         icon="icons/citi_small.bmp"
+         class="platform.aquarius.browser.BrowserEditorPart"
+         id="Aquarius.Browser.View">
+        </editor>
+    </extension>
+</plugin>
