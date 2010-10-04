@@ -4,7 +4,7 @@ package tw.com.citi.cdic.batch.model;
  * @author Chih-Liang Chang
  * @since 2010/9/29
  */
-public class Customer {
+public class A11 {
 
     private String unit = "021";
 

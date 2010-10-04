@@ -20,7 +20,7 @@
             </map>
         </property>
         <property name="rowMapper">
-            <bean class="tw.com.citi.cdic.batch.BusCustomerMapper"></bean>
+            <bean class="tw.com.citi.cdic.batch.BusA11Mapper"></bean>
         </property>
     </bean>
 
