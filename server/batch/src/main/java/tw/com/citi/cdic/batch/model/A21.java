@@ -3,6 +3,8 @@ package tw.com.citi.cdic.batch.model;
 import java.util.Date;
 
 /**
+ * A21, B21, C21 共用的 domain 物件。
+ * 
  * @author Chih-Liang Chang
  * @since 2010/10/4
  */
