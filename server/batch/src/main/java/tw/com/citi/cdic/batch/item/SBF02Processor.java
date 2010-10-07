@@ -2,18 +2,18 @@ package tw.com.citi.cdic.batch.item;
 
 import org.springframework.batch.item.ItemProcessor;
 
-import tw.com.citi.cdic.batch.model.CDICF02;
+import tw.com.citi.cdic.batch.model.A21;
 
 /**
  * @author Chih-Liang Chang
  * @since 2010/10/4
  */
-public class SBF02Processor implements ItemProcessor<CDICF02, CDICF02> {
+public class SBF02Processor implements ItemProcessor<A21, A21> {
 
     private boolean b21;
 
     @Override
-    public CDICF02 process(CDICF02 item) throws Exception {
+    public A21 process(A21 item) throws Exception {
         if (b21) {
             if (item.getSrNo().startsWith("9")) {
                 return item;

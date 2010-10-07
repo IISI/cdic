@@ -13,7 +13,7 @@
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
                     <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
-                        <property name="targetType" value="tw.com.citi.cdic.batch.model.CDICF02"></property>
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.A21"></property>
                         <property name="customEditors">
                             <map>
                                 <entry key="java.util.Date">

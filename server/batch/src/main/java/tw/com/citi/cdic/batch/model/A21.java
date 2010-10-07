@@ -6,7 +6,7 @@ import java.util.Date;
  * @author Chih-Liang Chang
  * @since 2010/10/4
  */
-public class CDICF02 {
+public class A21 {
 
     private String unit;
 
