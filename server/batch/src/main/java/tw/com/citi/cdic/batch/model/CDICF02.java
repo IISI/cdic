@@ -34,7 +34,7 @@ public class CDICF02 {
 
     private double balance;
 
-    private double stopPayment;
+    private double stopPayAmount;
 
     private double cardAmount;
 
@@ -162,12 +162,12 @@ public class CDICF02 {
         this.balance = balance;
     }
 
-    public double getStopPayment() {
-        return stopPayment;
+    public double getStopPayAmount() {
+        return stopPayAmount;
     }
 
-    public void setStopPayment(double stopPayment) {
-        this.stopPayment = stopPayment;
+    public void setStopPayAmount(double stopPayAmount) {
+        this.stopPayAmount = stopPayAmount;
     }
 
     public double getCardAmount() {
