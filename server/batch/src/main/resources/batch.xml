@@ -5,9 +5,13 @@
 
     <beans:import resource="database.xml" />
 
+    <beans:import resource="dao.xml" />
+
     <beans:import resource="SBF01.xml" />
 
     <beans:import resource="SBF02.xml" />
+
+    <beans:import resource="SBF07.xml" />
 
     <job-repository />
 
@@ -33,6 +37,10 @@
 
     <beans:bean id="f02Decider" parent="skipDecider">
         <beans:property name="stepName" value="f02"></beans:property>
+    </beans:bean>
+
+    <beans:bean id="f07Decider" parent="skipDecider">
+        <beans:property name="stepName" value="f07"></beans:property>
     </beans:bean>
 
     <job id="convertJob">
@@ -98,6 +106,30 @@
                     <description></description>
                     <tasklet>
                         <chunk reader="cdicF02RFileReader" processor="c21Processor" writer="c21FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="f07Decision" decider="f07Decider">
+                    <next on="EXECUTE" to="f07-a26" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="f07-a26" next="f07-b26">
+                    <description>把 CDICF07H 的資料 import 至 A26 file</description>
+                    <tasklet>
+                        <chunk reader="cdicF07HFileReader" processor="a26Processor" writer="a26FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f07-b26" next="f07-c26">
+                    <description>把 CDICF07H 的資料 import 至 B26 file</description>
+                    <tasklet>
+                        <chunk reader="cdicF07HFileReader" processor="b26Processor" writer="b26FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f07-c26">
+                    <description>把 CDICF07H 的資料 import 至 C26 file</description>
+                    <tasklet>
+                        <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26FileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
