@@ -1,5 +1,7 @@
 package tw.com.citi.cdic.batch.model;
 
+import java.util.Date;
+
 
 /**
  * A77, B77, C77, CDICF25 Layout
@@ -11,7 +13,7 @@ public class A77 {
     private String unit;
     private String branchNo;
     private String srNo;
-    private String txnDate;
+    private Date txnDate;
     private String currencyCode;
     private double dbAmt;
     private double crAmt;
@@ -43,11 +45,11 @@ public class A77 {
         return srNo;
     }
 
-    public void setTxnDate(String txnDate) {
+    public void setTxnDate(Date txnDate) {
         this.txnDate = txnDate;
     }
 
-    public String getTxnDate() {
+    public Date getTxnDate() {
         return txnDate;
     }
 

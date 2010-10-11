@@ -7,17 +7,17 @@ package tw.com.citi.cdic.batch.model;
  * @since 2010/10/8
  */
 public class A34 {
-    String unit;
-    String branchNo;
-    String srNo;
-    String apNo;
-    String applyDate;
-    String applyKind;
-    String billNo;
-    String currencyCode;
-    double billAmt;
-    String billDate;
-    String accName;
+    private String unit;
+    private String branchNo;
+    private String srNo;
+    private String apNo;
+    private String applyDate;
+    private String applyKind;
+    private String billNo;
+    private String currencyCode;
+    private double billAmt;
+    private String billDate;
+    private String accName;
 
     public String getUnit() {
         return unit;

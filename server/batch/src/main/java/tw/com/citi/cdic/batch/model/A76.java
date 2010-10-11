@@ -1,5 +1,7 @@
 package tw.com.citi.cdic.batch.model;
 
+import java.util.Date;
+
 
 /**
  * A76, CDICF24 Layout
@@ -17,11 +19,11 @@ public class A76 {
     private String endNo;
     private String currencyCode;
     private double amt;
-    private String dueDate;
+    private Date dueDate;
     private String code;
     private String dishonoredReason;
-    private String entryDate;
-    private String reserveDate;
+    private Date entryDate;
+    private Date reserveDate;
 
     public void setUnit(String unit) {
         this.unit = unit;
@@ -95,11 +97,11 @@ public class A76 {
         return amt;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
@@ -119,19 +121,19 @@ public class A76 {
         return dishonoredReason;
     }
 
-    public void setEntryDate(String entryDate) {
+    public void setEntryDate(Date entryDate) {
         this.entryDate = entryDate;
     }
 
-    public String getEntryDate() {
+    public Date getEntryDate() {
         return entryDate;
     }
 
-    public void setReserveDate(String reserveDate) {
+    public void setReserveDate(Date reserveDate) {
         this.reserveDate = reserveDate;
     }
 
-    public String getReserveDate() {
+    public Date getReserveDate() {
         return reserveDate;
     }
 }

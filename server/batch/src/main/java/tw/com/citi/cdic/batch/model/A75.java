@@ -3,6 +3,8 @@
  */
 package tw.com.citi.cdic.batch.model;
 
+import java.util.Date;
+
 
 /**
  * A75, CDICF23 Layout
@@ -13,10 +15,10 @@ package tw.com.citi.cdic.batch.model;
 public class A75 {
     private String unit;
     private String branchNo;
-    private String date;
+    private Date date;
     private String srNo;
-    private String dueDate;
-    private String defferDate;
+    private Date dueDate;
+    private Date defferDate;
     private String payBank;
     private String billType;
     private String billNo;
@@ -42,11 +44,11 @@ public class A75 {
         return branchNo;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -58,19 +60,19 @@ public class A75 {
         return srNo;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDefferDate(String defferDate) {
+    public void setDefferDate(Date defferDate) {
         this.defferDate = defferDate;
     }
 
-    public String getDefferDate() {
+    public Date getDefferDate() {
         return defferDate;
     }
 

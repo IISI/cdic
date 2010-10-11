@@ -1,5 +1,7 @@
 package tw.com.citi.cdic.batch.model;
 
+import java.util.Date;
+
 /**
  * A74, CDICF22I, CDICF22R, CDICF22L Layout
  * 
@@ -14,7 +16,7 @@ public class A74 {
     private String type;
     private String period;
     private double largeMax;
-    private String effectiveDate;
+    private Date effectiveDate;
     private double rate;
 
     public void setUnit(String unit) {
@@ -73,11 +75,11 @@ public class A74 {
         return largeMax;
     }
 
-    public void setEffectiveDate(String effectiveDate) {
+    public void setEffectiveDate(Date effectiveDate) {
         this.effectiveDate = effectiveDate;
     }
 
-    public String getEffectiveDate() {
+    public Date getEffectiveDate() {
         return effectiveDate;
     }
 

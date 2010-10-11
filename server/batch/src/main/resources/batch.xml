@@ -13,6 +13,8 @@
 
     <beans:import resource="SBF07.xml" />
 
+    <beans:import resource="SBT27.xml" />
+
     <job-repository />
 
     <beans:bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
@@ -41,6 +43,10 @@
 
     <beans:bean id="f07Decider" parent="skipDecider">
         <beans:property name="stepName" value="f07"></beans:property>
+    </beans:bean>
+
+    <beans:bean id="t27Decider" parent="skipDecider">
+        <beans:property name="stepName" value="t27"></beans:property>
     </beans:bean>
 
     <job id="convertJob">
@@ -130,6 +136,18 @@
                     <description>把 CDICF07H 的資料 import 至 C26 file</description>
                     <tasklet>
                         <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="t27Decision" decider="t27Decider">
+                    <next on="EXECUTE" to="t27" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="t27">
+                    <description>把 CDICT27H 的資料 import 至 T27 file</description>
+                    <tasklet>
+                        <chunk reader="cdicT27HFileReader" processor="t27Processor" writer="t27FileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
