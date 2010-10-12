@@ -12,6 +12,8 @@
 
     <beans:import resource="SBF07.xml" />
 
+    <beans:import resource="SBT03.xml" />
+
     <beans:import resource="SBT27.xml" />
 
     <job-repository />
@@ -46,6 +48,10 @@
 
     <beans:bean id="t01Decider" parent="skipDecider">
         <beans:property name="stepName" value="t01"></beans:property>
+    </beans:bean>
+
+    <beans:bean id="t03Decider" parent="skipDecider">
+        <beans:property name="stepName" value="t03"></beans:property>
     </beans:bean>
 
     <beans:bean id="t04Decider" parent="skipDecider">
@@ -198,6 +204,36 @@
                             <beans:property name="sourceDir" value="z:/input/CDICT01.txt"></beans:property>
                             <beans:property name="targetDir" value="z:/process/T01.txt"></beans:property>
                         </beans:bean>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="t03Decision" decider="t03Decider">
+                    <next on="EXECUTE" to="t03-t03" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="t06-table" next="t03-t03">
+                    <description>把 CDICT06 的資料 insert 至 T06 table</description>
+                    <tasklet>
+                        <chunk reader="cdicT06FileReader" processor="t06Processor" writer="t06TableWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="t03-t03" next="t03-t12">
+                    <description>把 CDICT03G 的資料 import 至 T03 file</description>
+                    <tasklet>
+                        <chunk reader="cdicT03GFileReader" processor="t03Processor" writer="t03FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="t03-t12" next="t06-file">
+                    <description>把 CDICT03G 的資料 import 至 T12 file</description>
+                    <tasklet>
+                        <chunk reader="cdicT03GFileReader" processor="t12Processor" writer="t12FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="t06-file">
+                    <description>把 T06 table 的資料 import 至 T06 file</description>
+                    <tasklet>
+                        <chunk reader="t06TableReader" writer="t06FileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
