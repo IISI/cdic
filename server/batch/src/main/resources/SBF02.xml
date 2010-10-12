@@ -39,21 +39,11 @@
         </property>
     </bean>
 
-    <bean id="a21FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
-        <property name="resource">
-            <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/A21.txt"></constructor-arg>
-            </bean>
-        </property>
-        <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
-                <property name="format" value="%3s%4s%30s%6s%6s%8s%4s%11s%3s%3s%tY%\u003ctm%\u003ctd%3s%16.2f%16.2f%15.2f%15.2f%1s%1s%16s%8.5f%15.2f%1s%1s%15.2f%15.2f%tY%\u003ctm%\u003ctd"></property>
-                <property name="fieldExtractor">
-                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,balance,stopPayment,cardAmount,gsAccountCode,jointCode,rateType,intRate,intPayable,overdrawStatus,taxCode,grossInt,grossTax,lastTxDate"></property>
-                    </bean>
-                </property>
-            </bean>
+    <bean id="a21DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO A21(PBUNIT, PBBRNO, PBSRNO, PBAPNO, PBCHARCODE, PBSTATUS, PBCUSTID, CUSTIDNO, PBCUSTTYPE, PBOPENDATE, PBCURCODE, PBACTBAL, PBBAL, PBSTOPPAYAMT, PBCARDAMT, PBGSACTCODE, PBJOINTCODE, PBRATETYPE, PBINTRATE, PBINTPAYABLE, PBOVRSTATUS, PBTAXCODE, PBGROSSINT, PBGROSSTAX, PBLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :openDate, :currencyCode, :accountBalance, :balance, :stopPayAmount, :cardAmount, :gsAccountCode, :jointCode, :rateType, :intRate, :intPayable, :overdrawStatus, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
+        <property name="itemSqlParameterSourceProvider">
+            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"></bean>
         </property>
     </bean>
 
@@ -69,23 +59,42 @@
         <property name="b21" value="true"></property>
     </bean>
 
-    <bean id="b21FileWriter" parent="a21FileWriter">
-        <property name="resource">
-            <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/B21.txt"></constructor-arg>
-            </bean>
-        </property>
+    <bean id="b21DbWriter" parent="a21DbWriter">
+        <property name="sql" value="INSERT INTO B21(PBUNIT, PBBRNO, PBSRNO, PBAPNO, PBCHARCODE, PBSTATUS, PBCUSTID, CUSTIDNO, PBCUSTTYPE, PBOPENDATE, PBCURCODE, PBACTBAL, PBBAL, PBSTOPPAYAMT, PBCARDAMT, PBGSACTCODE, PBJOINTCODE, PBRATETYPE, PBINTRATE, PBINTPAYABLE, PBOVRSTATUS, PBTAXCODE, PBGROSSINT, PBGROSSTAX, PBLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :openDate, :currencyCode, :accountBalance, :balance, :stopPayAmount, :cardAmount, :gsAccountCode, :jointCode, :rateType, :intRate, :intPayable, :overdrawStatus, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
     </bean>
 
     <bean id="c21Processor" class="tw.com.citi.cdic.batch.item.SBF02Processor">
         <property name="b21" value="false"></property>
     </bean>
 
-    <bean id="c21FileWriter" parent="a21FileWriter">
+    <bean id="c21FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="z:/C21.txt"></constructor-arg>
             </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format" value="%3s%4s%30s%6s%6s%8s%4s%11s%3s%3s%tY%\u003ctm%\u003ctd%3s%16.2f%16.2f%15.2f%15.2f%1s%1s%16s%8.5f%15.2f%1s%1s%15.2f%15.2f%tY%\u003ctm%\u003ctd"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,balance,stopPayment,cardAmount,gsAccountCode,jointCode,rateType,intRate,intPayable,overdrawStatus,taxCode,grossInt,grossTax,lastTxDate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="c21DbWriter" parent="a21DbWriter">
+        <property name="sql" value="INSERT INTO C21(PBUNIT, PBBRNO, PBSRNO, PBAPNO, PBCHARCODE, PBSTATUS, PBCUSTID, CUSTIDNO, PBCUSTTYPE, PBOPENDATE, PBCURCODE, PBACTBAL, PBBAL, PBSTOPPAYAMT, PBCARDAMT, PBGSACTCODE, PBJOINTCODE, PBRATETYPE, PBINTRATE, PBINTPAYABLE, PBOVRSTATUS, PBTAXCODE, PBGROSSINT, PBGROSSTAX, PBLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :openDate, :currencyCode, :accountBalance, :balance, :stopPayAmount, :cardAmount, :gsAccountCode, :jointCode, :rateType, :intRate, :intPayable, :overdrawStatus, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
+    </bean>
+
+    <bean id="c21Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="c21FileWriter" />
+                <ref bean="c21DbWriter" />
+            </list>
         </property>
     </bean>
 

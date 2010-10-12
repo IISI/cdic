@@ -97,21 +97,21 @@
                     <end on="SKIP" />
                 </decision>
                 <step id="f02-a21" next="f02-b21">
-                    <description>把 CDICF02I 的資料 import 至 A21 file</description>
+                    <description>把 CDICF02I 的資料 import 至 A21 table</description>
                     <tasklet>
-                        <chunk reader="cdicF02IFileReader" writer="a21FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicF02IFileReader" writer="a21DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
                 <step id="f02-b21" next="f02-c21">
-                    <description>把 CDICF02R 的資料 import 至 B21 file</description>
+                    <description>把 CDICF02R 的資料 import 至 B21 table</description>
                     <tasklet>
-                        <chunk reader="cdicF02RFileReader" processor="b21Processor" writer="b21FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicF02RFileReader" processor="b21Processor" writer="b21DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
                 <step id="f02-c21">
-                    <description>把 CDICF02R 的資料 import 至 C21 file</description>
+                    <description>把 CDICF02R 的資料 import 至 C21 file 及 C21 table</description>
                     <tasklet>
-                        <chunk reader="cdicF02RFileReader" processor="c21Processor" writer="c21FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicF02RFileReader" processor="c21Processor" writer="c21Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
