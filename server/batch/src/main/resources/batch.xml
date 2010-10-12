@@ -103,13 +103,13 @@
                     </tasklet>
                 </step>
                 <step id="f02-b21" next="f02-c21">
-                    <description>把 CDICF02R 的資料 import 至 B21, C21 files</description>
+                    <description>把 CDICF02R 的資料 import 至 B21 file</description>
                     <tasklet>
                         <chunk reader="cdicF02RFileReader" processor="b21Processor" writer="b21FileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
                 <step id="f02-c21">
-                    <description></description>
+                    <description>把 CDICF02R 的資料 import 至 C21 file</description>
                     <tasklet>
                         <chunk reader="cdicF02RFileReader" processor="c21Processor" writer="c21FileWriter" commit-interval="500"></chunk>
                     </tasklet>
