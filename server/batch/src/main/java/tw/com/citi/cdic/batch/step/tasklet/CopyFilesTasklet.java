@@ -22,11 +22,14 @@ public class CopyFilesTasklet implements Tasklet {
     private FileSystemResource targetDir;
 
     @Override
-    public RepeatStatus execute(StepContribution contribution,
-            ChunkContext chunkContext) throws Exception {
+    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         File srcDir = sourceDir.getFile();
         File destDir = targetDir.getFile();
-        FileUtils.copyDirectory(srcDir, destDir, true);
+        if (srcDir.isDirectory()) {
+            FileUtils.copyDirectory(srcDir, destDir, true);
+        } else {
+            FileUtils.copyFile(srcDir, destDir);
+        }
         return RepeatStatus.FINISHED;
     }
 
