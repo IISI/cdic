@@ -44,6 +44,14 @@
         <beans:property name="stepName" value="f07"></beans:property>
     </beans:bean>
 
+    <beans:bean id="t01Decider" parent="skipDecider">
+        <beans:property name="stepName" value="t01"></beans:property>
+    </beans:bean>
+
+    <beans:bean id="t04Decider" parent="skipDecider">
+        <beans:property name="stepName" value="t04"></beans:property>
+    </beans:bean>
+
     <beans:bean id="t08Decider" parent="skipDecider">
         <beans:property name="stepName" value="t08"></beans:property>
     </beans:bean>
@@ -175,6 +183,36 @@
                     <description>把 CDICF07H 的資料 import 至 C26 file</description>
                     <tasklet>
                         <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="t01Decision" decider="t01Decider">
+                    <next on="EXECUTE" to="t01" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="t01">
+                    <description>把 local file CDICT04 的資料複製至 T04 file</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
+                            <beans:property name="sourceDir" value="z:/input/CDICT01.txt"></beans:property>
+                            <beans:property name="targetDir" value="z:/process/T01.txt"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="t04Decision" decider="t04Decider">
+                    <next on="EXECUTE" to="t04" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="t04">
+                    <description>把 local file CDICT04 的資料複製至 T04 file</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
+                            <beans:property name="sourceDir" value="z:/input/CDICT04.txt"></beans:property>
+                            <beans:property name="targetDir" value="z:/process/T04.txt"></beans:property>
+                        </beans:bean>
                     </tasklet>
                 </step>
             </flow>
