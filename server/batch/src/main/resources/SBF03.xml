@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="cdicF03FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/input/CDICF03.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.A22"></property>
+                        <property name="customEditors">
+                            <map>
+                                <entry key="java.util.Date">
+                                    <bean class="org.springframework.beans.propertyeditors.CustomDateEditor">
+                                        <constructor-arg>
+                                            <bean class="java.text.SimpleDateFormat">
+                                                <constructor-arg value="yyyyMMdd"></constructor-arg>
+                                            </bean>
+                                        </constructor-arg>
+                                    </bean>
+                                </entry>
+                            </map>
+                        </property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                        <property name="columns" value="1,4,8,38,50,58,62,73,76,79,95,98,113,128,136,144,160,163,164,165,173,174,175,205,213,221,222,223,242,250,265,281,296,297,312,320,321,336,351"></property>
+                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,vilaoteAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a22Processor" class="tw.com.citi.cdic.batch.item.SBF03AProcessor">
+        <property name="type" value="1"></property>
+    </bean>
+
+    <bean id="a22DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO A22(TDUNIT, TDBRNO, TDSRNO, TDAPNO, TDCHARCODE, TDSTATUS, TDCUSTID, TDCUSTIDNO, TDCUSTTYPE , TDSLIPNO, TDCURCODE, TDAMT, TDSTOPPAYAMT, TDBGNDATE, TDDUEDATE, TDRATETYPE, TDPERIOD, TDINTTYPE, TDNAMECODE, TDINTRATE, TDINTPAYCODE, TDAUTOPRIM, TDAUTOINTNO, TDISUEDATE, TDREISUEDATE, TDGSACTCODE, TDJOINTCODE, TDSDCASE, TDINTEDATE, TDINTPAY, TDINTPAYABLE, TDVIOLATEAMT, TDPGKIND, TDPGAMT, TDPGSETDATE, TDTAXCODE, TDGROSSINT, TDGROSSTAX, TDLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :slipNo, :currencyCode, :amount, :stopPayAmount, :beginDate, :dueDate, :rateType, :period, :intType, :nameCode, :intRate, :intPayCode, :autoPrim, :autoIntNo, :issueDate, :reIssueDate, :gsAccountCode, :jointCode, :sdCase, :intEndDate, :intPay, :intPayable, :violateAmount, :pgKind, :pgAmount, :pgSetDate, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="b22Processor" class="tw.com.citi.cdic.batch.item.SBF03AProcessor">
+        <property name="type" value="2"></property>
+    </bean>
+
+    <bean id="b22DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO B22(TDUNIT, TDBRNO, TDSRNO, TDAPNO, TDCHARCODE, TDSTATUS, TDCUSTID, TDCUSTIDNO, TDCUSTTYPE , TDSLIPNO, TDCURCODE, TDAMT, TDSTOPPAYAMT, TDBGNDATE, TDDUEDATE, TDRATETYPE, TDPERIOD, TDINTTYPE, TDNAMECODE, TDINTRATE, TDINTPAYCODE, TDAUTOPRIM, TDAUTOINTNO, TDISUEDATE, TDREISUEDATE, TDGSACTCODE, TDJOINTCODE, TDSDCASE, TDINTEDATE, TDINTPAY, TDINTPAYABLE, TDVIOLATEAMT, TDPGKIND, TDPGAMT, TDPGSETDATE, TDTAXCODE, TDGROSSINT, TDGROSSTAX, TDLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :slipNo, :currencyCode, :amount, :stopPayAmount, :beginDate, :dueDate, :rateType, :period, :intType, :nameCode, :intRate, :intPayCode, :autoPrim, :autoIntNo, :issueDate, :reIssueDate, :gsAccountCode, :jointCode, :sdCase, :intEndDate, :intPay, :intPayable, :violateAmount, :pgKind, :pgAmount, :pgSetDate, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="c22Processor" class="tw.com.citi.cdic.batch.item.SBF03AProcessor">
+        <property name="type" value="3"></property>
+    </bean>
+
+    <bean id="c22DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO C22(TDUNIT, TDBRNO, TDSRNO, TDAPNO, TDCHARCODE, TDSTATUS, TDCUSTID, TDCUSTIDNO, TDCUSTTYPE , TDSLIPNO, TDCURCODE, TDAMT, TDSTOPPAYAMT, TDBGNDATE, TDDUEDATE, TDRATETYPE, TDPERIOD, TDINTTYPE, TDNAMECODE, TDINTRATE, TDINTPAYCODE, TDAUTOPRIM, TDAUTOINTNO, TDISUEDATE, TDREISUEDATE, TDGSACTCODE, TDJOINTCODE, TDSDCASE, TDINTEDATE, TDINTPAY, TDINTPAYABLE, TDVIOLATEAMT, TDPGKIND, TDPGAMT, TDPGSETDATE, TDTAXCODE, TDGROSSINT, TDGROSSTAX, TDLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :slipNo, :currencyCode, :amount, :stopPayAmount, :beginDate, :dueDate, :rateType, :period, :intType, :nameCode, :intRate, :intPayCode, :autoPrim, :autoIntNo, :issueDate, :reIssueDate, :gsAccountCode, :jointCode, :sdCase, :intEndDate, :intPay, :intPayable, :violateAmount, :pgKind, :pgAmount, :pgSetDate, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="c22FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/C22.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format" value="%3s%4s%30s%12s%8s%4s%11s%3s%3s%16s%3s%15.2f%15.2f%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%16s%3s%1s%1s%8.5f%1s%1s%30s%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%1s%1s%19s%8s%15.2f%16.2f%15.2f%1s%15.2f%tY%\u003ctm%\u003ctd%1s%15.2f%15.2f%tY%\u003ctm%\u003ctd"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType ,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,violateAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="c22Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="c22DbWriter" />
+                <ref bean="c22FileWriter" />
+            </list>
+        </property>
+    </bean>
+
+</beans>

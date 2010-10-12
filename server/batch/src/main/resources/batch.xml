@@ -145,52 +145,81 @@
                 </step>
             </flow>
             <flow>
-                <decision id="f02Decision" decider="f02Decider">
-                    <next on="EXECUTE" to="f02-a21" />
-                    <end on="SKIP" />
-                </decision>
-                <step id="f02-a21" next="f02-b21">
-                    <description>把 CDICF02I 的資料 import 至 A21 file</description>
-                    <tasklet>
-                        <chunk reader="cdicF02IFileReader" writer="a21FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="f02-b21" next="f02-c21">
-                    <description>把 CDICF02R 的資料 import 至 B21, C21 files</description>
-                    <tasklet>
-                        <chunk reader="cdicF02RFileReader" processor="b21Processor" writer="b21FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="f02-c21">
-                    <description></description>
-                    <tasklet>
-                        <chunk reader="cdicF02RFileReader" processor="c21Processor" writer="c21FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-            </flow>
-            <flow>
-                <decision id="f07Decision" decider="f07Decider">
-                    <next on="EXECUTE" to="f07-a26" />
-                    <end on="SKIP" />
-                </decision>
-                <step id="f07-a26" next="f07-b26">
-                    <description>把 CDICF07H 的資料 import 至 A26 file</description>
-                    <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="a26Processor" writer="a26FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="f07-b26" next="f07-c26">
-                    <description>把 CDICF07H 的資料 import 至 B26 file</description>
-                    <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="b26Processor" writer="b26FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="f07-c26">
-                    <description>把 CDICF07H 的資料 import 至 C26 file</description>
-                    <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
+                <split id="f02a-f03a-f04a" next="f07-f08-f18">
+                    <flow>
+                        <decision id="f02Decision" decider="f02Decider">
+                            <next on="EXECUTE" to="f02a-a21" />
+                            <end on="SKIP" />
+                        </decision>
+                        <step id="f02a-a21" next="f02a-b21">
+                            <description>把 CDICF02I 的資料 import 至 A21 table</description>
+                            <tasklet>
+                                <chunk reader="cdicF02IFileReader" writer="a21DbWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f02a-b21" next="f02a-c21">
+                            <description>把 CDICF02R 的資料 import 至 B21 table</description>
+                            <tasklet>
+                                <chunk reader="cdicF02RFileReader" processor="b21Processor" writer="b21DbWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f02a-c21">
+                            <description>把 CDICF02R 的資料 import 至 C21 file 及 C21 table</description>
+                            <tasklet>
+                                <chunk reader="cdicF02RFileReader" processor="c21Processor" writer="c21Writer" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
+                    <flow>
+                        <step id="f03A-a22" next="f03A-b22">
+                            <description>把 CDICF03 的資料 import 至 A22 table</description>
+                            <tasklet>
+                                <chunk reader="cdicF03FileReader" processor="a22Processor" writer="a22DbWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f03A-b22" next="f03A-c22">
+                            <description>把 CDICF03 的資料 import 至 B22 table</description>
+                            <tasklet>
+                                <chunk reader="cdicF03FileReader" processor="b22Processor" writer="b22DbWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f03A-c22">
+                            <description>把 CDICF03 的資料 import 至 C22 table 及 C22 file</description>
+                            <tasklet>
+                                <chunk reader="cdicF03FileReader" processor="c22Processor" writer="c22Writer" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
+                    <flow></flow>
+                </split>
+                <split id="f07-f08-f18">
+                    <flow>
+                        <decision id="f07Decision" decider="f07Decider">
+                            <next on="EXECUTE" to="f07-a26" />
+                            <end on="SKIP" />
+                        </decision>
+                        <step id="f07-a26" next="f07-b26">
+                            <description>把 CDICF07H 的資料 import 至 A26 file</description>
+                            <tasklet>
+                                <chunk reader="cdicF07HFileReader" processor="a26Processor" writer="a26FileWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f07-b26" next="f07-c26">
+                            <description>把 CDICF07H 的資料 import 至 B26 file</description>
+                            <tasklet>
+                                <chunk reader="cdicF07HFileReader" processor="b26Processor" writer="b26FileWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f07-c26">
+                            <description>把 CDICF07H 的資料 import 至 C26 file</description>
+                            <tasklet>
+                                <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26FileWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
+                    <flow></flow>
+                    <flow></flow>
+                </split>
             </flow>
             <flow>
                 <decision id="t01Decision" decider="t01Decider">
