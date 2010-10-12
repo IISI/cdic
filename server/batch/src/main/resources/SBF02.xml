@@ -42,9 +42,7 @@
     <bean id="a21DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql" value="INSERT INTO A21(PBUNIT, PBBRNO, PBSRNO, PBAPNO, PBCHARCODE, PBSTATUS, PBCUSTID, CUSTIDNO, PBCUSTTYPE, PBOPENDATE, PBCURCODE, PBACTBAL, PBBAL, PBSTOPPAYAMT, PBCARDAMT, PBGSACTCODE, PBJOINTCODE, PBRATETYPE, PBINTRATE, PBINTPAYABLE, PBOVRSTATUS, PBTAXCODE, PBGROSSINT, PBGROSSTAX, PBLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :openDate, :currencyCode, :accountBalance, :balance, :stopPayAmount, :cardAmount, :gsAccountCode, :jointCode, :rateType, :intRate, :intPayable, :overdrawStatus, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
-        <property name="itemSqlParameterSourceProvider">
-            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"></bean>
-        </property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 
     <bean id="cdicF02RFileReader" parent="cdicF02IFileReader">

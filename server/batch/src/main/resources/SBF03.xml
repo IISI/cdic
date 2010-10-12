@@ -46,9 +46,7 @@
     <bean id="a22DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql" value="INSERT INTO A22(TDUNIT, TDBRNO, TDSRNO, TDAPNO, TDCHARCODE, TDSTATUS, TDCUSTID, TDCUSTIDNO, TDCUSTTYPE , TDSLIPNO, TDCURCODE, TDAMT, TDSTOPPAYAMT, TDBGNDATE, TDDUEDATE, TDRATETYPE, TDPERIOD, TDINTTYPE, TDNAMECODE, TDINTRATE, TDINTPAYCODE, TDAUTOPRIM, TDAUTOINTNO, TDISUEDATE, TDREISUEDATE, TDGSACTCODE, TDJOINTCODE, TDSDCASE, TDINTEDATE, TDINTPAY, TDINTPAYABLE, TDVIOLATEAMT, TDPGKIND, TDPGAMT, TDPGSETDATE, TDTAXCODE, TDGROSSINT, TDGROSSTAX, TDLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :slipNo, :currencyCode, :amount, :stopPayAmount, :beginDate, :dueDate, :rateType, :period, :intType, :nameCode, :intRate, :intPayCode, :autoPrim, :autoIntNo, :issueDate, :reIssueDate, :gsAccountCode, :jointCode, :sdCase, :intEndDate, :intPay, :intPayable, :violateAmount, :pgKind, :pgAmount, :pgSetDate, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
-        <property name="itemSqlParameterSourceProvider">
-            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"></bean>
-        </property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 
     <bean id="b22Processor" class="tw.com.citi.cdic.batch.item.SBF03AProcessor">
@@ -58,9 +56,7 @@
     <bean id="b22DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql" value="INSERT INTO B22(TDUNIT, TDBRNO, TDSRNO, TDAPNO, TDCHARCODE, TDSTATUS, TDCUSTID, TDCUSTIDNO, TDCUSTTYPE , TDSLIPNO, TDCURCODE, TDAMT, TDSTOPPAYAMT, TDBGNDATE, TDDUEDATE, TDRATETYPE, TDPERIOD, TDINTTYPE, TDNAMECODE, TDINTRATE, TDINTPAYCODE, TDAUTOPRIM, TDAUTOINTNO, TDISUEDATE, TDREISUEDATE, TDGSACTCODE, TDJOINTCODE, TDSDCASE, TDINTEDATE, TDINTPAY, TDINTPAYABLE, TDVIOLATEAMT, TDPGKIND, TDPGAMT, TDPGSETDATE, TDTAXCODE, TDGROSSINT, TDGROSSTAX, TDLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :slipNo, :currencyCode, :amount, :stopPayAmount, :beginDate, :dueDate, :rateType, :period, :intType, :nameCode, :intRate, :intPayCode, :autoPrim, :autoIntNo, :issueDate, :reIssueDate, :gsAccountCode, :jointCode, :sdCase, :intEndDate, :intPay, :intPayable, :violateAmount, :pgKind, :pgAmount, :pgSetDate, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
-        <property name="itemSqlParameterSourceProvider">
-            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"></bean>
-        </property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 
     <bean id="c22Processor" class="tw.com.citi.cdic.batch.item.SBF03AProcessor">
@@ -70,9 +66,7 @@
     <bean id="c22DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql" value="INSERT INTO C22(TDUNIT, TDBRNO, TDSRNO, TDAPNO, TDCHARCODE, TDSTATUS, TDCUSTID, TDCUSTIDNO, TDCUSTTYPE , TDSLIPNO, TDCURCODE, TDAMT, TDSTOPPAYAMT, TDBGNDATE, TDDUEDATE, TDRATETYPE, TDPERIOD, TDINTTYPE, TDNAMECODE, TDINTRATE, TDINTPAYCODE, TDAUTOPRIM, TDAUTOINTNO, TDISUEDATE, TDREISUEDATE, TDGSACTCODE, TDJOINTCODE, TDSDCASE, TDINTEDATE, TDINTPAY, TDINTPAYABLE, TDVIOLATEAMT, TDPGKIND, TDPGAMT, TDPGSETDATE, TDTAXCODE, TDGROSSINT, TDGROSSTAX, TDLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :slipNo, :currencyCode, :amount, :stopPayAmount, :beginDate, :dueDate, :rateType, :period, :intType, :nameCode, :intRate, :intPayCode, :autoPrim, :autoIntNo, :issueDate, :reIssueDate, :gsAccountCode, :jointCode, :sdCase, :intEndDate, :intPay, :intPayable, :violateAmount, :pgKind, :pgAmount, :pgSetDate, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
-        <property name="itemSqlParameterSourceProvider">
-            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"></bean>
-        </property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 
     <bean id="c22FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
