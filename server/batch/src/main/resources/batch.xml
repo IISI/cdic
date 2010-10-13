@@ -141,7 +141,7 @@
                 </step>
             </flow>
             <flow>
-                <split id="f02A-f03A-f04A" next="f07-f08-f18">
+                <split id="f02A-f03A-f04A-f05" next="f07-f08-f18">
                     <flow>
                         <decision id="f02Decision" decider="f02Decider">
                             <next on="EXECUTE" to="f02A-a21" />
@@ -200,6 +200,23 @@
                             <description>把 CDICF04 的資料 import 至 A23 table</description>
                             <tasklet>
                                 <chunk reader="cdicF04FileReader" writer="a23DbWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
+                    <flow>
+                        <step id="f05-init" next="f05">
+                            <description>刪除 table A24 的所有資料</description>
+                            <tasklet>
+                                <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                                    <beans:property name="dataSource" ref="dataSource"></beans:property>
+                                    <beans:property name="sql" value="DELETE FROM A24"></beans:property>
+                                </beans:bean>
+                            </tasklet>
+                        </step>
+                        <step id="f05">
+                            <description>讀取 LUS view 的資料，然後產生 A24 table 及 file。</description>
+                            <tasklet>
+                                <chunk reader="lusDbReader" writer="a24Writer" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
                     </flow>
