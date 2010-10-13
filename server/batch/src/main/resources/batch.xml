@@ -229,7 +229,20 @@
                             </tasklet>
                         </step>
                     </flow>
-                    <flow></flow>
+                    <flow>
+                        <step id="f08A" next="f08B">
+                            <description>把 JointAcclist 的資料 import 至 A31</description>
+                            <tasklet>
+                                <chunk reader="jointAcclistFileReader" processor="a31Processor" writer="a31FileWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f08B">
+                            <description>把 JointAcclist 的資料 import 至 B31</description>
+                            <tasklet>
+                                <chunk reader="jointAcclistFileReader" processor="b31Processor" writer="b31FileWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
                     <flow></flow>
                 </split>
             </flow>
