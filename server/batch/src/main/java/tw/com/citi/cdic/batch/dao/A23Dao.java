@@ -14,4 +14,11 @@ public interface A23Dao {
      */
     A23 findBySrNo(String srno);
 
+    /**
+     * @param customerId
+     * @param srNo
+     * @return 找不到時回傳 null。
+     */
+    A23 findByCustomerIdAndSrNo(String customerId, String srNo);
+
 }

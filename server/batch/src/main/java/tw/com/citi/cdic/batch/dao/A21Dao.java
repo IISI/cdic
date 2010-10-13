@@ -17,4 +17,12 @@ public interface A21Dao {
      */
     A21 findBySrNo(String srNo, String tableName);
 
+    /**
+     * @param customerId
+     * @param srNo
+     * @param tableName
+     * @return 找不到時回傳 null。
+     */
+    A21 findByCustomerIdAndSrNo(String customerId, String srNo, String tableName);
+
 }

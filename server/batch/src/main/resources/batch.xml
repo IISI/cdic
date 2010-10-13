@@ -10,6 +10,8 @@
 
     <beans:import resource="SBF02.xml" />
 
+    <beans:import resource="SBF04.xml"  />
+
     <beans:import resource="SBF07.xml" />
 
     <beans:import resource="SBT02.xml" />
@@ -153,25 +155,25 @@
                 </step>
             </flow>
             <flow>
-                <split id="f02a-f03a-f04a" next="f07-f08-f18">
+                <split id="f02A-f03A-f04A" next="f07-f08-f18">
                     <flow>
                         <decision id="f02Decision" decider="f02Decider">
-                            <next on="EXECUTE" to="f02a-a21" />
+                            <next on="EXECUTE" to="f02A-a21" />
                             <end on="SKIP" />
                         </decision>
-                        <step id="f02a-a21" next="f02a-b21">
+                        <step id="f02A-a21" next="f02A-b21">
                             <description>把 CDICF02I 的資料 import 至 A21 table</description>
                             <tasklet>
                                 <chunk reader="cdicF02IFileReader" writer="a21DbWriter" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
-                        <step id="f02a-b21" next="f02a-c21">
+                        <step id="f02A-b21" next="f02A-c21">
                             <description>把 CDICF02R 的資料 import 至 B21 table</description>
                             <tasklet>
                                 <chunk reader="cdicF02RFileReader" processor="b21Processor" writer="b21DbWriter" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
-                        <step id="f02a-c21">
+                        <step id="f02A-c21">
                             <description>把 CDICF02R 的資料 import 至 C21 file 及 C21 table</description>
                             <tasklet>
                                 <chunk reader="cdicF02RFileReader" processor="c21Processor" writer="c21Writer" commit-interval="500"></chunk>
@@ -198,7 +200,23 @@
                             </tasklet>
                         </step>
                     </flow>
-                    <flow></flow>
+                    <flow>
+                        <step id="f04A-init" next="f04A">
+                            <description>刪除 table A23 的所有資料</description>
+                            <tasklet>
+                                <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                                    <beans:property name="dataSource" ref="dataSource"></beans:property>
+                                    <beans:property name="sql" value="DELETE FROM A23"></beans:property>
+                                </beans:bean>
+                            </tasklet>
+                        </step>
+                        <step id="f04A">
+                            <description>把 CDICF04 的資料 import 至 A23 table</description>
+                            <tasklet>
+                                <chunk reader="cdicF04FileReader" writer="a23DbWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
                 </split>
                 <split id="f07-f08-f18">
                     <flow>
@@ -225,7 +243,20 @@
                             </tasklet>
                         </step>
                     </flow>
-                    <flow></flow>
+                    <flow>
+                        <step id="f08A" next="f08B">
+                            <description>把 JointAcclist 的資料 import 至 A31</description>
+                            <tasklet>
+                                <chunk reader="jointAcclistFileReader" processor="a31Processor" writer="a31FileWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f08B">
+                            <description>把 JointAcclist 的資料 import 至 B31</description>
+                            <tasklet>
+                                <chunk reader="jointAcclistFileReader" processor="b31Processor" writer="b31FileWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
                     <flow></flow>
                 </split>
             </flow>
