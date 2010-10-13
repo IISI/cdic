@@ -12,6 +12,8 @@
 
     <beans:import resource="SBF07.xml" />
 
+    <beans:import resource="SBT02.xml" />
+
     <beans:import resource="SBT03.xml" />
 
     <beans:import resource="SBT06.xml" />
@@ -50,6 +52,10 @@
 
     <beans:bean id="t01Decider" parent="skipDecider">
         <beans:property name="stepName" value="t01"></beans:property>
+    </beans:bean>
+
+    <beans:bean id="t02Decider" parent="skipDecider">
+        <beans:property name="stepName" value="t02"></beans:property>
     </beans:bean>
 
     <beans:bean id="t03Decider" parent="skipDecider">
@@ -239,8 +245,26 @@
                 </step>
             </flow>
             <flow>
+                <decision id="t02Decision" decider="t02Decider">
+                    <next on="EXECUTE" to="t02-table" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="t02-table" next="t02-t02">
+                    <description>把 FMBCDWN4 的資料 insert 至 T02 table</description>
+                    <tasklet>
+                        <chunk reader="fmbcdwn4FileReader" processor="t02Processor" writer="t02DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="t02-t02">
+                    <description>把 T02 Table 的資料 import 至 T02 file</description>
+                    <tasklet>
+                        <chunk reader="t02DbReader" writer="t02FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
                 <decision id="t03Decision" decider="t03Decider">
-                    <next on="EXECUTE" to="t03-t03" />
+                    <next on="EXECUTE" to="t06-table" />
                     <end on="SKIP" />
                 </decision>
                 <step id="t06-table" next="t03-t03">
