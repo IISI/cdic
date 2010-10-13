@@ -141,25 +141,25 @@
                 </step>
             </flow>
             <flow>
-                <split id="f02a-f03a-f04a" next="f07-f08-f18">
+                <split id="f02A-f03A-f04A" next="f07-f08-f18">
                     <flow>
                         <decision id="f02Decision" decider="f02Decider">
-                            <next on="EXECUTE" to="f02a-a21" />
+                            <next on="EXECUTE" to="f02A-a21" />
                             <end on="SKIP" />
                         </decision>
-                        <step id="f02a-a21" next="f02a-b21">
+                        <step id="f02A-a21" next="f02A-b21">
                             <description>把 CDICF02I 的資料 import 至 A21 table</description>
                             <tasklet>
                                 <chunk reader="cdicF02IFileReader" writer="a21DbWriter" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
-                        <step id="f02a-b21" next="f02a-c21">
+                        <step id="f02A-b21" next="f02A-c21">
                             <description>把 CDICF02R 的資料 import 至 B21 table</description>
                             <tasklet>
                                 <chunk reader="cdicF02RFileReader" processor="b21Processor" writer="b21DbWriter" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
-                        <step id="f02a-c21">
+                        <step id="f02A-c21">
                             <description>把 CDICF02R 的資料 import 至 C21 file 及 C21 table</description>
                             <tasklet>
                                 <chunk reader="cdicF02RFileReader" processor="c21Processor" writer="c21Writer" commit-interval="500"></chunk>
