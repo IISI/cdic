@@ -184,7 +184,17 @@
                             </tasklet>
                         </step>
                     </flow>
-                    <flow></flow>
+                    <flow>
+                        <step id="f04a-init">
+                            <description>刪除 table A23 的所有資料</description>
+                            <tasklet>
+                                <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                                    <beans:property name="dataSource" ref="dataSource"></beans:property>
+                                    <beans:property name="sql" value="DELETE FROM A23"></beans:property>
+                                </beans:bean>
+                            </tasklet>
+                        </step>
+                    </flow>
                 </split>
                 <split id="f07-f08-f18">
                     <flow>
