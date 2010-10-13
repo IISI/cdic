@@ -14,6 +14,8 @@
 
     <beans:import resource="SBT03.xml" />
 
+    <beans:import resource="SBT06.xml" />
+
     <beans:import resource="SBT27.xml" />
 
     <job-repository />
@@ -244,7 +246,7 @@
                 <step id="t06-table" next="t03-t03">
                     <description>把 CDICT06 的資料 insert 至 T06 table</description>
                     <tasklet>
-                        <chunk reader="cdicT06FileReader" processor="t06Processor" writer="t06TableWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicT06FileReader" processor="t06Processor" writer="t06DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
                 <step id="t03-t03" next="t03-t12">
@@ -262,7 +264,7 @@
                 <step id="t06-file">
                     <description>把 T06 table 的資料 import 至 T06 file</description>
                     <tasklet>
-                        <chunk reader="t06TableReader" writer="t06FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="t06DbReader" writer="t06FileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>

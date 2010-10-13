@@ -1,0 +1,24 @@
+package tw.com.citi.cdic.batch.item;
+
+import org.springframework.batch.item.ItemProcessor;
+
+import tw.com.citi.cdic.batch.model.CDICT03G;
+import tw.com.citi.cdic.batch.model.T01;
+
+/**
+ * @author Lancelot
+ * @since 2010/10/11
+ */
+public class SBT03T12Processor implements ItemProcessor<CDICT03G, T01> {
+
+    @Override
+    public T01 process(CDICT03G item) throws Exception {
+        T01 t12 = null;
+        if (item != null && ("AM ".equals(item.getSystemId()))) {
+            t12 = new T01();
+            t12.setCode(item.getProductCode());
+            t12.setDescription(item.getDescription());
+        }
+        return t12;
+    }
+}
