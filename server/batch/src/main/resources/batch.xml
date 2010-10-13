@@ -10,6 +10,8 @@
 
     <beans:import resource="SBF02.xml" />
 
+    <beans:import resource="SBF04.xml"  />
+
     <beans:import resource="SBF07.xml" />
 
     <beans:import resource="SBT27.xml" />
@@ -185,13 +187,19 @@
                         </step>
                     </flow>
                     <flow>
-                        <step id="f04a-init">
+                        <step id="f04A-init" next="f04A">
                             <description>刪除 table A23 的所有資料</description>
                             <tasklet>
                                 <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
                                     <beans:property name="dataSource" ref="dataSource"></beans:property>
                                     <beans:property name="sql" value="DELETE FROM A23"></beans:property>
                                 </beans:bean>
+                            </tasklet>
+                        </step>
+                        <step id="f04A">
+                            <description>把 CDICF04 的資料 import 至 A23 table</description>
+                            <tasklet>
+                                <chunk reader="cdicF04FileReader" writer="a23DbWriter" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
                     </flow>
