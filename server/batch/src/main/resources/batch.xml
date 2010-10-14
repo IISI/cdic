@@ -14,6 +14,8 @@
 
     <beans:import resource="SBF07.xml" />
 
+    <beans:import resource="SBF08.xml" />
+
     <beans:import resource="SBT27.xml" />
 
     <job-repository />
