@@ -12,6 +12,8 @@
 
     <beans:import resource="SBF04.xml"  />
 
+    <beans:import resource="SBF05.xml"  />
+
     <beans:import resource="SBF07.xml" />
 
     <beans:import resource="SBF08.xml" />
