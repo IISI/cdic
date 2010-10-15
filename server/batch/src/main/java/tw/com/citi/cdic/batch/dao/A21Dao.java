@@ -1,5 +1,7 @@
 package tw.com.citi.cdic.batch.dao;
 
+import java.util.List;
+
 import tw.com.citi.cdic.batch.model.A21;
 
 /**
@@ -24,5 +26,24 @@ public interface A21Dao {
      * @return 找不到時回傳 null。
      */
     A21 findByCustomerIdAndSrNo(String customerId, String srNo, String tableName);
+
+    /**
+     * 根據 customerId, jointCode 為條件，找回 accountBalance > 0 的資料。
+     * 
+     * @param customerId
+     * @param jointCode
+     * @param tableName
+     * @return
+     */
+    List<A21> findByCustomerIdAndJointCode(String customerId, String jointCode, String tableName);
+
+    /**
+     * 根據 customerId 為條件，找回 accountBalance > 0 的資料。
+     * 
+     * @param customerId
+     * @param tableName
+     * @return
+     */
+    List<A21> findByCustomerId(String customerId, String tableName);
 
 }

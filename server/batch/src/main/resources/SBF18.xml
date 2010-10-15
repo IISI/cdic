@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="SBF18Processor" class="tw.com.citi.cdic.batch.item.SBF18Processor">
+        <property name="a21Dao" ref="a21Dao"></property>
+        <property name="a22Dao" ref="a22Dao"></property>
+        <property name="a23Dao" ref="a23Dao"></property>
+        <property name="a24Dao" ref="a24Dao"></property>
+    </bean>
+
+    <bean id="a61FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/out/A61.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format" value="%3s%4s%11s%3s%30s%tY%\u003ctm%\u003ctd%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,custId,custIdNo,srNo,date,acctBalance,acctInt,noAcctBalance,noAcctInt,unDepBalance,unDepInt,acctBalanceEx,acctIntEx,noAcctBalanceEx,noAcctIntEx,unDepBalanceEx,unDepIntEx,obuDepBalance,obuDepInt"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+</beans>

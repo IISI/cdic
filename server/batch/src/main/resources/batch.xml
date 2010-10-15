@@ -18,6 +18,8 @@
 
     <beans:import resource="SBF08.xml" />
 
+    <beans:import resource="SBF18.xml" />
+
     <beans:import resource="SBT27.xml" />
 
     <job-repository />
@@ -264,7 +266,14 @@
                             </tasklet>
                         </step>
                     </flow>
-                    <flow></flow>
+                    <flow>
+                        <step id="f18">
+                            <description>Summarise BUS view 的資料，產生 A61</description>
+                            <tasklet>
+                                <chunk reader="busDbReader" processor="SBF18Processor" writer="a61FileWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
                 </split>
             </flow>
             <flow>
