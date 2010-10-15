@@ -12,6 +12,7 @@ public class A61 {
     private String unit;
     private String branchNo;
     private String custId;
+    private String custIdNo;
     private String srNo;
     private Date date;
     private double acctBalance;
@@ -51,6 +52,14 @@ public class A61 {
 
     public String getCustId() {
         return custId;
+    }
+
+    public String getCustIdNo() {
+        return custIdNo;
+    }
+
+    public void setCustIdNo(String custIdNo) {
+        this.custIdNo = custIdNo;
     }
 
     public void setSrNo(String srNo) {
