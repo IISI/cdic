@@ -52,10 +52,6 @@
         <beans:property name="stepName" value="f07"></beans:property>
     </beans:bean>
 
-    <beans:bean id="t01Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t01"></beans:property>
-    </beans:bean>
-
     <beans:bean id="t02Decider" parent="skipDecider">
         <beans:property name="stepName" value="t02"></beans:property>
     </beans:bean>
@@ -94,10 +90,6 @@
 
     <beans:bean id="t18Decider" parent="skipDecider">
         <beans:property name="stepName" value="t18"></beans:property>
-    </beans:bean>
-
-    <beans:bean id="t19Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t19"></beans:property>
     </beans:bean>
 
     <beans:bean id="t20Decider" parent="skipDecider">
@@ -259,21 +251,6 @@
                     </flow>
                     <flow></flow>
                 </split>
-            </flow>
-            <flow>
-                <decision id="t01Decision" decider="t01Decider">
-                    <next on="EXECUTE" to="t01" />
-                    <end on="SKIP" />
-                </decision>
-                <step id="t01">
-                    <description>把 local file CDICT04 的資料複製至 T04 file</description>
-                    <tasklet>
-                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="z:/input/CDICT01.txt"></beans:property>
-                            <beans:property name="targetDir" value="z:/process/T01.txt"></beans:property>
-                        </beans:bean>
-                    </tasklet>
-                </step>
             </flow>
             <flow>
                 <decision id="t02Decision" decider="t02Decider">
@@ -439,21 +416,6 @@
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="z:/input/CDICT18.txt"></beans:property>
                             <beans:property name="targetDir" value="z:/process/T18.txt"></beans:property>
-                        </beans:bean>
-                    </tasklet>
-                </step>
-            </flow>
-            <flow>
-                <decision id="t19Decision" decider="t19Decider">
-                    <next on="EXECUTE" to="t19" />
-                    <end on="SKIP" />
-                </decision>
-                <step id="t19">
-                    <description>把 local file CDICT19 的資料複製至 T19 file</description>
-                    <tasklet>
-                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="z:/input/CDICT19.txt"></beans:property>
-                            <beans:property name="targetDir" value="z:/process/T19.txt"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
