@@ -21,10 +21,129 @@
                 <property name="format" value="%3s%4s%11s%3s%30s%tY%\u003ctm%\u003ctd%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,custId,custIdNo,srNo,date,acctBalance,acctInt,noAcctBalance,noAcctInt,unDepBalance,unDepInt,acctBalanceEx,acctIntEx,noAcctBalanceEx,noAcctIntEx,unDepBalanceEx,unDepIntEx,obuDepBalance,obuDepInt"></property>
+                        <property name="names" value="a61.unit,a61.branchNo,a61.custId,a61.custIdNo,a61.srNo,a61.date,a61.acctBalance,a61.acctInt,a61.noAcctBalance,a61.noAcctInt,a61.unDepBalance,a61.unDepInt,a61.acctBalanceEx,a61.acctIntEx,a61.noAcctBalanceEx,a61.noAcctIntEx,a61.unDepBalanceEx,a61.unDepIntEx,a61.obuDepBalance,a61.obuDepInt"></property>
                     </bean>
                 </property>
             </bean>
+        </property>
+    </bean>
+
+    <bean id="a61SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/out/A61Sample.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format" value="%3s%4s%11s%3s%30s%tY%\u003ctm%\u003ctd%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="a61.unit,a61.branchNo,a61.custId,a61.custIdNo,a61.srNo,a61.date,a61.acctBalance,a61.acctInt,a61.noAcctBalance,a61.noAcctInt,a61.unDepBalance,a61.unDepInt,a61.acctBalanceEx,a61.acctIntEx,a61.noAcctBalanceEx,a61.noAcctIntEx,a61.unDepBalanceEx,a61.unDepIntEx,a61.obuDepBalance,a61.obuDepInt"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f02SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/out/F02Sample.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.file.transform.A21RecursiveCollectionLineAggregator">
+                <property name="delegate">
+                    <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                        <property name="format" value="%3s%4s%30s%6s%6s%8s%4s%11s%3s%3s%tY%\u003ctm%\u003ctd%3s%16.2f%16.2f%15.2f%15.2f%1s%1s%16s%8.5f%15.2f%1s%1s%15.2f%15.2f%tY%\u003ctm%\u003ctd"></property>
+                        <property name="fieldExtractor">
+                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                                <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,balance,stopPayment,cardAmount,gsAccountCode,jointCode,rateType,intRate,intPayable,overdrawStatus,taxCode,grossInt,grossTax,lastTxDate"></property>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f03SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/out/F03Sample.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.file.transform.A22RecursiveCollectionLineAggregator">
+                <property name="delegate">
+                    <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                        <property name="format" value="%3s%4s%30s%12s%8s%4s%11s%3s%3s%16s%3s%15.2f%15.2f%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%16s%3s%1s%1s%8.5f%1s%1s%30s%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%1s%1s%19s%8s%15.2f%16.2f%15.2f%1s%15.2f%tY%\u003ctm%\u003ctd%1s%15.2f%15.2f%tY%\u003ctm%\u003ctd"></property>
+                        <property name="fieldExtractor">
+                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                                <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,violateAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f04SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/out/F04Sample.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.file.transform.A23RecursiveCollectionLineAggregator">
+                <property name="delegate">
+                    <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                        <property name="format" value="%3s%4s%30s%12s%8s%4s%11s%3s%3s%tY%\u003ctm%\u003ctd%3s%16.2f%15.2f%1s%1s%tY%\u003ctm%\u003ctd"></property>
+                        <property name="fieldExtractor">
+                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                                <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,stopPayAmount,jointCode,overdrawStatus,lastTxDate"></property>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f05SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/out/F05Sample.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.file.transform.A24RecursiveCollectionLineAggregator">
+                <property name="delegate">
+                    <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                        <property name="format" value="%3s%4s%30s%30s%12s%8s%11s%3s%60s%6s%3s%3s%15.2f%16s%8.5f%15.2f%1s%15.2f%15.2f%80s%80s%16s%16s"></property>
+                        <property name="fieldExtractor">
+                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                                <property name="names" value="unit,branchNo,controlSrNo,srNo,apNo,charCode,customerId,customerIdNo,customerName,customerBusinessCode,customerType,currencyCode,balance,rateType,intRate,intPayable,taxCode,grossInt,grossTax,originalAddress,address,tel1,tel2"></property>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f18Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a61FileWriter" />
+                <ref bean="a61SampleFileWriter" />
+                <ref bean="f02SampleFileWriter" />
+                <ref bean="f03SampleFileWriter" />
+                <ref bean="f04SampleFileWriter" />
+                <ref bean="f05SampleFileWriter" />
+            </list>
         </property>
     </bean>
 

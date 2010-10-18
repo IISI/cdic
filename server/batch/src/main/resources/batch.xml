@@ -270,7 +270,7 @@
                         <step id="f18">
                             <description>Summarise BUS view 的資料，產生 A61</description>
                             <tasklet>
-                                <chunk reader="busDbReader" processor="SBF18Processor" writer="a61FileWriter" commit-interval="500"></chunk>
+                                <chunk reader="busDbReader" processor="SBF18Processor" writer="f18Writer" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
                     </flow>

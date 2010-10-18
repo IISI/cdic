@@ -2,6 +2,9 @@ package tw.com.citi.cdic.batch.item;
 
 import java.util.List;
 
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 
 import tw.com.citi.cdic.batch.dao.A21Dao;
@@ -14,12 +17,13 @@ import tw.com.citi.cdic.batch.model.A22;
 import tw.com.citi.cdic.batch.model.A23;
 import tw.com.citi.cdic.batch.model.A24;
 import tw.com.citi.cdic.batch.model.A61;
+import tw.com.citi.cdic.batch.model.SBF18Output;
 
 /**
  * @author Chih-Liang Chang
  * @since 2010/10/14
  */
-public class SBF18Processor implements ItemProcessor<A11, A61> {
+public class SBF18Processor implements ItemProcessor<A11, SBF18Output> {
 
     private A21Dao a21Dao;
 
@@ -29,9 +33,14 @@ public class SBF18Processor implements ItemProcessor<A11, A61> {
 
     private A24Dao a24Dao;
 
+    private StepExecution stepExecution;
+
+    private int writeSampleFrequency = 1000;
+
     @Override
-    public A61 process(A11 item) throws Exception {
+    public SBF18Output process(A11 item) throws Exception {
         double temp7 = 0, temp8 = 0, temp11 = 0, temp12 = 0, temp9 = 0, temp10 = 0, temp13 = 0, temp14 = 0, temp17 = 0, temp18 = 0, temp15 = 0, temp16 = 0, temp19 = 0, temp20 = 0;
+        SBF18Output out = new SBF18Output();
         
         // 1. Summary 台幣要保金額
         List<A21> a21s = a21Dao.findByCustomerIdAndJointCode(item.getId(), "0", "A21");
@@ -53,6 +62,10 @@ public class SBF18Processor implements ItemProcessor<A11, A61> {
             temp7 += a24.getBalance();
             temp8 += a24.getIntPayable();
         }
+        out.getA21List().addAll(a21s);
+        out.getA22List().addAll(a22s);
+        out.getA23List().addAll(a23s);
+        out.getA24List().addAll(a24s);
         
         // 2. Summary 台幣聯名戶金額
         a21s = a21Dao.findByCustomerIdAndJointCode(item.getId(), "1", "A21");
@@ -69,6 +82,9 @@ public class SBF18Processor implements ItemProcessor<A11, A61> {
         for (A23 a23 : a23s) {
             temp11 += a23.getAccountBalance();
         }
+        out.getA21List().addAll(a21s);
+        out.getA22List().addAll(a22s);
+        out.getA23List().addAll(a23s);
         
         // 3. Summary 台幣非要保金額
         a22s = a22Dao.findByCustomerIdAndJointCodeAndCharCodeAndAmount(item.getId(), "A22");
@@ -76,6 +92,7 @@ public class SBF18Processor implements ItemProcessor<A11, A61> {
             temp9 += a22.getAmount();
             temp10 += a22.getIntPayable();
         }
+        out.getA22List().addAll(a22s);
         
         // 4. Summary 外幣要保金額
         a21s = a21Dao.findByCustomerIdAndJointCode(item.getId(), "0", "B21");
@@ -88,6 +105,8 @@ public class SBF18Processor implements ItemProcessor<A11, A61> {
             temp13 += b22.getAmount();
             temp14 += b22.getIntPayable();
         }
+        out.getA21List().addAll(a21s);
+        out.getA22List().addAll(a22s);
         
         // 5. Summary 外幣聯名戶金額
         a21s = a21Dao.findByCustomerIdAndJointCode(item.getId(), "1", "B21");
@@ -100,6 +119,8 @@ public class SBF18Processor implements ItemProcessor<A11, A61> {
             temp17 += b22.getAmount();
             temp18 += b22.getIntPayable();
         }
+        out.getA21List().addAll(a21s);
+        out.getA22List().addAll(a22s);
         
         // 6. Summary 外幣非要保金額
         a22s = a22Dao.findByCustomerIdAndJointCodeAndCharCodeOrSdCaseAndAmount(item.getId(), "B22");
@@ -107,6 +128,7 @@ public class SBF18Processor implements ItemProcessor<A11, A61> {
             temp15 += b22.getAmount();
             temp16 += b22.getIntPayable();
         }
+        out.getA22List().addAll(a22s);
         
         // 7. Summary OBU要保金額
         a21s = a21Dao.findByCustomerId(item.getId(), "C21");
@@ -119,6 +141,8 @@ public class SBF18Processor implements ItemProcessor<A11, A61> {
             temp19 += c22.getAmount();
             temp20 += c22.getIntPayable();
         }
+        out.getA21List().addAll(a21s);
+        out.getA22List().addAll(a22s);
         
         A61 a61 = new A61();
         a61.setUnit("021");
@@ -140,7 +164,21 @@ public class SBF18Processor implements ItemProcessor<A11, A61> {
         a61.setObuDepBalance(temp19);
         a61.setObuDepInt(temp20);
         
-        return a61;
+        out.setA61(a61);
+        ExecutionContext stepContext = stepExecution.getExecutionContext();
+        long processCount = stepContext.getLong("PROCESS_COUNT", 0);
+        processCount++;
+        stepContext.putLong("PROCESS_COUNT", processCount);
+        if (processCount % writeSampleFrequency == 0) {
+            out.setWriteSample(true);
+        }
+        
+        return out;
+    }
+
+    @BeforeStep
+    public void saveStepExecution(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
     }
 
     public void setA21Dao(A21Dao a21Dao) {
@@ -157,6 +195,10 @@ public class SBF18Processor implements ItemProcessor<A11, A61> {
 
     public void setA24Dao(A24Dao a24Dao) {
         this.a24Dao = a24Dao;
+    }
+
+    public void setWriteSampleFrequency(int writeSampleFrequency) {
+        this.writeSampleFrequency = writeSampleFrequency;
     }
 
 }
