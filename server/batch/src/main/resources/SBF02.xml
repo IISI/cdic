@@ -53,7 +53,7 @@
         </property>
     </bean>
 
-    <bean id="b21Processor" class="tw.com.citi.cdic.batch.item.SBF02Processor">
+    <bean id="b21Processor" class="tw.com.citi.cdic.batch.item.SBF02AProcessor">
         <property name="b21" value="true"></property>
     </bean>
 
@@ -61,7 +61,7 @@
         <property name="sql" value="INSERT INTO B21(PBUNIT, PBBRNO, PBSRNO, PBAPNO, PBCHARCODE, PBSTATUS, PBCUSTID, CUSTIDNO, PBCUSTTYPE, PBOPENDATE, PBCURCODE, PBACTBAL, PBBAL, PBSTOPPAYAMT, PBCARDAMT, PBGSACTCODE, PBJOINTCODE, PBRATETYPE, PBINTRATE, PBINTPAYABLE, PBOVRSTATUS, PBTAXCODE, PBGROSSINT, PBGROSSTAX, PBLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :openDate, :currencyCode, :accountBalance, :balance, :stopPayAmount, :cardAmount, :gsAccountCode, :jointCode, :rateType, :intRate, :intPayable, :overdrawStatus, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
     </bean>
 
-    <bean id="c21Processor" class="tw.com.citi.cdic.batch.item.SBF02Processor">
+    <bean id="c21Processor" class="tw.com.citi.cdic.batch.item.SBF02AProcessor">
         <property name="b21" value="false"></property>
     </bean>
 

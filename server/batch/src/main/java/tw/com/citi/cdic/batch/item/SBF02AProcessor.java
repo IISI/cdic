@@ -8,7 +8,7 @@ import tw.com.citi.cdic.batch.model.A21;
  * @author Chih-Liang Chang
  * @since 2010/10/4
  */
-public class SBF02Processor implements ItemProcessor<A21, A21> {
+public class SBF02AProcessor implements ItemProcessor<A21, A21> {
 
     private boolean b21;
 
