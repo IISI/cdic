@@ -227,7 +227,7 @@
                         </step>
                     </flow>
                 </split>
-                <split id="f07-f08-f18">
+                <split id="f07-f08-f18" next="f02B-f03B-F04B">
                     <flow>
                         <decision id="f07Decision" decider="f07Decider">
                             <next on="EXECUTE" to="f07-a26" />
@@ -271,6 +271,34 @@
                             <description>Summarise BUS view 的資料，產生 A61</description>
                             <tasklet>
                                 <chunk reader="busDbReader" processor="SBF18Processor" writer="f18Writer" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
+                </split>
+                <split id="f02B-f03B-F04B">
+                    <flow>
+                        <step id="f02B-update-a21">
+                            <description>讀取 table A31 的資料來更新 table A21</description>
+                            <tasklet>
+                                <chunk reader="a31FileReader" processor="f02B-a21Processor" writer="f02B-a21DbWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f02B-update-b21">
+                            <description>讀取 table B31 的資料來更新 table B21</description>
+                            <tasklet>
+                                <chunk reader="b31FileReader" processor="f02B-b21Processor" writer="f02B-b21DbWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f02B-copy-a21">
+                            <description>將 tabel A21 的資料 export 至 file</description>
+                            <tasklet>
+                                <chunk reader="a21DbReader" writer="a21FileWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f02B-copy-b21">
+                            <description>將 table B21 的資料 export 至 file</description>
+                            <tasklet>
+                                <chunk reader="b21DbReader" writer="b21FileWriter" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
                     </flow>

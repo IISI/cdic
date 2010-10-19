@@ -53,7 +53,7 @@
         </property>
     </bean>
 
-    <bean id="b21Processor" class="tw.com.citi.cdic.batch.item.SBF02Processor">
+    <bean id="b21Processor" class="tw.com.citi.cdic.batch.item.SBF02AProcessor">
         <property name="b21" value="true"></property>
     </bean>
 
@@ -61,7 +61,7 @@
         <property name="sql" value="INSERT INTO B21(PBUNIT, PBBRNO, PBSRNO, PBAPNO, PBCHARCODE, PBSTATUS, PBCUSTID, CUSTIDNO, PBCUSTTYPE, PBOPENDATE, PBCURCODE, PBACTBAL, PBBAL, PBSTOPPAYAMT, PBCARDAMT, PBGSACTCODE, PBJOINTCODE, PBRATETYPE, PBINTRATE, PBINTPAYABLE, PBOVRSTATUS, PBTAXCODE, PBGROSSINT, PBGROSSTAX, PBLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :openDate, :currencyCode, :accountBalance, :balance, :stopPayAmount, :cardAmount, :gsAccountCode, :jointCode, :rateType, :intRate, :intPayable, :overdrawStatus, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
     </bean>
 
-    <bean id="c21Processor" class="tw.com.citi.cdic.batch.item.SBF02Processor">
+    <bean id="c21Processor" class="tw.com.citi.cdic.batch.item.SBF02AProcessor">
         <property name="b21" value="false"></property>
     </bean>
 
@@ -93,6 +93,108 @@
                 <ref bean="c21FileWriter" />
                 <ref bean="c21DbWriter" />
             </list>
+        </property>
+    </bean>
+
+    <bean id="a31FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="Z:/out/A31.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.A31"></property>
+                        <property name="customEditors">
+                            <map>
+                                <entry key="java.util.Date">
+                                    <bean class="org.springframework.beans.propertyeditors.CustomDateEditor">
+                                        <constructor-arg>
+                                            <bean class="java.text.SimpleDateFormat">
+                                                <constructor-arg value="yyyyMMdd"></constructor-arg>
+                                            </bean>
+                                        </constructor-arg>
+                                    </bean>
+                                </entry>
+                            </map>
+                        </property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                        <property name="columns" value="1,4,8,38,41,52,55,61"></property>
+                        <property name="names" value="unit,branchNo,srNo,currencyCode,customerId,customerIdNo,locateRate,memo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f02B-a21Processor" class="tw.com.citi.cdic.batch.item.SBF02BProcessor">
+        <property name="type" value="1"></property>
+        <property name="a21Dao" ref="a21Dao"></property>
+    </bean>
+
+    <bean id="f02B-a21DbWriter" parent="a21DbWriter">
+        <property name="sql" value="UPDATE A21 SET PBJOINTCODE = :jointCode WHERE UNCUSTID = :customerId AND UNSRNO = :srNo"></property>
+    </bean>
+
+    <bean id="b31FileReader" parent="a31FileReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="Z:/out/B31.txt"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f02B-b21Processor" parent="f02B-a21Processor">
+        <property name="type" value="2"></property>
+    </bean>
+
+    <bean id="f02B-b21DbWriter" parent="a21DbWriter">
+        <property name="sql" value="UPDATE B21 SET PBJOINTCODE = :jointCode WHERE UNCUSTID = :customerId AND UNSRNO = :srNo"></property>
+    </bean>
+
+    <bean id="a21DbReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="pageSize" value="500"></property>
+        <property name="queryProvider">
+            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
+                <property name="selectClause" value="SELECT *"></property>
+                <property name="fromClause" value="FROM A21"></property>
+                <property name="sortKey" value="PBCUSTID, PBSRNO"></property>
+            </bean>
+        </property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.A21Mapper"></bean>
+        </property>
+    </bean>
+
+    <bean id="a21FileWriter" parent="c21FileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/A21.txt"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="b21DbReader" parent="a21DbReader">
+        <property name="queryProvider">
+            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
+                <property name="selectClause" value="SELECT *"></property>
+                <property name="fromClause" value="FROM B21"></property>
+                <property name="sortKey" value="PBCUSTID, PBSRNO"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="b21FileWriter" parent="c21FileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/B21.txt"></constructor-arg>
+            </bean>
         </property>
     </bean>
 
