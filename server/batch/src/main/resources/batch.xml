@@ -277,19 +277,19 @@
                 </split>
                 <split id="f02B-f03B-F04B">
                     <flow>
-                        <step id="f02B-update-a21">
+                        <step id="f02B-update-a21" next="f02B-update-b21">
                             <description>讀取 table A31 的資料來更新 table A21</description>
                             <tasklet>
                                 <chunk reader="a31FileReader" processor="f02B-a21Processor" writer="f02B-a21DbWriter" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
-                        <step id="f02B-update-b21">
+                        <step id="f02B-update-b21" next="f02B-copy-a21">
                             <description>讀取 table B31 的資料來更新 table B21</description>
                             <tasklet>
                                 <chunk reader="b31FileReader" processor="f02B-b21Processor" writer="f02B-b21DbWriter" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
-                        <step id="f02B-copy-a21">
+                        <step id="f02B-copy-a21" next="f02B-copy-b21">
                             <description>將 tabel A21 的資料 export 至 file</description>
                             <tasklet>
                                 <chunk reader="a21DbReader" writer="a21FileWriter" commit-interval="500"></chunk>
