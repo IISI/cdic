@@ -306,13 +306,13 @@
                         <step id="f03B-update-a22" next="f03B-update-b22">
                             <description>讀取 table A31 的資料來更新 table A22</description>
                             <tasklet>
-                                <chunk reader="a31FileReader" processor="" writer="" commit-interval="500"></chunk>
+                                <chunk reader="a31FileReader" processor="f03B-a22Processor" writer="f03B-a22DbWriter" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
                         <step id="f03B-update-b22" next="f03B-copy-a22">
                             <description>讀取 table B31 的資料來更新 table B22</description>
                             <tasklet>
-                                <chunk reader="b31FileReader" processor="" writer="" commit-interval="500"></chunk>
+                                <chunk reader="b31FileReader" processor="f03B-b22Processor" writer="f03B-b22DbWriter" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
                         <step id="f03B-copy-a22" next="f03B-copy-b22">
