@@ -43,6 +43,11 @@
                 </property>
             </bean>
         </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,客戶識別碼,保留欄位,存款帳號,歸戶資料日期,台幣要保項目存款本金歸戶金額,台幣要保項目存款應付利息歸戶金額,台幣非要保項目存款本金歸戶金額,台幣非要保項目存款應付利息歸戶金額,台幣聯名存款分配之本金歸戶金額,台幣聯名存款分配之應付利息歸戶金額,外幣要保項目存款本金歸戶金額,外幣要保項目存款應付利息歸戶金額,外幣非要保項目存款本金歸戶金額,外幣非要保項目存款應付利息歸戶金額,外幣聯名存款分配之本金歸戶金額,外幣聯名存款分配之應付利息歸戶金額,OBU存款本金歸戶金額,OBU存款應付利息歸戶金額"></property>
+            </bean>
+        </property>
     </bean>
 
     <bean id="f02SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
@@ -62,6 +67,11 @@
                         </property>
                     </bean>
                 </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科子目代碼,存款性質別或產品類別,存款帳戶狀況碼,客戶識別碼,保留欄位,存戶性質或組織型態,開戶日期,幣別,帳戶餘額,存摺餘額,止付扣押總金額,儲值性圈存金額,綜存戶記號,聯名戶及統制帳戶註記,利率別,指定基準日之存款利率,應付存款利息,透支戶註記,稅率別,本年度未開扣繳憑單已付利息,本年度未開扣繳憑單已代扣稅額,最近交易日"></property>
             </bean>
         </property>
     </bean>
@@ -85,6 +95,11 @@
                 </property>
             </bean>
         </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科子目代碼,存款性質別或產品類別,存款帳戶狀況碼,客戶識別碼,保留欄位,存戶性質或組織型態,存單號碼,幣別,存單金額,止付扣押總金額,起息日,到期日,利率別,適用之利率期間,計息種類,記名註記,存單利率,付息方式,自動轉期代號,自動轉息帳號,開立存單日期,補發存單日期,綜存戶存單,聯名戶及統制帳戶註記,結構型商品代號,上次付息迄日,已付存款利息,應付存款利息/預付存款利息,違約金,存單設定種類,存單設定質權金額,設定日期,稅率別,本年度未開扣繳憑單已付利息,本年度未開扣繳憑單已代扣稅額,最近交易日"></property>
+            </bean>
+        </property>
     </bean>
 
     <bean id="f04SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
@@ -106,6 +121,11 @@
                 </property>
             </bean>
         </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科子目代碼,存款性質別或產品類別,存款帳戶狀況碼,客戶識別碼,保留欄位,存戶性質或組織型態,開戶日期,幣別,帳戶餘額,止付扣押總金額,聯名戶及統制帳戶註記,透支戶註記,最近交易日"></property>
+            </bean>
+        </property>
     </bean>
 
     <bean id="f05SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
@@ -125,6 +145,11 @@
                         </property>
                     </bean>
                 </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,靜止戶之統制帳戶帳號,客戶之存款帳號,會計科子目代碼,存款性質別或產品類別,客戶識別碼,保留欄位,戶名,行業別,存戶性質或組織型態,幣別,帳戶餘額,利率別,指定基準日之存款利率,應付存款利息,稅率別,本年度未開扣繳憑單已付利息,本年度未開扣繳憑單已代扣稅額,客戶戶籍地址,客戶通訊地址,電話1,電話2"></property>
             </bean>
         </property>
     </bean>
