@@ -328,6 +328,20 @@
                             </tasklet>
                         </step>
                     </flow>
+                    <flow>
+                        <step id="f04B-update" next="f04B-copy">
+                            <description>讀取 table A31 的資料來更新 table A23</description>
+                            <tasklet>
+                                <chunk reader="a31FileReader" processor="f04B-a23Processor" writer="f04B-a23DbWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                        <step id="f04B-copy">
+                            <description>將 tabel A23 的資料 export 至 file</description>
+                            <tasklet>
+                                <chunk reader="a23DbReader" writer="a23FileWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
                 </split>
             </flow>
             <flow>
