@@ -25,7 +25,7 @@
          allowMultiple="false"
          class="platform.aquarius.tree.TreeView"
          id="platform.aquarius.tree.TreeView"
-         name="系統功能(1)"
+         name="系統功能(一)"
          restorable="true">
         </view>
     </extension>

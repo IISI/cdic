@@ -43,7 +43,6 @@ public class TreeView extends ViewPart {
      */
     @Override
     public void createPartControl(Composite parent) {
-        this.setPartName("系統功能(一)");
         viewer = new TreeViewer(parent);
         // viewer.getTree().setLinesVisible(true);
         viewer.setContentProvider(new FileTreeContentProvider());
@@ -82,7 +81,7 @@ public class TreeView extends ViewPart {
                 "/configs/tree.json");
         try {
             InputStreamReader reader = new InputStreamReader(
-                    config.openStream());
+                    config.openStream(), "UTF-8");
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(JsonArray.class,
                     new CustomerDeserializer());
