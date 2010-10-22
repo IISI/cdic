@@ -39,6 +39,7 @@
       <plugin id="com.springsource.org.apache.commons.logging"/>
       <plugin id="com.springsource.org.apache.log4j"/>
       <plugin id="com.springsource.org.jdom"/>
+      <plugin id="com.springsource.org.json"/>
       <plugin id="groovy-all"/>
       <plugin id="javax.activation"/>
       <plugin id="javax.mail"/>

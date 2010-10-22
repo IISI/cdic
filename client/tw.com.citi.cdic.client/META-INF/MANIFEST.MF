@@ -6,6 +6,8 @@ Bundle-Version: 1.0.0
 Bundle-Activator: tw.com.citi.cdic.client.Activator
 Require-Bundle: org.eclipse.core.runtime,
  platform.aquarius.embedserver;bundle-version="1.0.0",
- org.apache.wicket.wicket;bundle-version="1.4.10"
+ org.apache.wicket.wicket;bundle-version="1.4.10",
+ com.springsource.org.json;bundle-version="1.0.0",
+ slf4j.api;bundle-version="1.5.11"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
