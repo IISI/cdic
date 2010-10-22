@@ -34,6 +34,8 @@ public class TreeView extends ViewPart {
 
     private TreeViewer viewer;
 
+    private BrowserEditorInput editorInput = new BrowserEditorInput();
+
     /*
      * (non-Javadoc)
      * 
@@ -60,7 +62,7 @@ public class TreeView extends ViewPart {
                     if (page != null) {
                         try {
                             IEditorPart part = page.openEditor(
-                                    new BrowserEditorInput(),
+                                    editorInput,
                                     BrowserEditorPart.ID);
 
                             if (part instanceof BrowserEditorPart) {
@@ -93,7 +95,7 @@ public class TreeView extends ViewPart {
             e.printStackTrace();
         }
 
-        // viewer.expandAll();
+        viewer.expandAll();
     }
 
     /*
