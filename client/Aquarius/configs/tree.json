@@ -14,7 +14,7 @@
 				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC003Page/tw.com.citi.cdic.client'
 			},
 			{
-				'text' : 'Local 檔案維護',
+				'text' : 'Local 檔案上、下傳及確認',
 				'icon' : '',
 				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC004Page/tw.com.citi.cdic.client'
 			},
@@ -24,15 +24,10 @@
 				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC005Page/tw.com.citi.cdic.client'
 			},
 			{
-			    'text' : '產檔狀態檢查及確認',
+			    'text' : '檔案確認及檢核下載',
 			    'icon' : '',
 			    'url' : 'http://127.0.0.1:8080/app/dispatch/SUC006Page/tw.com.citi.cdic.client'
-			},
-            {
-                'text' : '檢核報表及 Sample File 下載',
-                'icon' : '',
-                'url' : 'http://127.0.0.1:8080/app/dispatch/SUC007Page/tw.com.citi.cdic.client'
-            }
+			}
 		]
 	}
 ]
