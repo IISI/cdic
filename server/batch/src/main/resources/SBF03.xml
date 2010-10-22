@@ -80,7 +80,7 @@
                 <property name="format" value="%3s%4s%30s%12s%8s%4s%11s%3s%3s%16s%3s%15.2f%15.2f%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%16s%3s%1s%1s%8.5f%1s%1s%30s%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%1s%1s%19s%8s%15.2f%16.2f%15.2f%1s%15.2f%tY%\u003ctm%\u003ctd%1s%15.2f%15.2f%tY%\u003ctm%\u003ctd"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType ,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,violateAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
+                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,violateAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
                     </bean>
                 </property>
             </bean>
@@ -93,6 +93,64 @@
                 <ref bean="c22DbWriter" />
                 <ref bean="c22FileWriter" />
             </list>
+        </property>
+    </bean>
+
+    <bean id="f03B-a22Processor" class="tw.com.citi.cdic.batch.item.SBF03BProcessor">
+        <property name="a22Dao" ref="a22Dao"></property>
+        <property name="type" value="1"></property>
+    </bean>
+
+    <bean id="f03B-a22DbWriter" parent="a22DbWriter">
+        <property name="sql" value="UPDATE A22 SET TDJOINTCODE = :jointCode WHERE TDCUSTID = :customerId AND TDSRNO = :srNo"></property>
+    </bean>
+
+    <bean id="f03B-b22Processor" parent="f03B-a22Processor">
+        <property name="type" value="2"></property>
+    </bean>
+
+    <bean id="f03B-b22DbWriter" parent="a22DbWriter">
+        <property name="sql" value="UPDATE B22 SET TDJOINTCODE = :jointCode WHERE TDCUSTID = :customerId AND TDSRNO = :srNo"></property>
+    </bean>
+
+    <bean id="a22DbReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="pageSize" value="500"></property>
+        <property name="queryProvider">
+            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
+                <property name="selectClause" value="SELECT *"></property>
+                <property name="fromClause" value="FROM A22"></property>
+                <property name="sortKey" value="TDCUSTID, TDSRNO"></property>
+            </bean>
+        </property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.A22Mapper"></bean>
+        </property>
+    </bean>
+
+    <bean id="a22FileWriter" parent="c22FileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/A22.txt"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="b22DbReader" parent="a22DbReader">
+        <property name="queryProvider">
+            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
+                <property name="selectClause" value="SELECT *"></property>
+                <property name="fromClause" value="FROM B22"></property>
+                <property name="sortKey" value="TDCUSTID, TDSRNO"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="b22FileWriter" parent="c22FileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/B22.txt"></constructor-arg>
+            </bean>
         </property>
     </bean>
 
