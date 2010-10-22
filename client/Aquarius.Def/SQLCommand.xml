@@ -2,10 +2,35 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>SQL Command</comment>
-<entry key="SUC002_DEL">
+<entry key="SUC002_DEL_TABLEFLOW">
 DELETE FROM TABLEFLOW;
 </entry>
-<entry key="SUC002_INS">
+<entry key="SUC002_INS_TABLEFLOW">
 INSERT TABLEFLOW (CDICFILESTATUS, CUSTDATE, STARTER, INITUSERID, INITDATETIME) VALUES (:CDICFileStatus, :custDate, :starter, :initUserId, :initDateTime);
+</entry>
+<entry key="SUC002_UPD_CDICFILESTS">
+UPDATE CDICFILESTS SET STATUS = :status, CONFIRMER = :confirmer, CONFIRMDATETIME = :confirmDateTime;
+</entry>
+<entry key="SUC002_UPD_HOSTFILESTS">
+UPDATE HOSTFILESTS SET HOSTDATETIME = :hostDateTime, COPYDATETIME = :copyDateTime, PROCESSUSER = :processUser, STATUS = :status;
+</entry>
+<entry key="SUC002_UPD_LOCALFILESTS">
+UPDATE LOCALFILESTS SET PROCESSUSER = :processUser, STATUS = :status;
+</entry>
+<entry key="SUC002_DEL_LOCALBUS">
+DELETE FROM LOCALBUS;
+</entry>
+<entry key="SUC002_INS_LOCALBUS">
+INSERT INTO LOCALBUS ()
+SELECT
+FROM BUS;
+</entry>
+<entry key="SUC002_DEL_LOCALLUS">
+DELETE FROM LOCALLUS;
+</entry>
+<entry key="SUC002_INS_LOCALLUS">
+INSERT INTO LOCALLUS ()
+SELECT
+FROM LUS;
 </entry>
 </properties>
