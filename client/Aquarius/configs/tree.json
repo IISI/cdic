@@ -3,18 +3,18 @@
 		'text' : 'CDIC Batch System',
 		'icon' : '',
 		'nodes' : [
-			{
-				'text' : '啟始作業',
-				'icon' : '',
-				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC002Page/tw.com.citi.cdic.client'
-			},
+            {
+                'text' : '啟始作業',
+                'icon' : '',
+                'url' : 'http://127.0.0.1:8080/app/dispatch/SUC002Page/tw.com.citi.cdic.client'
+            },
 			{
 				'text' : '主機檔案檢查及 Copy',
 				'icon' : '',
 				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC003Page/tw.com.citi.cdic.client'
 			},
 			{
-				'text' : 'Local 檔案維護',
+				'text' : 'Local 檔案上、下傳及確認',
 				'icon' : '',
 				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC004Page/tw.com.citi.cdic.client'
 			},
@@ -24,7 +24,7 @@
 				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC005Page/tw.com.citi.cdic.client'
 			},
 			{
-			    'text' : '產檔狀態檢查及確認',
+			    'text' : '檔案確認及檢核下載',
 			    'icon' : '',
 			    'url' : 'http://127.0.0.1:8080/app/dispatch/SUC006Page/tw.com.citi.cdic.client'
 			}

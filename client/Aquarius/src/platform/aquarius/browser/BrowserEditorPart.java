@@ -28,6 +28,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.part.EditorPart;
 
+import platform.aquarius.Messages;
 import platform.aquarius.embedserver.CustomFunction;
 
 /**
@@ -37,7 +38,7 @@ import platform.aquarius.embedserver.CustomFunction;
  */
 public class BrowserEditorPart extends EditorPart {
 
-    public static final String ID = "Aquarius.Browser.View";
+    public static final String ID = "Aquarius.Browser.View"; //$NON-NLS-1$
 
     public Browser browser;
 
@@ -145,7 +146,7 @@ public class BrowserEditorPart extends EditorPart {
                 if (!working) {
                     if (event.current == event.total)
                         return;
-                    monitor.beginTask("載入中...", event.current); //$NON-NLS-1$
+                    monitor.beginTask(Messages.BrowserEditorPart_Loading, event.current);
                     workedSoFar = 0;
                     working = true;
                 }
@@ -161,11 +162,11 @@ public class BrowserEditorPart extends EditorPart {
             }
         });
 
-        new CustomFunction(browser, "callJava");
+        new CustomFunction(browser, "callJava"); //$NON-NLS-1$
 
         Menu popupMenu = new Menu(parent);
         MenuItem mi = new MenuItem(popupMenu, SWT.DEFAULT);
-        mi.setText("重新整理");
+        mi.setText(Messages.BrowserEditorPart_Reload);
         mi.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -178,11 +179,11 @@ public class BrowserEditorPart extends EditorPart {
         });
 
         mi = new MenuItem(popupMenu, SWT.DEFAULT);
-        mi.setText("複製");
+        mi.setText(Messages.BrowserEditorPart_Copy);
         mi.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                browser.execute("__copyToClipboard();");
+                browser.execute("__copyToClipboard();"); //$NON-NLS-1$
             }
 
             @Override

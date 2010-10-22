@@ -2,93 +2,10 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>SQL Command</comment>
-<entry key="S001">
-INSERT INTO CUSTOMER(ID, NAME) VALUES(:id, :name)
+<entry key="SUC002_DEL">
+DELETE FROM TABLEFLOW;
 </entry>
-<entry key="S002">
-UPDATE CUSTOMER SET NAME = :name WHERE ID = :id
-</entry>
-<entry key="S003">
-DELETE CUSTOMER WHERE ID = :id
-</entry>
-<entry key="S004">
-SELECT * FROM CUSTOMER WHERE ID = :id AND NAME = :name
-</entry>
-<entry key="S005">
-INSERT INTO CFU_HEADER(TRANSACTION_TYPE, DBU_OR_OBU, CORPORATE_ID, DEBIT_A_OR_C, DEBIT_CCY, DEBIT_TOTAL_AMOUNT, DETAIL_RECORD_COUNT, CORRESPONDING_BRANCH_CODE, CREATION_DATE, CORPORATE_NAME) VALUES(:transactionType, :dbuOrObu, :corporateID, :debitAOrC, :debitCCY, :debitTotalAmount, :detailRecordCount, :correspBranchCode, :creationDate, :corporateName)
-</entry>
-<entry key="S006">
-INSERT INTO CFU_BODY(DETAIL_SN, CREDIT_CCY, AMOUNT, CREDIT_A_OR_C, BENEFICIARY_BANK_SWIFT_CODE, BENEFICIARY_BANK_NAME, BENEFICIARY_BANK_ADDRESS1, BENEFICIARY_BANK_ADDRESS2, BENEFICIARY_BANK_ADDRESS3, BENEFICIARY_NAME, BENEFICIARY_ADDRESS1, BENEFICIARY_ADDRESS2, BENEFICIARY_ADDRESS3, MEMO1, MEMO2, MEMO3, MEMO4, RESERVED_FIELD1, BENEFICIARY_COUNTRY_CODE, VALUE_DATE, MT_202, RESERVED_FIELD2, FEE_CHARGE, NOTIFICATION_TYPE, BENEFICIARY_EMAIL1, BENEFICIARY_EMAIL2, PAYEE_ID, DETAIL_RECORD_COUNT, RESERVED_FIELD3)
-VALUES(:detailSN, :creditCCY, :amount, :creditAOrC, :beneficiaryBankSWIFTCode, :beneficiaryBankName, :beneficiaryBankAddress1, :beneficiaryBankAddress2, :beneficiaryBankAddress3, :beneficiaryName, :BeneficiaryAddress1, :BeneficiaryAddress2, :BeneficiaryAddress3, :memo1, :memo2, :memo3, :memo4, :reservedField1, :beneficiaryCountryCode, :valueDate, :Mt202, :reservedField2, :feeCharge, :notificationType, :beneficiaryEMail1, :beneficiaryEMail2, :payeeID, :detailRecordCount, :reservedField3)
-</entry>
-<entry key="S007">
-INSERT INTO CFU_TAILER(Detail_S_N, ITEM, INVOICE_CURRENCY, INVOICE_AMOUNT, DETAIL_NOTE)
-VALUES(:detailSN, :item, :invoiceCurrency, :invoiceAmount, :detailNote)
-</entry>
-<entry key="S008">
-INSERT INTO UTYTxnH(BatchNo, SU_TRX_TYPE, SU_RD_TYPE, SU_PAY_MODE, SU_POST_DATE, SU_TX_DATE, SU_USER, SU_BRANCH, AUTH_FLAG, SU_TAPE_DATE_1) VALUES(:batchNo, :su_trx_type, :su_rd_type, :su_pay_mode, :su_post_date, :su_tx_date, :su_user, :su_branch, :auth_flag, :su_tape_date_1)
-</entry>
-<entry key="S009">
-INSERT INTO UTYTxnD(UPS_ID, UPS_RECNO, SU_TRX_TYPE, SU_RD_TYPE, SU_PAY_MODE, SU_POST_DATE, SU_TX_DATE, SU_BTU_CODE, SU_UNIT_CODE, SU_ELEC_TYPE, SU_AC_NO, SU_OLD_AC_NO, SU_REF_NO, SU_TX_AMT, SU_STATUS, SU_TAPE_DATE_1, CGIX_FLAG, GLOBAL_SEQ, LOCAL_SEQ) 
-VALUES (:ups_id, :ups_recno, :su_trx_type, :su_rd_type, :su_pay_mode, :su_post_date, :su_tx_date, :su_btu_code, :su_unit_code, :su_elec_type, :su_ac_no, :su_old_ac_no, :su_ref_no, :su_tx_amt, :su_status, :su_tape_date_1, :cgix_flag, :global_seq, :local_seq)
-</entry>
-<entry key="S010">
-INSERT INTO UTYTxnT(UPS_ID, SendU, ReceiveU, TxType, TxDate, SU_TRX_TYPE, SU_RD_TYPE, SU_PAY_MODE, SU_POST_DATE, SU_TX_DATE, SU_RD_NO, SU_RD_AMT)
-VALUES (:ups_id, :sendU, :receiveU, :txType, :txDate, :su_trx_type, :su_rd_type, :su_pay_mode, :su_post_date, :su_tx_date, :su_rd_no, :su_rd_amt)
-</entry>
-<entry key="S011">
-SELECT ACCT FROM CTL_ACCT_MP WHERE Unisys_ACCT = :unisys_acct
-</entry>
-<entry key="S012">
-SELECT AC_NO, REF_NO, SUSPEND_FG FROM GCIBAC WHERE AC_NO = :ac_no
-</entry>
-<entry key="S014">
-UPDATE UTYTxnD SET SU_STATUS = :su_status WHERE SU_TX_DATE = :su_tx_date AND GLOBAL_SEQ = :global_seq AND LOCAL_SEQ = :local_seq
-</entry>
-<entry key="S015">
-SELECT UPS_ID, SU_TAPE_DATE_1 FROM UTYTxnH WHERE SU_PAY_MODE = :su_pay_mode AND SU_TX_DATE = :su_tx_date
-</entry>
-<entry key="S016">
-SELECT SU_TAPE_DATE_1 FROM UTYTxnH WHERE UPS_ID = :ups_id
-</entry>
-<entry key="S017">
-SELECT SU_TX_AMT, SU_STATUS, SU_TAPE_DATE_1 FROM UTYTxnD WHERE UPS_ID = :ups_id
-</entry>
-<entry key="S018">
-SELECT SendU, ReceiveU, TxType, TxDate, SU_TRX_TYPE, SU_RD_TYPE, SU_RD_NO, SU_RD_AMT FROM UTYTxnT WHERE UPS_ID = :ups_id
-</entry>
-<entry key="S019">
-DELETE UTYTxnH WHERE UPS_ID = :ups_id
-</entry>
-<entry key="S020">
-DELETE UTYTxnD WHERE UPS_ID = :ups_id
-</entry>
-<entry key="S021">
-select UPS_ID, SU_TRX_TYPE, SU_RD_TYPE, SU_PAY_MODE, SU_POST_DATE, SU_TX_DATE, SU_USER, SU_BRANCH from UTYTxnH where SU_TX_DATE = :su_tx_date and AUTH_FLAG = :auth_flag order by SU_PAY_MODE, UPS_ID
-</entry>
-<entry key="S022">
-select UPS_ID, SU_TRX_TYPE, SU_RD_TYPE, SU_PAY_MODE, SU_POST_DATE, SU_TX_DATE, SU_BTU_CODE, SU_UNIT_CODE, SU_ELEC_TYPE, SU_AC_NO, SU_REF_NO, SU_TX_AMT, CGIX_FLAG, GLOBAL_SEQ, LOCAL_SEQ from UTYTxnD where UPS_ID = :ups_id order by UPS_RECNO
-</entry>
-<entry key="S023">
-select UPS_ID, SU_TRX_TYPE, SU_RD_TYPE, SU_PAY_MODE, SU_POST_DATE, SU_TX_DATE, SU_BTU_CODE, SU_UNIT_CODE, SU_ELEC_TYPE, SU_AC_NO, SU_REF_NO, SU_TX_AMT, CGIX_FLAG, GLOBAL_SEQ, LOCAL_SEQ from UTYTxnD where UPS_ID = :ups_id and CGIX_FLAG = :cgix_flag order by UPS_RECNO
-</entry>
-<entry key="S024">
-INSERT INTO GCIBPayN(POST_DATE, SEQ_NO, AC_NO, PAY_MODE, REF_NO, AMOUNT, STATUS, PAY_CNT, UPD_FG, BILL_PERIOD, RECNO, BRANCH_CODE) 
-VALUES (:post_date, :seq_no, :ac_no, :pay_mode, :ref_no, :amount, :status, :pay_cnt, :upd_fg, :bill_period, :recno, :branch_code)
-</entry>
-<entry key="S027">
-select A.UPS_ID, A.SU_TRX_TYPE, A.SU_RD_TYPE, A.SU_PAY_MODE, A.SU_POST_DATE, A.SU_TX_DATE, A.SU_BTU_CODE, A.SU_UNIT_CODE, A.SU_ELEC_TYPE, A.SU_AC_NO, A.SU_REF_NO, A.SU_TX_AMT, A.CGIX_FLAG, A.GLOBAL_SEQ, A.LOCAL_SEQ, B.FLEXCUBE_BRANCH from UTYTxnD as A, ACH_CMBAC as B where A.UPS_ID = :ups_id and A.CGIX_FLAG = :cgix_flag and B.FLEXCUBE_ACCT = A.SU_AC_NO order by UPS_RECNO
-</entry>
-<entry key="UTY1100_QC">
-SELECT COUNT(*) FROM UTYTxnH WHERE SU_TX_DATE BETWEEN :beginDate AND :endDate
-</entry>
-<entry key="UTY1100_Q">
-SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY :sidx :sord) AS RowNum, * FROM UTYTxnH WHERE SU_TX_DATE BETWEEN :beginDate AND :endDate) AS RowConstrainedResult WHERE RowNum >= :firstResult AND RowNum &lt; :lastResult
-</entry>
-<entry key="UTY1100_D">
-DELETE FROM UTYTxnH WHERE UPS_ID = :upsId
-</entry>
-<entry key="S028">
-select @@IDENTITY
+<entry key="SUC002_INS">
+INSERT TABLEFLOW (CDICFILESTATUS, CUSTDATE, STARTER, INITUSERID, INITDATETIME) VALUES (:CDICFileStatus, :custDate, :starter, :initUserId, :initDateTime);
 </entry>
 </properties>
