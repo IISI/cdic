@@ -4,45 +4,30 @@
 		'icon' : '',
 		'nodes' : [
 			{
-				'text' : '主機檔案檢查',
+				'text' : '啟始作業',
 				'icon' : '',
 				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC002Page/tw.com.citi.cdic.client'
 			},
 			{
-				'text' : '主機檔案上傳',
+				'text' : '主機檔案檢查及 Copy',
 				'icon' : '',
-				'url' : ''
+				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC003Page/tw.com.citi.cdic.client'
 			},
 			{
-				'text' : 'Local 檔案上傳',
+				'text' : 'Local 檔案維護',
 				'icon' : '',
-				'url' : ''
-			},
-			{
-				'text' : '檔案上傳狀態檢查',
-				'icon' : '',
-				'url' : ''
+				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC004Page/tw.com.citi.cdic.client'
 			},
 			{
 				'text' : '批次產檔作業',
 				'icon' : '',
-				'url' : ''
+				'url' : 'http://127.0.0.1:8080/app/dispatch/SUC005Page/tw.com.citi.cdic.client'
 			},
 			{
-			    'text' : '產檔狀態檢查',
+			    'text' : '產檔狀態檢查及確認',
 			    'icon' : '',
-			    'url' : ''
-			},
-            {
-                'text' : '檢核報表下載',
-                'icon' : '',
-                'url' : ''
-            },
-            {
-                'text' : '批次產檔作業重新作業',
-                'icon' : '',
-                'url' : ''
-            }
+			    'url' : 'http://127.0.0.1:8080/app/dispatch/SUC006Page/tw.com.citi.cdic.client'
+			}
 		]
 	}
 ]

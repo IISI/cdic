@@ -1,10 +1,60 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/">
-<wicket:head>
-<title>主機檔案檢查</title>
-</wicket:head>
-<wicket:extend>
-<div>Sample</div>
-</wicket:extend>
+    <wicket:head>
+        <title>起始作業</title>
+    </wicket:head>
+    <wicket:extend>
+        <form id="userform">
+            <table class="doc-tb">
+                <tbody>
+                    <tr>
+                        <th class="doc-tb-th">
+                            基準日
+                        </th>
+                        <td class="doc-tb-td">
+                            <input name="baseDate" id="baseDate" type="text" maxlength="8" class="required" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="doc-tb-th">
+                            前次執行時間
+                        </th>
+                        <td class="doc-tb-td">
+                            <span id="lastInitTime" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="doc-tb-th">
+                            前次執行人員
+                        </th>
+                        <td class="doc-tb-td">
+                            <span id="lastInitUser" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+                &nbsp;&nbsp;
+            </p>
+            <a id="startInit" class="fg-button ui-state-default ui-corner-all" style="float:none;">開始</a>
+            <a id="cancel" name="cancel" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        </form>
+        <script type="text/javascript">
+            $('#startInit').click(function(){
+                $.ajax({
+					url: __ajaxHandler + '&_ab=xxxxhandler',
+                    data : {
+                        formAction : 'START_INIT',
+                    },
+                    success : function(res) {
+						alert(res);
+                    }
+                });
+            });
+            $('#cancel').click(function(){
+                alert('cancel');
+            });
+        </script>
+    </wicket:extend>
 </html>

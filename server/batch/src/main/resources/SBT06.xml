@@ -1,43 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="cdicT06FileReader"
-        class="org.springframework.batch.item.file.FlatFileItemReader">
+    <bean id="cdicT06FileReader" parent="cdicT04FileReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICT06.txt"></constructor-arg>
-            </bean>
-        </property>
-        <property name="lineMapper">
-            <bean
-                class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
-                <property name="fieldSetMapper">
-                    <bean
-                        class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
-                        <property name="targetType"
-                            value="tw.com.citi.cdic.batch.model.T01"></property>
-                    </bean>
-                </property>
-                <property name="lineTokenizer">
-                    <bean
-                        class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-                        <property name="columns" value="1,17"></property>
-                        <property name="names"
-                            value="code,description"></property>
-                    </bean>
-                </property>
+                <constructor-arg value="z:/input/CDICT06.csv"></constructor-arg>
             </bean>
         </property>
     </bean>
-    
+
     <bean id="t06DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql" value="INSERT INTO T06(CODE, DESCRIPTION) VALUES(:code, :description)"></property>
         <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
-    
+
     <bean id="t06DbReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
         <property name="dataSource" ref="dataSource"></property>
         <property name="pageSize" value="500"></property>
@@ -53,20 +30,17 @@
         </property>
     </bean>
 
-    <bean id="t06FileWriter"
-        class="org.springframework.batch.item.file.FlatFileItemWriter">
+    <bean id="t06FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="z:/T06.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
-            <bean
-                class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
                 <property name="format" value="%16s%40s"></property>
                 <property name="fieldExtractor">
-                    <bean
-                        class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="code,description"></property>
                     </bean>
                 </property>

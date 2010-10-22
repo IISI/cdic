@@ -45,3 +45,125 @@ select {
     float: right;
     right: 10px;
 }
+
+a.fg-button {font-family:arial,helvetica,sans-serif;border-bottom : 3px solid #baa068;border-right : 3px solid #baa068;}
+a.fg-button:hover{border: 1px solid #a45b13;border-bottom : 3px solid #a45b13;border-right : 3px solid #a45b13;background-color: #ffdd57 ; font-weight: bold; color: #381f00;}
+a.fg-button:active,a.fg-button:focus{border: 1px solid #a45b13;margin:2px 4px 0px 2px;}
+
+#top {padding: 2px;border-bottom: 1px solid #AAD5FF;padding-bottom: 6px;}
+.doc-body #capbody{background-color:#D4C8A2;}
+/* Container Header------------------------- */
+.doc-body h3.cap-header { font-size:32px; padding:0 0 5px; border-bottom:2px solid #CBD8AC; text-transform: capitalize; margin-bottom: 5px; }
+.doc-body h4.cap-subheader { font-size:1em; text-transform: uppercase; color:#666; padding:8px 0 3px; border:0; margin:0;font-weight:bolder;}
+
+/* doc ------------------------------ */
+.capdoc2{margin:0px 15px 5px 15px;padding:10px;border:1px solid #CBD8AC;background-color:#fff;min-height:500px;}
+.capdoc2 #capdoc,.capdoc2 #capFlowFrame{padding:10px ; font-size:1em}
+.doc-header{margin: 0 0 10px 0; padding: 2px ;}
+
+.doc-btnbar{padding: 3px;padding-bottom: 3px;margin-bottom: 3px;}
+.doc-btnbar li,.doc-btnbar a {display:inline;}
+
+.ui-widget .doc-tb{font-size: 0.8em;}
+.doc-tb{border:2px solid #CBD8AC;width:100%;margin:0px 0 3px 0;}
+.doc-tb .doc-tb-th,.doc-tb .doc-tb-td{padding: 3px;border: 1px solid gray;}
+.doc-tb .doc-tb-th {width: 15%;background:#F9F5EA;font-weight: bolder;color:#383838;letter-spacing:3px; }
+.doc-tb .doc-tb-td{background: #FFF;}
+
+.doc-dialog{margin: 3px 0px 0px 0px; cursor: default}
+.doc-iconact{float:right;margin:2px 2px 0 0;}
+
+.doc-lb{line-height:28px;}
+
+/* Input ------------------------- */
+input{padding: 2px;}
+input[readonly],input[disabled],select[disabled],textarea[readonly]{border:0px;background-color:transparent;color:#000000;margin:2px;}
+textarea{width:100%;padding: 2px;}
+label{padding: 3px;font-weight: bolder;color:#383838;letter-spacing:3px;}
+
+.fg-icon {
+    float: left;
+}
+
+.fg-button {
+    outline: 0;
+    margin: 0 4px 0 0;
+    padding: .4em 1em;
+    text-decoration: none !important;
+    cursor: pointer;
+    position: relative;
+    text-align: center;
+    zoom: 1;
+}
+
+.fg-button .ui-icon {
+    position: absolute;
+    top: 50%;
+    margin-top: -8px;
+    left: 50%;
+    margin-left: -8px;
+}
+
+a.fg-button {
+    float: left;
+}
+
+/* remove extra button width in IE */
+button.fg-button {
+    width: auto;
+    overflow: visible;
+}
+
+.fg-button-icon-left {
+    padding-left: 2.1em;
+}
+
+.fg-button-icon-right {
+    padding-right: 2.1em;
+}
+
+.fg-button-icon-left .ui-icon {
+    right: auto;
+    left: .2em;
+    margin-left: 0;
+}
+
+.fg-button-icon-right .ui-icon {
+    left: auto;
+    right: .2em;
+    margin-left: 0;
+}
+
+.fg-button-icon-solo {
+    display: block;
+    width: 8px;
+    text-indent: -9999px;
+}
+
+/* solo icon buttons must have block properties for the text-indent to work */
+.fg-buttonset {
+    float: left;
+}
+
+.fg-buttonset .fg-button {
+    float: left;
+}
+
+.fg-buttonset-single .fg-button,.fg-buttonset-multi .fg-button {
+    margin-right: -1px;
+}
+
+.fg-toolbar {
+    padding: .5em;
+    margin: 0;
+}
+
+.fg-toolbar .fg-buttonset {
+    margin-right: 1.5em;
+    padding-left: 1px;
+}
+
+.fg-toolbar .fg-button {
+    font-size: 1em;
+}
+
