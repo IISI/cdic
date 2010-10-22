@@ -2,9 +2,61 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/">
 <wicket:head>
-<title>主機檔案檢查</title>
+<title>啟始作業</title>
 </wicket:head>
 <wicket:extend>
-<div>Sample</div>
+<div>SUC002-啟始作業</div>
+<div>
+    <ol>
+        <li>啟始各 Control Flag</li>
+        <li>輸入基準日<input id="datepicker" type="text" /></li>
+    </ol>
+</div>
+<div>
+    <input id="begin" type="button" value="開始" />
+    <input id="exit" type="button" value="離開" />
+</div>
+<div id="confirmDialog" title="確認">
+    <div>確認啟始作業？</div>
+</div>
+<script type="text/javascript">
+<!--
+$(function() {
+	$(":button").button();
+	var baseDate = $("#datepicker").datepicker({"dateFormat": "yymmdd"});
+	var confirmDialog = $("#confirmDialog").dialog({
+		"autoOpen": false,
+		"modal": true,
+		"buttons": {
+			"確認 ": function() {
+				var payload = {};
+				payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+				payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC002Handler";
+				payload.actionParam = JSON.stringify({"baseDate": baseDate.val()});
+				$.ajax({
+					"url": __ajaxHandler,
+					"type": "post",
+					"dataType": "json",
+					"data": payload,
+					"success": function(data) {
+						confirmDialog.dialog("close");
+					}
+				});
+			},
+			"取消": function() {
+				$(this).dialog("close");
+			}
+		}
+	});
+	$("#begin").click(function() {
+		confirmDialog.dialog("open");
+		return false;
+	});
+	$("#exit").click(function() {
+		callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.CloseBrowserHandler");
+	});
+})
+//-->
+</script>
 </wicket:extend>
 </html>
