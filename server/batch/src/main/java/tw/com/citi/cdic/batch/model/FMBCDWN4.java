@@ -7,9 +7,11 @@ package tw.com.citi.cdic.batch.model;
  * @since 2010/10/7
  */
 public class FMBCDWN4 {
+    private String recType;
+    private String filler;
     private String acct;
-    private String IBCode;
     private String description;
+    private String IBCode;
 
     public void setAcct(String acct) {
         this.acct = acct;
@@ -33,5 +35,21 @@ public class FMBCDWN4 {
 
     public String getIBCode() {
         return IBCode;
+    }
+
+    public void setRecType(String recType) {
+        this.recType = recType;
+    }
+
+    public String getRecType() {
+        return recType;
+    }
+
+    public void setFiller(String filler) {
+        this.filler = filler;
+    }
+
+    public String getFiller() {
+        return filler;
     }
 }

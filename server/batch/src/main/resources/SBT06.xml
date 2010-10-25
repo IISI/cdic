@@ -26,7 +26,7 @@
             </bean>
         </property>
         <property name="rowMapper">
-            <bean class="tw.com.citi.cdic.batch.BusA11Mapper"></bean>
+            <bean class="tw.com.citi.cdic.batch.T06Mapper"></bean>
         </property>
     </bean>
 
@@ -37,11 +37,15 @@
             </bean>
         </property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
-                <property name="format" value="%16s%40s"></property>
-                <property name="fieldExtractor">
-                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="code,description"></property>
+            <bean class="tw.com.citi.cdic.batch.item.file.transform.T06RecursiveCollectionLineAggregator">
+                <property name="delegate">
+                    <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                        <property name="format" value="%16s%40s"></property>
+                        <property name="fieldExtractor">
+                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                                <property name="names" value="code,description"></property>
+                            </bean>
+                        </property>
                     </bean>
                 </property>
             </bean>
@@ -49,5 +53,7 @@
     </bean>
 
     <bean id="t06Processor" class="tw.com.citi.cdic.batch.item.SBT06Processor" />
+
+    <bean id="t03t06Processor" class="tw.com.citi.cdic.batch.item.SBT03T06Processor" />
 
 </beans>
