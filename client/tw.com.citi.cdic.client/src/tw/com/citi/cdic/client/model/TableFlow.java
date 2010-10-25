@@ -18,6 +18,8 @@ public class TableFlow {
 
     private Date initDateTime;
 
+    private String initStatus;
+
     public int getCDICFileStatus() {
         return CDICFileStatus;
     }
@@ -56,6 +58,14 @@ public class TableFlow {
 
     public void setInitDateTime(Date initDateTime) {
         this.initDateTime = initDateTime;
+    }
+
+    public String getInitStatus() {
+        return initStatus;
+    }
+
+    public void setInitStatus(String initStatus) {
+        this.initStatus = initStatus;
     }
 
 }

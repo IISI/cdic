@@ -35,6 +35,7 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
         tableFlow.setStarter(null);
         tableFlow.setInitUserId(null);
         tableFlow.setInitDateTime(new Date());
+        tableFlow.setInitStatus("1");
 
         CDICFileSts fileSts = new CDICFileSts();
         fileSts.setStatus("0");
