@@ -17,4 +17,7 @@ UPDATE HOSTFILESTS SET HOSTDATETIME = :hostDateTime, COPYDATETIME = :copyDateTim
 <entry key="SUC002_UPD_LOCALFILESTS">
 UPDATE LOCALFILESTS SET PROCESSUSER = :processUser, STATUS = :status;
 </entry>
+<entry key="SUC002_QRY_TABLEFLOW">
+SELECT TOP (1) * FROM TABLEFLOW;
+</entry>
 </properties>
