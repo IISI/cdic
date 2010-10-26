@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- host file reader cdicf21i -->
+    <bean id="cdicF21IFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/input/CDICF21I.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.A73"></property>
+                        <property name="customEditors">
+                            <map>
+                                <entry key="java.util.Date">
+                                    <bean class="org.springframework.beans.propertyeditors.CustomDateEditor">
+                                        <constructor-arg>
+                                            <bean class="java.text.SimpleDateFormat">
+                                                <constructor-arg value="yyyyMMdd"></constructor-arg>
+                                            </bean>
+                                        </constructor-arg>
+                                    </bean>
+                                </entry>
+                            </map>
+                        </property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                        <property name="columns" value="1,4,8,38,54,62,64,66,69,84"></property>
+                        <property name="names" value="unit,branchNo,srNo,depositReceiptNo,txnDate,serNo,txnReason,currencyCode,holdAmt,memo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- host file reader cdicf21r -->
+    <bean id="cdicF21RFileReader" parent="cdicF02IFileReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/input/CDICF21R.txt"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- cdic db writer A73 -->
+    <bean id="a73DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql"
+            value="INSERT INTO A73(UNIT, BRANCH_NO, SR_NO, DEPOSIT_RECEIPT_NO, TXN_DATE, SER_NO, TXN_REASON, CURRENCY_CODE, HOLD_AMT, MEMO) VALUES(:unit, :branchNo, :srNo, :depositReceiptNo, :txnDate, :serNo, :txnReason, :currencyCode, :holdAmt, :memo)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <!-- cdic db reader A73 -->
+    <bean id="a73DbReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="pageSize" value="500"></property>
+        <property name="queryProvider">
+            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
+                <property name="selectClause" value="SELECT *"></property>
+                <property name="fromClause" value="FROM A73"></property>
+            </bean>
+        </property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.A73Mapper"></bean>
+        </property>
+    </bean>
+
+    <!-- cdic file writer A73 -->
+    <bean id="a73FileWriter" class="tw.com.citi.cdic.batch.item.file.A73FileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/A73.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format" value="%3s%4s%30s%16s%tY%\u003ctm%\u003ctd%2s%2s%3s%15.2f%40s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,depositReceiptNo,txnDate,serNo,txnReason,currencyCode,holdAmt,memo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- cdic file writer B73 -->
+    <bean id="b73FileWriter" parent="a73FileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/B73.txt"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- cdic file writer C73 -->
+    <bean id="c73FileWriter" parent="a73FileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/C73.txt"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- cdicF21RFileReader => f21Writer1 -->
+    <bean id="f21Processor" class="tw.com.citi.cdic.batch.item.SBF21Processor" />
+
+    <!-- a73 db => f21Writer2 -->
+    <bean id="f21a73Processor" class="tw.com.citi.cdic.batch.item.SBF21A73Processor" />
+
+    <!-- cdic sample file writer A73 -->
+    <bean id="a73SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A73SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/A73Sample.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format" value="%3s, %4s, %30s, %16s, %tY%\u003ctm%\u003ctd, %2s, %2s, %3s, %15.2f, %40s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,depositReceiptNo,txnDate,serNo,txnReason,currencyCode,holdAmt,memo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- cdic sample file writer B73 -->
+    <bean id="b73SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.B73SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/B73Sample.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format" value="%3s, %4s, %30s, %16s, %tY%\u003ctm%\u003ctd, %2s, %2s, %3s, %15.2f, %40s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,depositReceiptNo,txnDate,serNo,txnReason,currencyCode,holdAmt,memo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- cdic sample file writer C73 -->
+    <bean id="c73SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.C73SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/C73Sample.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format" value="%3s, %4s, %30s, %16s, %tY%\u003ctm%\u003ctd, %2s, %2s, %3s, %15.2f, %40s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,depositReceiptNo,txnDate,serNo,txnReason,currencyCode,holdAmt,memo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- 寫 A73 table, B73 file, C73 file, B73 sample, C73 sample -->
+    <bean id="f21Writer1" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a73DbWriter" />
+                <ref bean="b73FileWriter" />
+                <ref bean="b73SampleFileWriter" />
+                <ref bean="c73FileWriter" />
+                <ref bean="c73SampleFileWriter" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- 寫 A73 file, A73 sample -->
+    <bean id="f21Writer2" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a73FileWriter" />
+                <ref bean="a73SampleFileWriter" />
+            </list>
+        </property>
+    </bean>
+
+</beans>
