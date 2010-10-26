@@ -14,11 +14,14 @@
  */
 package platform.aquarius.embedserver;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.target.basic.StringRequestTarget;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
@@ -154,6 +157,10 @@ public class AquariusAjaxBehavior extends AbstractAjaxBehavior {
             // TODO
             // errorMsg
             logger.error(e.getMessage(), e);
+            
+            // Add by Chih-Liang Chang
+            ((WebResponse) requestCycle.getResponse()).getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            result = "{\"type\":\"" + e.getClass().getName() + "\",\"message\":\"" + e.getMessage() + "\"}";
         }
 
         // 判斷是否為檔案,否則用String輸出
