@@ -19,12 +19,6 @@ public class Application implements IApplication {
      */
     public Object start(IApplicationContext context) {
 
-        Object[] a = (Object[]) context.getArguments().get("application.args");
-
-        for (Object x : a) {
-            System.out.println("arg: " + x);
-        }
-
         Display display = PlatformUI.createDisplay();
         try {
             int returnCode = PlatformUI.createAndRunWorkbench(display,
