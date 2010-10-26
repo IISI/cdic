@@ -107,7 +107,6 @@ Export-Package: net.sf.jasperreports.ant,
  net.sf.jasperreports.view.save,
  platform.aquarius.embedserver,
  platform.aquarius.embedserver.jdbc,
- platform.aquarius.embedserver.model,
  platform.aquarius.embedserver.pages
 Import-Package: platform.aquarius.def
 Bundle-ActivationPolicy: lazy
