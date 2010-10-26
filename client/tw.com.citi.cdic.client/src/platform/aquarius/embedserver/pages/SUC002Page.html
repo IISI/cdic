@@ -1,33 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/">
 <wicket:head>
 <title>啟始作業</title>
 </wicket:head>
 <wicket:extend>
-<div>SUC002-啟始作業</div>
-<div>
-    <ol>
-        <li>啟始各 Control Flag</li>
-        <li>輸入基準日<input id="datepicker" type="text" /></li>
-    </ol>
-</div>
-<table border="1">
-    <caption>啟始作業資訊</caption>
-    <tr>
-        <td>執行人員代號</td>
-        <td>執行時間</td>
-        <td>狀態</td>
-    </tr>
-    <tr>
-        <td id="initUserId"></td>
-        <td id="initDateTime"></td>
-        <td id="initStatus"></td>
-    </tr>
+<table class="doc-tb">
+    <tbody>
+        <tr>
+            <th class="doc-tb-th">基準日</th>
+            <td class="doc-tb-td">
+                <input id="baseDate" type="text" maxlength="8" class="required" />
+            </td>
+        </tr>
+        <tr>
+            <th class="doc-tb-th">前次執行人員</th>
+            <td id="initUserId" class="doc-tb-td"></td>
+        </tr>
+        <tr>
+            <th class="doc-tb-th">前次執行時間</th>
+            <td id="initDateTime" class="doc-tb-td"></td>
+        </tr>
+        <tr>
+            <th class="doc-tb-th">前次執行狀態</th>
+            <td id="initStatus" class="doc-tb-td"></td>
+        </tr>
+    </tbody>
 </table>
+<p>&nbsp;</p>
 <div>
-    <input id="begin" type="button" value="開始" />
-    <input id="exit" type="button" value="離開" />
+    <a id="begin" class="fg-button ui-state-default ui-corner-all" style="float:none;">開始</a>
+    <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
 </div>
 <div id="confirmDialog" title="確認">
     <div>確認啟始作業？</div>
@@ -68,7 +71,7 @@ $(function() {
 
     $(":button").button();
 
-    var baseDate = $("#datepicker").datepicker({
+    var baseDate = $("#baseDate").datepicker({
     	"dateFormat": "yymmdd",
     	"maxDate": new Date(),
     	"changeMonth": true,
