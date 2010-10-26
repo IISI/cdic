@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- host file reader -->
+    <bean id="cdicF24FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/input/CDICF24.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.A76"></property>
+                        <property name="customEditors">
+                            <map>
+                                <entry key="java.util.Date">
+                                    <bean class="org.springframework.beans.propertyeditors.CustomDateEditor">
+                                        <constructor-arg>
+                                            <bean class="java.text.SimpleDateFormat">
+                                                <constructor-arg value="yyyyMMdd"></constructor-arg>
+                                            </bean>
+                                        </constructor-arg>
+                                    </bean>
+                                </entry>
+                            </map>
+                        </property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                        <property name="columns" value="1,4,8,38,50,61,62,69,76,79,94,102,105,107,115"></property>
+                        <property name="names" value="unit,branchNo,srNo,custId,type,startNo,endNo,currencyCode,amt,dueDate,code,dishonoredReason,entryDate,reserveDate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- sample file writer -->
+    <bean id="a41SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/out/A76.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,custId,type,startNo,endNo,currencyCode,amt,dueDate,code,dishonoredReason,entryDate,reserveDate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f24SampleProcessor" class="tw.com.citi.cdic.batch.item.SBF24Processor" />
+
+</beans>

@@ -14,8 +14,11 @@ public class A77 {
     private String branchNo;
     private String srNo;
     private Date txnDate;
+    private String serNo;
     private String currencyCode;
+    private String dbAmtSign;
     private double dbAmt;
+    private String crAmtSign;
     private double crAmt;
     private String memoTxn;
     private String memoAgent;
@@ -99,5 +102,29 @@ public class A77 {
 
     public String getAlterMemo() {
         return alterMemo;
+    }
+
+    public void setDbAmtSign(String dbAmtSign) {
+        this.dbAmtSign = dbAmtSign;
+    }
+
+    public String getDbAmtSign() {
+        return dbAmtSign;
+    }
+
+    public void setCrAmtSign(String crAmtSign) {
+        this.crAmtSign = crAmtSign;
+    }
+
+    public String getCrAmtSign() {
+        return crAmtSign;
+    }
+
+    public void setSerNo(String serNo) {
+        this.serNo = serNo;
+    }
+
+    public String getSerNo() {
+        return serNo;
     }
 }

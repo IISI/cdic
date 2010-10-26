@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="cdicT27HFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+    <!-- host file reader -->
+    <bean id="cdicT03GFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICT27H.txt"></constructor-arg>
+                <constructor-arg value="z:/input/CDICT03G.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
                     <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
-                        <property name="targetType" value="tw.com.citi.cdic.batch.model.CDICT27H"></property>
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.CDICT03G"></property>
                     </bean>
                 </property>
                 <property name="lineTokenizer">
                     <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
-                        <property name="columns" value="1,3,7,47,87"></property>
-                        <property name="names" value="sourceIndicator,transactionCode,description1,description2,stateMne"></property>
+                        <property name="columns" value="1,4,9"></property>
+                        <property name="names" value="systemId,productCode,description"></property>
                     </bean>
                 </property>
             </bean>
         </property>
     </bean>
 
-    <bean id="t27FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+    <!-- cdic file writer T03 -->
+    <bean id="t03FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/T27.txt"></constructor-arg>
+                <constructor-arg value="z:/T03.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -42,6 +44,17 @@
         </property>
     </bean>
 
-    <bean id="t27Processor" class="tw.com.citi.cdic.batch.item.SBT27Processor" />
+    <!-- cdic file writer T12 -->
+    <bean id="t12FileWriter" parent="t03FileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/T12.txt"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="t03Processor" class="tw.com.citi.cdic.batch.item.SBT03Processor" />
+
+    <bean id="t12Processor" class="tw.com.citi.cdic.batch.item.SBT12Processor" />
 
 </beans>

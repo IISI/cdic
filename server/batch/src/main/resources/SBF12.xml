@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- host file reader -->
+    <bean id="cdicF12FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/input/CDICF12.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.A41"></property>
+                        <property name="customEditors">
+                            <map>
+                                <entry key="java.util.Date">
+                                    <bean class="org.springframework.beans.propertyeditors.CustomDateEditor">
+                                        <constructor-arg>
+                                            <bean class="java.text.SimpleDateFormat">
+                                                <constructor-arg value="yyyyMMdd"></constructor-arg>
+                                            </bean>
+                                        </constructor-arg>
+                                    </bean>
+                                </entry>
+                            </map>
+                        </property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                        <property name="columns" value="1,4,8,38,54,66,67,75,77,88,90,106,114,122,130,133,148,163,179,180,188,196,197,200,208,216,218,226,256,271,272,287,302,317,332,333,341,349"></property>
+                        <property name="names"
+                            value="unit,branchNo,srNo,srSubNo,apNo,cola,charCode,status,custId,govCode,replyNo,firstLoanDate,loanBeginDate,dueDate,currencyCode,amt,currentBalance,rateType,rateAdjustSign,rateAdjust,currentRate,intKind,intCycle,lastInt,nextInt,payIntType,patStart,payAcctNo,intReceivable,overCode,oweInt,penalty,oweLawFee,tempAmt,evlRank,overdueDate,writeOffDate,writeOffAmt"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- sample file writer -->
+    <bean id="a41SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="z:/out/A41.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format"
+                    value="%3s,%4s,%8s,%16s,%12s,%1s,%8s,%2s,%11s,%2s,%16s,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%3s,%15.2f,%15.2f,%16s,%1s%8.5f,%8.5f,%1s,%3s,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%2s,%tY%\u003ctm%\u003ctd,%30s,%15.2f,%1s,%15.2f,%15.2f,%15.2f,%15.2f,%1s,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%15.2f"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names"
+                            value="unit,branchNo,srNo,srSubNo,apNo,cola,charCode,status,custId,govCode,replyNo,firstLoanDate,loanBeginDate,dueDate,currencyCode,amt,currentBalance,rateType,rateAdjustSign,rateAdjust,currentRate,intKind,intCycle,lastInt,nextInt,payIntType,patStart,payAcctNo,intReceivable,overCode,oweInt,penalty,oweLawFee,tempAmt,evlRank,overdueDate,writeOffDate,writeOffAmt"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f12SampleProcessor" class="tw.com.citi.cdic.batch.item.SBF12Processor" />
+
+</beans>

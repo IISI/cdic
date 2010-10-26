@@ -24,12 +24,13 @@ public class SkipDecider implements JobExecutionDecider {
     public FlowExecutionStatus decide(JobExecution jobExecution,
             StepExecution stepExecution) {
         // TODO 應該要根據 db 的資料來決定是要回傳 SKIP 或是 EXECUTE
-        if ("f01".equals(stepName)) {
-            return new FlowExecutionStatus("EXECUTE");
-        } else {
-            logger.info("skipping step [{}]", stepName);
-            return new FlowExecutionStatus("SKIP");
-        }
+//        if ("f01".equals(stepName)) {
+//            return new FlowExecutionStatus("EXECUTE");
+//        } else {
+//            logger.info("skipping step [{}]", stepName);
+//            return new FlowExecutionStatus("SKIP");
+//        }
+        return new FlowExecutionStatus("EXECUTE");
     }
 
     public void setStepName(String stepName) {
