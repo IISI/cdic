@@ -26,6 +26,8 @@
 
     <beans:import resource="SBF18.xml" />
 
+    <beans:import resource="SBF21.xml" />
+
     <beans:import resource="SBF23.xml" />
 
     <beans:import resource="SBF24.xml" />
@@ -429,6 +431,45 @@
                                     <beans:property name="sourceDir" value="z:/input/CDICF12.txt"></beans:property>
                                     <beans:property name="targetDir" value="z:/process/A41.txt"></beans:property>
                                 </beans:bean>
+                            </tasklet>
+                        </step>
+                    </flow>
+                </split>
+            </flow>
+            <flow>
+                <split id="f21-1" next="f21-2">
+                    <flow>
+                        <step id="a73db-init" next="f21i-a73db">
+                            <description>刪除 table A73 的所有資料</description>
+                            <tasklet>
+                                <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                                    <beans:property name="dataSource" ref="dataSource"></beans:property>
+                                    <beans:property name="sql" value="DELETE FROM A73"></beans:property>
+                                </beans:bean>
+                            </tasklet>
+                        </step>
+                        <step id="f21i-a73db">
+                            <description>把 host file CDICF21I 的資料寫入 A73 table</description>
+                            <tasklet>
+                                <chunk reader="cdicF21IFileReader" writer="a73DbWriter" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
+                    <flow>
+                        <step id="f21r">
+                            <description>把 host file CDICF21R 的資料寫入 A73 table, B73 file, C73 file</description>
+                            <tasklet>
+                                <chunk reader="cdicF21RFileReader" processor="f21Processor" writer="f21Writer1" commit-interval="500"></chunk>
+                            </tasklet>
+                        </step>
+                    </flow>
+                </split>
+                <split id="f21-2">
+                    <flow>
+                        <step id="a73db-a73file">
+                            <description>把 host file CDICF21R 的資料寫入 A73 table, B73 file, C73 file</description>
+                            <tasklet>
+                                <chunk reader="cdicF21RFileReader" processor="f21Processor" writer="f21Writer1" commit-interval="500"></chunk>
                             </tasklet>
                         </step>
                     </flow>
