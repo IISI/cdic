@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/">
+<wicket:head>
+<title>Local 檔案上、下傳及確認</title>
+</wicket:head>
+<wicket:extend>
+<form id="uploadForm" action="/app/dispatch/SUC004Page/tw.com.citi.cdic.client" method="post" enctype="multipart/form-data">
+    <div>
+        <input id="file" name="file" type="file" />
+    </div>
+    <div>
+        <input type="submit" />
+    </div>
+</form>
+<script type="text/javascript">
+<!--
+$(function() {
+
+    $(":button, input:submit").button();
+
+})
+//-->
+</script>
+</wicket:extend>
+</html>
