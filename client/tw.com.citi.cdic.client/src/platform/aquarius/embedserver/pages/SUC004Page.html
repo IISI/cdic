@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/">
+    <wicket:head>
+        <title>Local 檔案維護</title>
+    </wicket:head>
+    <wicket:extend>
+        <div id="localFileList" />
+        <p>
+            &nbsp;&nbsp;
+        </p>
+        <a id="cancel" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <script type="text/javascript">
+            var hostFileList = $('#localFileList').iGrid({
+                datatype: "local",
+                height: 200,
+                needPager: false,
+                sortname: 'path',
+                colModel: [{
+                    colHeader: '檔名',
+                    name: 'fileName'
+                }, {
+                    colHeader: '上傳時間',
+                    name: 'uploadDateTime'
+                }, {
+                    colHeader: '執行人員',
+                    name: 'processUser'
+                }, {
+                    colHeader: '檔案處理',
+                    name: 'process'
+                }]
+            });
+            hostFileList.addRowData('1', '1');
+            var download = function(id){
+                alert('download: ' + id);
+            };
+            var upload = function(id){
+                alert('upload: ' + id);
+            };
+            var confirm = function(id){
+                alert('confirm: ' + id);
+            };
+            var ids = $("#localFileList").getDataIDs();
+            for (var i = 0; i < ids.length; i++) {
+                var cl = ids[i];
+                be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='download(" + cl + ");'>下載</a>";
+                se = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='upload(" + cl + ");'>上傳</a>";
+                ce = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='confirm(" + cl + ");'>確認</a>";
+                $("#localFileList").setRowData(ids[i], {
+                    process: be + se + ce
+                })
+            }
+        </script>
+    </wicket:extend>
+</html>

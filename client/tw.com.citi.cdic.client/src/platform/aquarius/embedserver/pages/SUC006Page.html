@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/">
+    <wicket:head>
+        <title>產檔狀態檢查及確認</title>
+    </wicket:head>
+    <wicket:extend>
+        <div id="batchStatusList">
+        </div>
+        <p>
+            &nbsp;&nbsp;
+        </p>
+        <a id="confirm" class="fg-button ui-state-default ui-corner-all" style="float:none;">確認</a>
+        <a id="cancel" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <script type="text/javascript">
+            var sample = function(id){
+                alert('check: ' + id);
+            };
+            $().ready(function(){
+                var batchStatusList = $('#batchStatusList').iGrid({
+                    datatype: "local",
+                    height: 200,
+                    needPager: false,
+                    sortname: 'batchId',
+                    colModel: [{
+                        colHeader: '群組/檔案',
+                        name: 'batchId'
+                    }, {
+                        colHeader: '狀態',
+                        name: 'batchStatus'
+                    }, {
+                        colHeader: ' ',
+                        name: 'downloadSample'
+                    }, {
+                        colHeader: '確認',
+                        name: 'confirm',
+                        formatter: 'checkbox',
+                        formatoptions: {
+                            disabled: false
+                        },
+                        editable: true,
+                        edittype: 'checkbox'
+                    }, {
+                        colHeader: '最後確認人員',
+                        name: 'lastConfirmer'
+                    }]
+                });
+                batchStatusList.addGridData([[true, 'Group1', ' ', 'OK', '123'], [false, 'Group2', ' ', 'OK', '234']]);
+                var ids = batchStatusList.getDataIDs();
+                for (var i = 0; i < ids.length; i++) {
+                    var cl = ids[i];
+                    be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='sample(" + cl + ");'>下載 Sample</a>";
+                    batchStatusList.setRowData(ids[i], {
+                        downloadSample: be
+                    })
+                }
+            });
+        </script>
+    </wicket:extend>
+</html>
