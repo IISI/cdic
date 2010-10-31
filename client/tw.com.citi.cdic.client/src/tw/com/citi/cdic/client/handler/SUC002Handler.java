@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.wicket.PageParameters;
+import org.eclipse.core.runtime.Platform;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +70,10 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
         tableFlow.setCustDate(sdf.parse(actionParam.getString("baseDate")));
         tableFlow.setStarter(null);
         tableFlow.setInitUserId(null);
+        String[] args = Platform.getApplicationArgs();
+        if (args != null && args.length > 0) {
+            tableFlow.setInitUserId(args[0]);
+        }
         tableFlow.setInitDateTime(new Date());
         tableFlow.setInitStatus("1");
 
@@ -98,8 +102,10 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
         BatchService batchService = new BatchServiceImpl();
         batchService.init();
 
-        return new JSONStringer().object().key("status").value("0")
-                .endObject().toString();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("yyyy/MM/dd HH:mm");
+        Gson gson = gsonBuilder.create();
+        return gson.toJson(tableFlow, TableFlow.class);
     }
 
 }

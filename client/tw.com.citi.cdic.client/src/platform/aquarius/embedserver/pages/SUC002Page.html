@@ -29,8 +29,8 @@
 </table>
 <p>&nbsp;</p>
 <div>
-    <a id="begin" class="fg-button ui-state-default ui-corner-all" style="float:none;">開始</a>
-    <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+    <button id="begin">開始</button>
+    <button id="exit">離開</button>
 </div>
 <div id="confirmDialog" title="確認">
     <div>確認啟始作業？</div>
@@ -38,6 +38,18 @@
 <script type="text/javascript">
 <!--
 $(function() {
+
+    function updateInitInfo(tableFlow) {
+        $("#initUserId").text(tableFlow.initUserId);
+        $("#initDateTime").text(tableFlow.initDateTime);
+        if ("1" == tableFlow.initStatus) {
+            $("#initStatus").text("處理中");
+        } else if ("2" == tableFlow.initStatus) {
+            $("#initStatus").text("已完成");
+        } else {
+            $("#initStatus").text("未開始");
+        }
+    }
 
     function loadInitInfo() {
         var payload = {};
@@ -48,21 +60,18 @@ $(function() {
             "url": __ajaxHandler,
             "type": "post",
             "dataType": "json",
+            "timeout": 10000,
             "data": payload,
             "success": function(data) {
-                $("#initUserId").text(data.initUserId);
-                $("#initDateTime").text(data.initDateTime);
-                if ("1" == data.initStatus) {
-                    $("#initStatus").text("處理中");
-                } else if ("2" == data.initStatus) {
-                    $("#initStatus").text("已完成");
-                } else {
-                    $("#initStatus").text("未開始");
-                }
+                updateInitInfo(data);
             },
-            "error": function(xhr, status, error) {
-                var resp = JSON.parse(xhr.responseText);
-                msgDialog.html(resp.message).dialog("open");
+            "error": function(xhr, status) {
+                if ("timeout" == status) {
+                    msgDialog.html("連線作業逾時。").dialog("open");
+                } else {
+                    var resp = JSON.parse(xhr.responseText);
+                    msgDialog.html(resp.message).dialog("open");
+                }
             }
         });
     }
@@ -93,13 +102,18 @@ $(function() {
                     "url": __ajaxHandler,
                     "type": "post",
                     "dataType": "json",
+                    "timeout": 10000,
                     "data": payload,
                     "success": function(data) {
-                        
+                        updateInitInfo(data);
                     },
-                    "error": function(xhr) {
-                        var resp = JSON.parse(xhr.responseText);
-                        msgDialog.html(resp.message).dialog("open");
+                    "error": function(xhr, status) {
+                        if ("timeout" == status) {
+                            msgDialog.html("連線作業逾時。").dialog("open");
+                        } else {
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
                     }
                 });
                 $(this).dialog("close");
