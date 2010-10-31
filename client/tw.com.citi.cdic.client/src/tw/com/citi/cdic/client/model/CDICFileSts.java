@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public class CDICFileSts {
 
-    private String group;
+    private String fileGroup;
 
     private String fileNo;
 
@@ -43,14 +43,6 @@ public class CDICFileSts {
     private String relatedSource5;
 
     private String relatedName5;
-
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
 
     public String getFileNo() {
         return fileNo;
@@ -186,6 +178,14 @@ public class CDICFileSts {
 
     public void setRelatedName5(String relatedName5) {
         this.relatedName5 = relatedName5;
+    }
+
+    public void setFileGroup(String fileGroup) {
+        this.fileGroup = fileGroup;
+    }
+
+    public String getFileGroup() {
+        return fileGroup;
     }
 
 }

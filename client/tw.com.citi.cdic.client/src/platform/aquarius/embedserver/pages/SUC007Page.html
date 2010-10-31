@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/">
+    <wicket:head>
+        <title>確認完成傳送ICG</title>
+    </wicket:head>
+    <wicket:extend>
+        <div id="confirmList">
+        </div>
+        <p>
+            &nbsp;&nbsp;
+        </p>
+        <a id="sendFile" class="fg-button ui-state-default ui-corner-all" style="float:none;">傳送</a>
+        <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <div id="confirmDialog" title="確認">
+            <div id="msg" />
+        </div>
+        <script type="text/javascript">
+            <!--
+            $(function(){
+                var confirmList = $('#confirmList').iGrid({
+                    datatype: "local",
+                    height: 200,
+                    needPager: false,
+                    sortname: 'fileSet',
+                    colModel: [{
+                        colHeader: 'Group',
+                        name: 'group'
+                    }, {
+                        colHeader: 'FileName',
+                        name: 'fileSet'
+                    }, {
+                        colHeader: 'Status',
+                        name: 'status'
+                    }, {
+                        colHeader: '最後確認者',
+                        name: 'confirmer'
+                    }]
+                });
+                
+                function loadInitInfo(){
+                    var payload = {};
+                    payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC007Handler";
+                    payload.actionName = "getInitInfo";
+                    $.ajax({
+                        "url": __ajaxHandler,
+                        "type": "post",
+                        "dataType": "json",
+                        "data": payload,
+                        "success": function(data){
+                            confirmList.addGridData(data);
+                        },
+                        "error": function(xhr, status, error){
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
+                    });
+                }
+                
+                loadInitInfo();
+                
+                var confirmDialog = $("#confirmDialog").dialog({
+                    "autoOpen": false,
+                    "modal": true,
+                    "buttons": {
+                        "確認 ": function(){
+                            var payload = {};
+                            payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                            payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC007Handler";
+                            payload.actionName = "sendFile";
+                            $.ajax({
+                                "url": __ajaxHandler,
+                                "type": "post",
+                                "dataType": "json",
+                                "data": payload,
+                                "success": function(data){
+                                
+                                },
+                                "error": function(xhr){
+                                    var resp = JSON.parse(xhr.responseText);
+                                    msgDialog.html(resp.message).dialog("open");
+                                }
+                            });
+                            $(this).dialog("close");
+                        },
+                        "取消": function(){
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                
+                $("#sendFile").click(function(){
+                    var allConfirm = true;
+                    var ids = confirmList.getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        var status = confirmList.getCell(ids[i], "status");
+                        if (status != "已確認") {
+                            allConfirm = false;
+                            break;
+                        }
+                    }
+                    if (allConfirm) {
+                        $("#msg").text("確認將檔案傳送至 ICG 目錄？");
+                    }
+                    else {
+                        $("#msg").text("有檔案未完成或未確認，將傳送空檔，認定傳送？");
+                    }
+                    confirmDialog.dialog("open");
+                });
+                
+                $("#exit").click(function(){
+                    callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.CloseBrowserHandler");
+                });
+                
+                var msgDialog = $("<div></div>").dialog({
+                    "title": "ERROR",
+                    "autoOpen": false,
+                    "modal": true
+                });
+                
+            });
+            //-->
+        </script>
+    </wicket:extend>
+</html>
