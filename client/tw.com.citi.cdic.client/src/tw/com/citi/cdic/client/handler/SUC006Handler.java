@@ -1,18 +1,20 @@
 package tw.com.citi.cdic.client.handler;
 
-import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.wicket.PageParameters;
-import org.json.JSONStringer;
+import org.eclipse.core.runtime.Platform;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import platform.aquarius.embedserver.AquariusAjaxDaoHandler;
 import tw.com.citi.cdic.client.dto.ConfirmDto;
 import tw.com.citi.cdic.client.model.CDICFileSts;
-import tw.com.citi.cdic.client.model.TableFlow;
 import tw.com.citi.cdic.utils.Messages;
 
 import com.google.gson.Gson;
@@ -23,7 +25,7 @@ import com.google.gson.JsonArray;
  * @author Lancelot
  * @since 2010/10/31
  */
-public class SUC007Handler extends AquariusAjaxDaoHandler {
+public class SUC006Handler extends AquariusAjaxDaoHandler {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -32,41 +34,54 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
         String actionName = params.getString("actionName");
         if ("getInitInfo".equals(actionName)) {
             return getInitInfo();
-        } else if ("sendFile".equals(actionName)) {
-            return sendFile();
+        } else if ("downloadSample".equals(actionName)) {
+            return downloadSample(params);
+        } else if ("confirm".equals(actionName)) {
+            return confirm(params);
         }
         throw new IllegalArgumentException("Cannot find actionName: " + actionName);
     }
 
-    private Object sendFile() throws Exception {
-        // TODO
-        // 取得基準日，用以產生新檔名
-        String custDate = null;
-        TableFlow tableFlow = new TableFlow();
-        List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object());
-        if (tableFlowList != null && tableFlowList.size() > 0) {
-            tableFlow = tableFlowList.get(0);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            custDate = sdf.format(tableFlow.getCustDate());
+    private Object confirm(PageParameters params) throws Exception {
+        JSONObject actionParam = new JSONObject(params.getString("actionParam"));
+        Gson gson = new Gson();
+        String[] fileNos = gson.fromJson(actionParam.get("data").toString(), String[].class);
+        Date now = new Date();
+        for (String fileNo : fileNos) {
+            CDICFileSts fileSts = new CDICFileSts();
+            fileSts.setFileNo(fileNo);
+            fileSts.setStatus("3");
+            fileSts.setConfirmDateTime(now);
+            String[] args = Platform.getApplicationArgs();
+            if (args != null && args.length > 0) {
+                fileSts.setConfirmer(args[0]);
+            }
+            getDao().update("SUC006_UPD_CDICFILESTS_BY_FILENO", fileSts);
         }
-        // 取得 CDIC File
-        List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
+        return "";
+    }
+
+    private Object downloadSample(PageParameters params) throws Exception {
+        // TODO
+        JSONObject actionParam = new JSONObject(params.getString("actionParam"));
+        System.out.println(actionParam.get("fileNo"));
+        // 根據 fileNo 取得 subFile
+        Map<String, Object> queryParams = new HashMap<String, Object>();
+        queryParams.put("fileNo", actionParam.get("fileNo"));
+        List<CDICFileSts> cdicFileList = getDao().query("SUC006_QRY_CDICFILESTS_BY_FILENO", CDICFileSts.class,
+                queryParams);
         if (cdicFileList != null && cdicFileList.size() > 0) {
             for (CDICFileSts cdicFile : cdicFileList) {
-                // 狀態不是已完成的，在 process folder 產生一個空檔。
-                if (!"3".equals(cdicFile.getStatus())) {
-                    String subFiles = cdicFile.getSubFile();
-                    StringTokenizer st = new StringTokenizer(subFiles, " ");
-                    while (st.hasMoreElements()) {
-                        String file = st.nextToken();
-                        // TODO jcifs create empty file in process folder
-                    }
+                String subFiles = cdicFile.getSubFile();
+                StringTokenizer st = new StringTokenizer(subFiles, " ");
+                while (st.hasMoreElements()) {
+                    String file = st.nextToken();
+                    // TODO download file
+                    System.out.println(file);
                 }
-                // TODO jcifs copy file from process folder to icg folder and
-                // append custDate
             }
         }
-        return new JSONStringer().object().key("status").value("0").endObject().toString();
+        return "";
     }
 
     private Object getInitInfo() throws Exception {
@@ -80,6 +95,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                 fileSet = fileSet.append(cdicFile.getFileNo()).append("(").append(cdicFile.getSubFile()).append(")");
                 dto.setFileSet(fileSet.toString());
                 dto.setGroup(cdicFile.getFileGroup());
+                dto.setFileNo(cdicFile.getFileNo());
                 if (cdicFile.getStatus() != null) {
                     String status = null;
                     switch (Integer.parseInt(cdicFile.getStatus())) {
@@ -104,7 +120,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
             }
             return result;
         } else {
-            return null;
+            return "";
         }
     }
 }

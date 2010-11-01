@@ -13,6 +13,8 @@ public class ConfirmDto {
     private String status;
 
     private String confirmer;
+    
+    private String fileNo;
 
     public String getGroup() {
         return group;
@@ -44,6 +46,14 @@ public class ConfirmDto {
 
     public void setConfirmer(String confirmer) {
         this.confirmer = confirmer;
+    }
+
+    public void setFileNo(String fileNo) {
+        this.fileNo = fileNo;
+    }
+
+    public String getFileNo() {
+        return fileNo;
     }
 
 }
