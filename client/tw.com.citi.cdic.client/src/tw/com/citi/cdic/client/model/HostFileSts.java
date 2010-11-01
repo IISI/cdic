@@ -19,6 +19,8 @@ public class HostFileSts {
     private String processUser;
 
     private String status;
+    
+    private int size;
 
     public String getName() {
         return name;
@@ -66,6 +68,14 @@ public class HostFileSts {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getSize() {
+        return size;
     }
 
 }
