@@ -11,15 +11,17 @@
             &nbsp;&nbsp;
         </p>
         <a id="start" class="fg-button ui-state-default ui-corner-all" style="float:none;">開始</a>
-        <a id="cancel" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
         <script type="text/javascript">
-            var check = function(id){
-                alert('check: ' + id);
-            };
-            $().ready(function(){
+            <!--
+            $(function(){
+                var check = function(id){
+                    alert('check: ' + id);
+                };
+                
                 var batchList = $('#batchList').iGrid({
                     datatype: "local",
-                    height: 200,
+                    height: 400,
                     needPager: false,
                     sortname: 'batchId',
                     colModel: [{
@@ -30,31 +32,137 @@
                             disabled: false
                         },
                         editable: true,
-                        edittype: 'checkbox'
+                        edittype: 'checkbox',
+                        sortable: false,
+                        width: 20
                     }, {
                         colHeader: '群組/檔案',
-                        name: 'batchId'
+                        name: 'batchName',
+                        sortable: false,
+                        width: 50
                     }, {
                         colHeader: '狀態',
-                        name: 'batchStatus'
+                        name: 'status',
+                        sortable: false,
+                        width: 50
                     }, {
-                        colHeader: '來源檔案',
-                        name: 'sourceFile'
+                        colHeader: '已備妥來源檔案',
+                        name: 'sourceReady',
+                        sortable: false
+                    }, {
+                        colHeader: '未備妥來源檔案',
+                        name: 'sourceNotReady',
+                        sortable: false
                     }, {
                         colHeader: ' ',
-                        name: 'process'
+                        name: 'process',
+                        sortable: false,
+                        width: 50
+                    }, {
+                        name: 'allowExecution',
+                        hidden: true
+                    }, {
+                        name: 'hasGroup',
+                        hidden: true
                     }]
                 });
-                batchList.addGridData([[true, 'Group1', 'OK', '123'], [false, 'Group2', 'OK', '234']]);
-                var ids = batchList.getDataIDs();
-                for (var i = 0; i < ids.length; i++) {
-                    var cl = ids[i];
-                    be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='check(" + cl + ");'>檢視來源檔案</a>";
-                    batchList.setRowData(ids[i], {
-                        process: be
-                    })
+                /*
+                $(window).bind('resize', function(){
+                    batchList.setGridWidth($(window).width() - 5);
+                }).trigger('resize');
+                */
+                $(window).bind('resize', function(){
+                    batchList.setGridWidth($(window).width() - 5);
+                });
+                function loadInitInfo(){
+                    var payload = {};
+                    payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC005Handler";
+                    payload.actionName = "getInitInfo";
+                    $.ajax({
+                        "url": __ajaxHandler,
+                        "type": "post",
+                        "dataType": "json",
+                        "data": payload,
+                        "success": function(data){
+                            batchList.addGridData(data);
+                            var ids = batchList.getDataIDs();
+                            for (var i = 0; i < ids.length; i++) {
+                                // TODO enable/disable checkbox, show/hidden checkbox
+                                var hasGroup = batchList.getCell(ids[i], "hasGroup");
+                                var allow = batchList.getCell(ids[i], "allowExecution");
+                                var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
+                                var batchName = batchList.getCell(ids[i], "batchName");
+                                if (hasGroup == 'true') {
+                                    checkBox.remove();
+                                    batchList.setCell(ids[i], "batchName", "　" + batchName);
+                                }
+                                else {
+                                    allow == 'true' ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true);
+                                }
+                                var sourceReady = batchList.getCell(ids[i], "sourceReady");
+                                var sourceNotReady = batchList.getCell(ids[i], "sourceNotReady");
+                                if (sourceReady != '' || sourceNotReady != '') {
+                                    be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='check(" + ids[i] + ");'>檢視來源檔案</a>";
+                                    batchList.setRowData(ids[i], {
+                                        process: be
+                                    })
+                                }
+								if(sourceNotReady != '') {
+									batchList.setCell(ids[i], "status", "資料未備妥")
+								}
+                            }
+                        },
+                        "error": function(xhr, status, error){
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
+                    });
                 }
+                
+                loadInitInfo();
+                
+                $("#start").click(function(){
+                    var data = new Array();
+                    var ids = batchStatusList.getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox").attr("checked") && data.push(batchStatusList.getCell(ids[i], "batchName"));
+                    }
+                    var payload = {};
+                    payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC006Handler";
+                    payload.actionName = "start";
+                    payload.actionParam = JSON.stringify({
+                        "data": data
+                    });
+                    $.ajax({
+                        "url": __ajaxHandler,
+                        "type": "post",
+                        "dataType": "json",
+                        "data": payload,
+                        "success": function(data){
+                            batchList.clearGridData();
+                            loadInitInfo();
+                        },
+                        "error": function(xhr, status, error){
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
+                    });
+                });
+                
+                $("#exit").click(function(){
+                    callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.CloseBrowserHandler");
+                });
+                
+                var msgDialog = $("<div></div>").dialog({
+                    "title": "ERROR",
+                    "autoOpen": false,
+                    "modal": true
+                });
+                
             });
+            -->
         </script>
     </wicket:extend>
 </html>

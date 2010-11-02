@@ -8,6 +8,8 @@ public class Messages extends NLS {
     public static String STATUS_1;
     public static String STATUS_2;
     public static String STATUS_3;
+    public static String STATUS_4;
+    public static String STATUS_5;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

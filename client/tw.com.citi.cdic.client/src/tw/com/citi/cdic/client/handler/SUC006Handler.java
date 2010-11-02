@@ -111,6 +111,12 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
                     case 3:
                         status = Messages.STATUS_3;
                         break;
+                    case 4:
+                        status = Messages.STATUS_4;
+                        break;
+                    case 5:
+                        status = Messages.STATUS_5;
+                        break;
                     }
                     dto.setStatus(status);
                 }
