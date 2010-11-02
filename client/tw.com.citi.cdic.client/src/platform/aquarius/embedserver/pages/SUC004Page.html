@@ -9,47 +9,152 @@
         <p>
             &nbsp;&nbsp;
         </p>
-        <a id="cancel" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
         <script type="text/javascript">
-            var hostFileList = $('#localFileList').iGrid({
+            <!--
+            var localFileList;
+            
+            var download = function(row){
+                alert('download: ' + row);
+                var fileName = localFileList.getCell(row, 'fileName');
+                // TODO 下載
+            };
+            
+            var updateStatus = function(actionName, fileName){
+                var payload = {};
+                payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC004Handler";
+                payload.actionName = actionName;
+                payload.actionParam = JSON.stringify({
+                    "fileName": fileName
+                });
+                $.ajax({
+                    "url": __ajaxHandler,
+                    "type": "post",
+                    "dataType": "json",
+                    "data": payload,
+                    "success": function(data){
+                        localFileList.addGridData(data);
+                        var ids = localFileList.getDataIDs();
+                        for (var i = 0; i < ids.length; i++) {
+                            var exist = localFileList.getCell(ids[i], "exist");
+                            se = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='upload(" + ids[i] + ");'>上傳</a>";
+                            ce = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='confirm(" + ids[i] + ");'>確認</a>";
+                            if (exist) {
+                                be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='download(" + ids[i] + ");'>下載</a>";
+                            }
+                            else {
+                                be = " ";
+                            }
+                            localFileList.setRowData(ids[i], {
+                                download: be,
+                                process: se + ce
+                            })
+                        }
+                    },
+                    "error": function(xhr, status, error){
+                        var resp = JSON.parse(xhr.responseText);
+                        msgDialog.html(resp.message).dialog("open");
+                    }
+                });
+            };
+            
+            var upload = function(row){
+                alert('upload: ' + row);
+                var fileName = localFileList.getCell(row, 'fileName');
+                //TODO 上傳
+                updateStatus('upload', fileName);
+            };
+            
+            var confirm = function(row){
+                alert('confirm: ' + row);
+                var fileName = localFileList.getCell(row, 'fileName');
+                updateStatus('confirm', fileName);
+            };
+            
+            localFileList = $('#localFileList').iGrid({
                 datatype: "local",
                 height: 200,
                 needPager: false,
-                sortname: 'path',
+                sortname: 'name',
                 colModel: [{
-                    colHeader: '檔名',
-                    name: 'fileName'
+                    colHeader: 'FileName',
+                    name: 'name',
+                    sortable: false
                 }, {
-                    colHeader: '上傳時間',
-                    name: 'uploadDateTime'
+                    colHeader: ' ',
+                    name: 'download',
+                    sortable: false
                 }, {
-                    colHeader: '執行人員',
-                    name: 'processUser'
+                    colHeader: 'Upload DateTime',
+                    name: 'uploadDateTime',
+                    sortable: false
                 }, {
-                    colHeader: '檔案處理',
-                    name: 'process'
+                    colHeader: 'User ID',
+                    name: 'processUser',
+                    sortable: false
+                }, {
+                    colHeader: 'Status',
+                    name: 'status',
+                    sortable: false
+                }, {
+                    colHeader: 'Process',
+                    name: 'process',
+                    sortable: false
+                }, {
+                    name: 'exist',
+                    hidden: true
                 }]
             });
-            hostFileList.addRowData('1', '1');
-            var download = function(id){
-                alert('download: ' + id);
-            };
-            var upload = function(id){
-                alert('upload: ' + id);
-            };
-            var confirm = function(id){
-                alert('confirm: ' + id);
-            };
-            var ids = $("#localFileList").getDataIDs();
-            for (var i = 0; i < ids.length; i++) {
-                var cl = ids[i];
-                be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='download(" + cl + ");'>下載</a>";
-                se = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='upload(" + cl + ");'>上傳</a>";
-                ce = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='confirm(" + cl + ");'>確認</a>";
-                $("#localFileList").setRowData(ids[i], {
-                    process: be + se + ce
-                })
+            
+            function loadInitInfo(){
+                var payload = {};
+                payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC004Handler";
+                payload.actionName = "getInitInfo";
+                $.ajax({
+                    "url": __ajaxHandler,
+                    "type": "post",
+                    "dataType": "json",
+                    "data": payload,
+                    "success": function(data){
+                        localFileList.addGridData(data);
+                        var ids = localFileList.getDataIDs();
+                        for (var i = 0; i < ids.length; i++) {
+                            var exist = localFileList.getCell(ids[i], "exist");
+                            se = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='upload(" + ids[i] + ");'>上傳</a>";
+                            ce = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='confirm(" + ids[i] + ");'>確認</a>";
+                            if (exist) {
+                                be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='download(" + ids[i] + ");'>下載</a>";
+                            }
+                            else {
+                                be = " ";
+                            }
+                            localFileList.setRowData(ids[i], {
+                                download: be,
+                                process: se + ce
+                            })
+                        }
+                    },
+                    "error": function(xhr, status, error){
+                        var resp = JSON.parse(xhr.responseText);
+                        msgDialog.html(resp.message).dialog("open");
+                    }
+                });
             }
+            
+            loadInitInfo();
+            
+            $("#exit").click(function(){
+                callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.CloseBrowserHandler");
+            });
+            
+            var msgDialog = $("<div></div>").dialog({
+                "title": "ERROR",
+                "autoOpen": false,
+                "modal": true
+            });
+            -->
         </script>
     </wicket:extend>
 </html>
