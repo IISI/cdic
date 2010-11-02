@@ -1,6 +1,8 @@
 package platform.aquarius.embedserver;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.eclipse.core.runtime.Platform;
@@ -28,6 +30,9 @@ public class AquariusServerStarter implements InitializingBean {
                 ServletContextHandler.SESSIONS);
 
         servletCtx_handler.setContextPath("/app");
+        Map<String, String> initParams = new HashMap<String, String>();
+        initParams.put("configuration", "deployment");
+        servletCtx_handler.setInitParams(initParams);
 
         // -- 開始 Wicket Filter設定
         servletCtx_handler.addServlet(
