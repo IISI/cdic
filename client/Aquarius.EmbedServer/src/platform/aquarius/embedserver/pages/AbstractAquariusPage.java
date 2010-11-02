@@ -25,7 +25,7 @@ public abstract class AbstractAquariusPage extends WebPage {
     private static final Logger logger = LoggerFactory
             .getLogger(AbstractAquariusPage.class);
 
-    @SpringBean
+    @SpringBean(name = "dao")
     private IDao dao;
 
     /**
