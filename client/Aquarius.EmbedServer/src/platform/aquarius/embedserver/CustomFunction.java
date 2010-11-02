@@ -14,7 +14,7 @@ public class CustomFunction extends BrowserFunction {
     public CustomFunction(Browser browser, String name) {
         super(browser, name);
         dao = Activator.getSpringContext(Activator.PLUGIN_ID).getBean(
-                IDao.class);
+                "dao", IDao.class);
     }
 
     /**
