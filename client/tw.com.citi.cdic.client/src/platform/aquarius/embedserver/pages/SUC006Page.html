@@ -87,6 +87,9 @@
                         enableConfirmButton();
                     }
                 });
+                $(window).bind('resize', function(){
+                    batchStatusList.setGridWidth($(window).width() - 5);
+                });
                 
                 function enableConfirmButton(){
                     var confirmed = false;

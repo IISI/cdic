@@ -16,9 +16,9 @@
             $(function(){
                 var hostFileList = $('#hostFileList').iGrid({
                     datatype: "local",
-                    height: 200,
+                    height: 400,
                     needPager: false,
-                    sortname: 'path',
+                    sortname: 'name',
                     colModel: [{
                         colHeader: 'Copy',
                         name: 'copy',
@@ -27,26 +27,40 @@
                             disabled: false
                         },
                         editable: true,
-                        edittype: 'checkbox'
+                        edittype: 'checkbox',
+                        sortable: false
+                    }, {
+                        colHeader: 'Status',
+                        name: 'status',
+                        sortable: false
                     }, {
                         colHeader: 'FileName',
-                        name: 'name'
+                        name: 'name',
+                        sortable: false
                     }, {
                         colHeader: 'Host-datetime',
-                        name: 'hostDateTime'
+                        name: 'hostDateTimeFmt',
+                        sortable: false
                     }, {
                         colHeader: 'size',
-                        name: 'size'
+                        name: 'size',
+                        sortable: false
                     }, {
                         colHeader: 'Record',
-                        name: 'recLen'
+                        name: 'record',
+                        sortable: false
                     }, {
                         colHeader: 'Copy-datetime',
-                        name: 'copyDateTime'
+                        name: 'copyDateTimeFmt',
+                        sortable: false
                     }, {
                         colHeader: 'Process-user',
-                        name: 'processUser'
+                        name: 'processUser',
+                        sortable: false
                     }]
+                });
+                $(window).bind('resize', function(){
+                    hostFileList.setGridWidth($(window).width() - 5);
                 });
                 function loadInitInfo(){
                     var payload = {};
@@ -60,6 +74,15 @@
                         "data": payload,
                         "success": function(data){
                             hostFileList.addGridData(data);
+                            var ids = hostFileList.getDataIDs();
+                            for (var i = 0; i < ids.length; i++) {
+                                // enable/disable checkbox
+                                var status = hostFileList.getCell(ids[i], "status");
+                                var checkBox = $("#" + ids[i]).find("td[aria-describedby$=copy] :checkbox");
+                                var batchName = hostFileList.getCell(ids[i], "batchName");
+                                status == '檔案不存在' ? checkBox.attr("disabled", true) : checkBox.attr("disabled", false);
+								status == '1' && hostFileList.setCell(ids[i], "status", "檔案已複製");
+                            }
                         },
                         "error": function(xhr, status, error){
                             var resp = JSON.parse(xhr.responseText);
