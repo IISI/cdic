@@ -107,6 +107,7 @@
       <plugin id="slf4j.api"/>
       <plugin id="slf4j.log4j12" fragment="true"/>
       <plugin id="tw.com.citi.cdic.client"/>
+      <plugin id="tw.com.citi.cdic.client.resources"/>
    </plugins>
 
    <configurations>
