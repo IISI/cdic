@@ -15,3 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: IISI
+Bundle-ClassPath: .,
+ libs/commons-vfs-2.0-20090326.033229-1.jar,
+ libs/commons-vfs-sandbox-2.0-20090326.033229-1.jar,
+ libs/jcifs-0.8.3.jar,
+ libs/jcl-over-slf4j-1.5.10.jar

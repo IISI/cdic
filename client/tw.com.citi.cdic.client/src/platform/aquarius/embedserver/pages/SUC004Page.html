@@ -74,7 +74,7 @@
             
             localFileList = $('#localFileList').iGrid({
                 datatype: "local",
-                height: 200,
+                height: 400,
                 needPager: false,
                 sortname: 'name',
                 colModel: [{
@@ -105,6 +105,9 @@
                     name: 'exist',
                     hidden: true
                 }]
+            });
+            $(window).bind('resize', function(){
+                localFileList.setGridWidth($(window).width() - 5);
             });
             
             function loadInitInfo(){

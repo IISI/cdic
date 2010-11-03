@@ -66,11 +66,6 @@
                         hidden: true
                     }]
                 });
-                /*
-                $(window).bind('resize', function(){
-                    batchList.setGridWidth($(window).width() - 5);
-                }).trigger('resize');
-                */
                 $(window).bind('resize', function(){
                     batchList.setGridWidth($(window).width() - 5);
                 });
@@ -88,7 +83,7 @@
                             batchList.addGridData(data);
                             var ids = batchList.getDataIDs();
                             for (var i = 0; i < ids.length; i++) {
-                                // TODO enable/disable checkbox, show/hidden checkbox
+                                // enable/disable checkbox, show/hidden checkbox
                                 var hasGroup = batchList.getCell(ids[i], "hasGroup");
                                 var allow = batchList.getCell(ids[i], "allowExecution");
                                 var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");

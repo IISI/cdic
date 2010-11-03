@@ -37,6 +37,9 @@
                         name: 'confirmer'
                     }]
                 });
+                $(window).bind('resize', function(){
+                    confirmList.setGridWidth($(window).width() - 5);
+                });
                 
                 function loadInitInfo(){
                     var payload = {};
