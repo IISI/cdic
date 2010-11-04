@@ -53,8 +53,8 @@
         </property>
     </bean>
 
-    <bean id="t03Processor" class="tw.com.citi.cdic.batch.item.SBT03Processor" />
+    <bean id="t03Processor" class="tw.com.citi.cdic.batch.item.SBT03T03Processor" />
 
-    <bean id="t12Processor" class="tw.com.citi.cdic.batch.item.SBT12Processor" />
+    <bean id="t12Processor" class="tw.com.citi.cdic.batch.item.SBT03T12Processor" />
 
 </beans>
