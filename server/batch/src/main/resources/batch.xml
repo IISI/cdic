@@ -10,6 +10,8 @@
 
     <beans:import resource="SBF02.xml" />
 
+    <beans:import resource="SBF03.xml" />
+
     <beans:import resource="SBF04.xml" />
 
     <beans:import resource="SBF05.xml" />
