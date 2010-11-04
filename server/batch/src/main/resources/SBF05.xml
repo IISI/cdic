@@ -14,7 +14,7 @@
             </bean>
         </property>
         <property name="rowMapper">
-            <bean class="tw.com.citi.cdic.batch.BusA24Mapper"></bean>
+            <bean class="tw.com.citi.cdic.batch.LusA24Mapper"></bean>
         </property>
     </bean>
 
