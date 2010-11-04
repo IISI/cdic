@@ -68,6 +68,8 @@
                     "modal": true,
                     "buttons": {
                         "確認 ": function(){
+							$(this).dialog("close");
+							var uploadMsg = CommonAPI.showMessage("檔案傳送中請耐心等候...");
                             var payload = {};
                             payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
                             payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC007Handler";
@@ -78,14 +80,14 @@
                                 "dataType": "json",
                                 "data": payload,
                                 "success": function(data){
-                                
+									uploadMsg.dialog('close');
+                                    CommonAPI.showMessage("檔案傳送至 ICG 完畢。");
                                 },
                                 "error": function(xhr){
                                     var resp = JSON.parse(xhr.responseText);
                                     msgDialog.html(resp.message).dialog("open");
                                 }
                             });
-                            $(this).dialog("close");
                         },
                         "取消": function(){
                             $(this).dialog("close");

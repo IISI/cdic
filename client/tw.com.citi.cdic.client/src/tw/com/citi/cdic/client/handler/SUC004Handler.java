@@ -44,7 +44,7 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
             List<FileItem> items = upload.parseRequest(req);
             uploadFiles(items);
             return "";
-        }else{
+        } else {
             String actionName = params.getString("actionName");
             if ("getInitInfo".equals(actionName)) {
                 return getInitInfo();
@@ -81,7 +81,7 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
         JSONObject actionParam = new JSONObject(params.getString("actionParam"));
         String savePath = actionParam.getString("savePath");
         String fileName = actionParam.getString("fileName");
-        FileUtil.copyFile(FolderType.PROCESS, savePath, fileName);
+        FileUtil.copyFile(FolderType.PROCESS, savePath, new String[] { fileName });
         return "";
     }
 

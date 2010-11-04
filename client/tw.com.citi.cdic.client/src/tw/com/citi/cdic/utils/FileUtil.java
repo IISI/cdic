@@ -75,7 +75,8 @@ public class FileUtil {
         return file;
     }
 
-    public static void copyFile(FileObject source, FileObject target, String... sorceFileNames) throws Exception {
+    public static void copyFile(FileObject source, FileObject target, String prefix, String suffix,
+            String[] sorceFileNames) throws Exception {
         List<FileObject> files = new ArrayList<FileObject>();
         if (sorceFileNames == null || sorceFileNames.length == 0) {
             // 全部複製
@@ -105,10 +106,38 @@ public class FileUtil {
                 }
             });
             target.copyFrom(source, ffs);
+            if (prefix != null || suffix != null) {
+                List<FileObject> targetFiles = new ArrayList<FileObject>();
+                for (String fileName : sorceFileNames) {
+                    FileObject file = fsManager.resolveFile(target, fileName);
+                    if (file != null) {
+                        targetFiles.add(file);
+                    }
+                }
+                if (targetFiles != null || targetFiles.size() > 0) {
+                    for (FileObject file : targetFiles) {
+                        String baseName = file.getName().getBaseName();
+                        String extensions = baseName.indexOf(".") > 0 ? baseName.substring(baseName.indexOf(".")) : "";
+                        String fileName = baseName.indexOf(".") > 0 ? baseName.substring(0, baseName.indexOf(".") - 1)
+                                : baseName;
+                        StringBuffer newName = new StringBuffer();
+                        newName = newName.append(prefix == null ? "" : prefix).append(fileName)
+                                .append(suffix == null ? "" : suffix).append(extensions);
+                        FileObject temp = fsManager.resolveFile(target, newName.toString());
+                        temp.createFile();
+                        file.moveTo(temp);
+                    }
+                }
+            }
         }
     }
 
-    public static void copyFile(FolderType sourceFolder, String localPath, String... sorceFileNames) throws Exception {
+    public static void copyFile(FileObject source, FileObject target, String[] sorceFileNames) throws Exception {
+        copyFile(source, target, null, null, sorceFileNames);
+    }
+
+    public static void copyFile(FolderType sourceFolder, String localPath, String prefix, String suffix,
+            String[] sorceFileNames) throws Exception {
         if (sourceFolder == null) {
             throw new IllegalArgumentException("input source folder is invalid.");
         }
@@ -118,11 +147,15 @@ public class FileUtil {
         FileObject source = fsManager.resolveFile("smb://" + config.getProperty(sourceFolder.getKey() + ".host")
                 + config.getProperty(sourceFolder.getKey() + ".path"), opts);
         FileObject target = fsManager.resolveFile("file://" + localPath);
-        copyFile(source, target, sorceFileNames);
+        copyFile(source, target, prefix, suffix, sorceFileNames);
     }
 
-    public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String... sorceFileNames)
-            throws Exception {
+    public static void copyFile(FolderType sourceFolder, String localPath, String[] sorceFileNames) throws Exception {
+        copyFile(sourceFolder, localPath, null, null, sorceFileNames);
+    }
+
+    public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String prefix, String suffix,
+            String[] sorceFileNames) throws Exception {
         if (sourceFolder == null) {
             throw new IllegalArgumentException("input source folder is invalid.");
         }
@@ -133,7 +166,12 @@ public class FileUtil {
                 + config.getProperty(sourceFolder.getKey() + ".path"), opts);
         FileObject target = fsManager.resolveFile("smb://" + config.getProperty(targetFolder.getKey() + ".host")
                 + config.getProperty(targetFolder.getKey() + ".path"), opts);
-        copyFile(source, target, sorceFileNames);
+        copyFile(source, target, prefix, suffix, sorceFileNames);
+    }
+
+    public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String[] sorceFileNames)
+            throws Exception {
+        copyFile(sourceFolder, targetFolder, null, null, sorceFileNames);
     }
 
     public static void uploadFile(InputStream in, FolderType target, String fileName) throws IOException {
@@ -170,5 +208,13 @@ public class FileUtil {
                         + config.getProperty(target.getKey() + ".path"), opts);
         FileObject file = fsManager.resolveFile(folder, fileName);
         return file.exists();
+    }
+
+    public static void createFile(FolderType target, String fileName) throws FileSystemException {
+        FileObject folder = fsManager.resolveFile(
+                "smb://" + config.getProperty(target.getKey() + ".host")
+                        + config.getProperty(target.getKey() + ".path"), opts);
+        FileObject file = fsManager.resolveFile(folder, fileName);
+        file.createFile();
     }
 }
