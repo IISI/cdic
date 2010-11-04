@@ -40,7 +40,7 @@
     </bean>
 
     <!-- sample file writer -->
-    <bean id="a41SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+    <bean id="a77SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="z:/out/A77.csv"></constructor-arg>
