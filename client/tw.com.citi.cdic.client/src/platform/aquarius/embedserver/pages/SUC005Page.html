@@ -12,14 +12,84 @@
         </p>
         <a id="start" class="fg-button ui-state-default ui-corner-all" style="float:none;">開始</a>
         <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <div id="sourceInfoDialog" title="來源檔案資訊">
+            <div>
+                <div id="fileNo" /><div id="infoGrid" />
+            </div>
+        </div>
         <script type="text/javascript">
             <!--
+            var batchList;
+            
+            var infoGrid;
+            
+            var sourceInfoDialog = $('#sourceInfoDialog').dialog({
+                "autoOpen": false,
+                "modal": true,
+                "width": 960,
+                "buttons": {
+                    "離開": function(event, ui){
+                        $(this).dialog("close");
+                    }
+                }
+            }).bind("dialogresizestop", function(event, ui){
+                infoGrid.setGridWidth(sourceInfoDialog.width() - 10);
+            });
+            
+            var check = function(row){
+                var fileNo = batchList.getCell(row, 'batchName');
+                $('#fileNo').text(fileNo);
+                var payload = {};
+                payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC005Handler";
+                payload.actionName = "getFileInfo";
+                payload.actionParam = JSON.stringify({
+                    "fileNo": fileNo
+                });
+                $.ajax({
+                    "url": __ajaxHandler,
+                    "type": "post",
+                    "dataType": "json",
+                    "data": payload,
+                    "success": function(data){
+                        infoGrid.addGridData(data);
+                    },
+                    "error": function(xhr, status, error){
+                        var resp = JSON.parse(xhr.responseText);
+                        msgDialog.html(resp.message).dialog("open");
+                    }
+                });
+                sourceInfoDialog.dialog("open").trigger("dialogresizestop");
+            };
+            
             $(function(){
-                var check = function(id){
-                    alert('check: ' + id);
-                };
-                
-                var batchList = $('#batchList').iGrid({
+                infoGrid = $('#infoGrid').iGrid({
+                    datatype: "local",
+                    height: 200,
+                    needPager: false,
+                    sortname: 'fileName',
+                    colModel: [{
+                        colHeader: 'File Name',
+                        name: 'name',
+                        sortable: false,
+						width: 50
+                    }, {
+                        colHeader: 'Source Type',
+                        name: 'depType',
+                        sortable: false,
+                        width: 50
+                    }, {
+                        colHeader: 'Host/Upload/Confirm DateTime',
+                        name: 'lastDateTime',
+                        sortable: false
+                    }, {
+                        colHeader: 'process user',
+                        name: 'processUser',
+                        sortable: false,
+                        width: 50
+                    }]
+                });
+                batchList = $('#batchList').iGrid({
                     datatype: "local",
                     height: 400,
                     needPager: false,
@@ -88,12 +158,13 @@
                                 var allow = batchList.getCell(ids[i], "allowExecution");
                                 var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
                                 var batchName = batchList.getCell(ids[i], "batchName");
+                                var status = data[i].status;
                                 if (hasGroup == 'true') {
                                     checkBox.remove();
-                                    batchList.setCell(ids[i], "batchName", "　" + batchName);
+                                    batchList.setCell(ids[i], "batchName", "  " + batchName);
                                 }
                                 else {
-                                    allow == 'true' ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true);
+                                    allow == 'true' && status != "4" ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true);
                                 }
                                 var sourceReady = batchList.getCell(ids[i], "sourceReady");
                                 var sourceNotReady = batchList.getCell(ids[i], "sourceNotReady");
@@ -103,9 +174,31 @@
                                         process: be
                                     })
                                 }
-								if(sourceNotReady != '') {
-									batchList.setCell(ids[i], "status", "資料未備妥")
-								}
+                                if (sourceNotReady != '') {
+                                    batchList.setCell(ids[i], "status", "資料未備妥")
+                                }
+                                else {
+                                    switch (status) {
+                                        case '0':
+                                            batchList.setCell(ids[i], "status", "未開始")
+                                            break;
+                                        case '1':
+                                            batchList.setCell(ids[i], "status", "待執行")
+                                            break;
+                                        case '2':
+                                            batchList.setCell(ids[i], "status", "已完成")
+                                            break;
+                                        case '3':
+                                            batchList.setCell(ids[i], "status", "已確認")
+                                            break;
+                                        case '4':
+                                            batchList.setCell(ids[i], "status", "執行中")
+                                            break;
+                                        case '5':
+                                            batchList.setCell(ids[i], "status", "執行失敗")
+                                            break;
+                                    }
+                                }
                             }
                         },
                         "error": function(xhr, status, error){
@@ -119,13 +212,13 @@
                 
                 $("#start").click(function(){
                     var data = new Array();
-                    var ids = batchStatusList.getDataIDs();
+                    var ids = batchList.getDataIDs();
                     for (var i = 0; i < ids.length; i++) {
-                        $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox").attr("checked") && data.push(batchStatusList.getCell(ids[i], "batchName"));
+                        $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox").attr("checked") && data.push(batchList.getCell(ids[i], "batchName"));
                     }
                     var payload = {};
                     payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
-                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC006Handler";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC005Handler";
                     payload.actionName = "start";
                     payload.actionParam = JSON.stringify({
                         "data": data

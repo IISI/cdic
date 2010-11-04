@@ -10,14 +10,115 @@
             &nbsp;&nbsp;
         </p>
         <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <div id="uploadDialog" title="檔案上傳">
+            <div>
+                <div id="fileName" /><input id="file" name="file" type="file" />
+            </div>
+        </div>
         <script type="text/javascript">
             <!--
             var localFileList;
             
+            var uploadDialog = $("#uploadDialog").dialog({
+                "autoOpen": false,
+                "modal": true,
+                "buttons": {
+                    "確認 ": function(){
+                        var fileName = $("#file").val();
+                        var required = $("#fileName").text();
+                        if (required != fileName) {
+                            CommonAPI.showMessage("請選擇正確檔案，檔名為 " + required + "");
+                        }
+                        else {
+                            $.capFileUpload({
+                                url: __ajaxHandler +
+                                '&_ab=tw.com.citi.cdic.client' +
+                                '&_ah=tw.com.citi.cdic.client.handler.SUC004Handler',
+                                fileCheck: [$("#fileName").text()],
+                                secureuri: false,
+                                fileElementId: 'file',
+                                timeout: 5 * 60 * 1000,
+                                successMsg: "檔案上傳完畢",
+                                data: {
+                                    fileName: fileName
+                                },
+                                complete: function(xhr, status, json){
+                                    uploadDialog.dialog("close");
+                                    updateStatus('upload', fileName);
+                                }
+                            });
+                        }
+                    },
+                    "取消": function(){
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            
+            var upload = function(row){
+                var fileName = localFileList.getCell(row, 'name');
+                uploadDialog.find("#fileName").text(fileName);
+                uploadDialog.dialog("open");
+            };
+            
+            var confirm = function(row){
+                var fileName = localFileList.getCell(row, 'name');
+                updateStatus('confirm', fileName);
+            };
+            
             var download = function(row){
-                alert('download: ' + row);
-                var fileName = localFileList.getCell(row, 'fileName');
-                // TODO 下載
+                var fileName = localFileList.getCell(row, 'name');
+                var path = callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.SelectFilePathHandler");
+                var payload = {};
+                payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC004Handler";
+                payload.actionName = "download";
+                payload.actionParam = JSON.stringify({
+                    "savePath": path,
+                    "fileName": fileName
+                });
+                $.ajax({
+                    "url": __ajaxHandler,
+                    "type": "post",
+                    "dataType": "json",
+                    "data": payload,
+                    "success": function(data){
+						CommonAPI.showMessage("檔案下載完畢。");
+                    },
+                    "error": function(xhr, status, error){
+                        var resp = JSON.parse(xhr.responseText);
+                        msgDialog.html(resp.message).dialog("open");
+                    }
+                });
+            };
+            
+            var msgDialog = $("<div></div>").dialog({
+                "title": "ERROR",
+                "autoOpen": false,
+                "modal": true
+            });
+            
+            var updateGridData = function(data){
+                var ids = localFileList.getDataIDs();
+                for (var i = 0; i < ids.length; i++) {
+                    var exist = localFileList.getCell(ids[i], "exist");
+                    se = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='upload(" + ids[i] + ");'>上傳</a>";
+                    if (exist == "true") {
+                        be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='download(" + ids[i] + ");'>下載</a>";
+                        ce = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='confirm(" + ids[i] + ");'>確認</a>";
+                    }
+                    else {
+                        be = "";
+                        ce = ""
+                    }
+                    localFileList.setRowData(ids[i], {
+                        download: be,
+                        process: se + ce,
+                        uploadDateTime: data[i].uploadDateTime,
+                        processUser: data[i].processUser,
+                        status: data[i].status == "1" ? "已確認" : exist == "true" ? "未確認" : "檔案不存在"
+                    })
+                }
             };
             
             var updateStatus = function(actionName, fileName){
@@ -34,23 +135,7 @@
                     "dataType": "json",
                     "data": payload,
                     "success": function(data){
-                        localFileList.addGridData(data);
-                        var ids = localFileList.getDataIDs();
-                        for (var i = 0; i < ids.length; i++) {
-                            var exist = localFileList.getCell(ids[i], "exist");
-                            se = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='upload(" + ids[i] + ");'>上傳</a>";
-                            ce = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='confirm(" + ids[i] + ");'>確認</a>";
-                            if (exist) {
-                                be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='download(" + ids[i] + ");'>下載</a>";
-                            }
-                            else {
-                                be = " ";
-                            }
-                            localFileList.setRowData(ids[i], {
-                                download: be,
-                                process: se + ce
-                            })
-                        }
+                        updateGridData(data);
                     },
                     "error": function(xhr, status, error){
                         var resp = JSON.parse(xhr.responseText);
@@ -59,103 +144,75 @@
                 });
             };
             
-            var upload = function(row){
-                alert('upload: ' + row);
-                var fileName = localFileList.getCell(row, 'fileName');
-                //TODO 上傳
-                updateStatus('upload', fileName);
-            };
-            
-            var confirm = function(row){
-                alert('confirm: ' + row);
-                var fileName = localFileList.getCell(row, 'fileName');
-                updateStatus('confirm', fileName);
-            };
-            
-            localFileList = $('#localFileList').iGrid({
-                datatype: "local",
-                height: 400,
-                needPager: false,
-                sortname: 'name',
-                colModel: [{
-                    colHeader: 'FileName',
-                    name: 'name',
-                    sortable: false
-                }, {
-                    colHeader: ' ',
-                    name: 'download',
-                    sortable: false
-                }, {
-                    colHeader: 'Upload DateTime',
-                    name: 'uploadDateTime',
-                    sortable: false
-                }, {
-                    colHeader: 'User ID',
-                    name: 'processUser',
-                    sortable: false
-                }, {
-                    colHeader: 'Status',
-                    name: 'status',
-                    sortable: false
-                }, {
-                    colHeader: 'Process',
-                    name: 'process',
-                    sortable: false
-                }, {
-                    name: 'exist',
-                    hidden: true
-                }]
-            });
-            $(window).bind('resize', function(){
-                localFileList.setGridWidth($(window).width() - 5);
-            });
-            
-            function loadInitInfo(){
-                var payload = {};
-                payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
-                payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC004Handler";
-                payload.actionName = "getInitInfo";
-                $.ajax({
-                    "url": __ajaxHandler,
-                    "type": "post",
-                    "dataType": "json",
-                    "data": payload,
-                    "success": function(data){
-                        localFileList.addGridData(data);
-                        var ids = localFileList.getDataIDs();
-                        for (var i = 0; i < ids.length; i++) {
-                            var exist = localFileList.getCell(ids[i], "exist");
-                            se = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='upload(" + ids[i] + ");'>上傳</a>";
-                            ce = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='confirm(" + ids[i] + ");'>確認</a>";
-                            if (exist) {
-                                be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='download(" + ids[i] + ");'>下載</a>";
-                            }
-                            else {
-                                be = " ";
-                            }
-                            localFileList.setRowData(ids[i], {
-                                download: be,
-                                process: se + ce
-                            })
-                        }
-                    },
-                    "error": function(xhr, status, error){
-                        var resp = JSON.parse(xhr.responseText);
-                        msgDialog.html(resp.message).dialog("open");
-                    }
+            $(function(){
+                localFileList = $('#localFileList').iGrid({
+                    datatype: "local",
+                    height: 400,
+                    needPager: false,
+                    sortname: 'name',
+                    colModel: [{
+                        colHeader: 'FileName',
+                        name: 'name',
+                        sortable: false,
+                        width: 50
+                    }, {
+                        colHeader: ' ',
+                        name: 'download',
+                        sortable: false,
+                        width: 50
+                    }, {
+                        colHeader: 'Upload/Confirm DateTime',
+                        name: 'uploadDateTime',
+                        sortable: false
+                    }, {
+                        colHeader: 'User ID',
+                        name: 'processUser',
+                        sortable: false
+                    }, {
+                        colHeader: 'Status',
+                        name: 'status',
+                        sortable: false,
+                        width: 50
+                    }, {
+                        colHeader: 'Process',
+                        name: 'process',
+                        sortable: false,
+                        width: 100
+                    }, {
+                        name: 'exist',
+                        hidden: true
+                    }]
                 });
-            }
-            
-            loadInitInfo();
-            
-            $("#exit").click(function(){
-                callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.CloseBrowserHandler");
-            });
-            
-            var msgDialog = $("<div></div>").dialog({
-                "title": "ERROR",
-                "autoOpen": false,
-                "modal": true
+                $(window).bind('resize', function(){
+                    localFileList.setGridWidth($(window).width() - 5);
+                });
+                
+                function loadInitInfo(){
+                    var payload = {};
+                    payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC004Handler";
+                    payload.actionName = "getInitInfo";
+                    $.ajax({
+                        "url": __ajaxHandler,
+                        "type": "post",
+                        "dataType": "json",
+                        "data": payload,
+                        "success": function(data){
+                            localFileList.addGridData(data);
+                            updateGridData(data);
+                        },
+                        "error": function(xhr, status, error){
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
+                    });
+                }
+                
+                loadInitInfo();
+                
+                $("#exit").click(function(){
+                    callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.CloseBrowserHandler");
+                });
             });
             -->
         </script>

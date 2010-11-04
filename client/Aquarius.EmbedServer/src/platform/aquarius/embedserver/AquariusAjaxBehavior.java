@@ -21,6 +21,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.target.basic.StringRequestTarget;
 import org.eclipse.core.runtime.Platform;
@@ -64,11 +65,8 @@ public class AquariusAjaxBehavior extends AbstractAjaxBehavior {
         /*
          * this.getCallbackUrl(false), false代表非最新的page也可以用這個call back
          */
-        response.renderJavascript(
-                "var __ajaxHandler=window.location.pathname+'"
-                        + getCallbackUrl(false) + "';",
-                "Inserted-by-AquariusAjaxBehavior-"
-                        + System.currentTimeMillis());
+        response.renderJavascript("var __ajaxHandler=window.location.pathname+'" + getCallbackUrl(false) + "';",
+                "Inserted-by-AquariusAjaxBehavior-" + System.currentTimeMillis());
     }
 
     /*
@@ -90,18 +88,13 @@ public class AquariusAjaxBehavior extends AbstractAjaxBehavior {
      */
     public void onRequest() {
         final RequestCycle requestCycle = RequestCycle.get();
-        final PageParameters params = new PageParameters(requestCycle
-                .getRequest().getParameterMap());
+        final PageParameters params = new PageParameters(requestCycle.getRequest().getParameterMap());
 
-        logger.debug(requestCycle.getSession().getId() + ", ajaxRequestParam: "
-                + params);
+        logger.debug(requestCycle.getSession().getId() + ", ajaxRequestParam: " + params);
 
-        String ajaxHandlerBundle = params.getString(AJAX_HANDLER_BUNDLE_KEY,
-                AJAX_HANDLER_BUNDLE_DEFAULT);
-        String ajaxHandlerBundleVersion = params.getString(
-                AJAX_HANDLER_BUNDLE_VERSION_KEY, "");
-        String ajaxHandlerName = params.getString(AJAX_HANDLER_KEY,
-                AJAX_DEFAULT_HANDLER_NAME);
+        String ajaxHandlerBundle = params.getString(AJAX_HANDLER_BUNDLE_KEY, AJAX_HANDLER_BUNDLE_DEFAULT);
+        String ajaxHandlerBundleVersion = params.getString(AJAX_HANDLER_BUNDLE_VERSION_KEY, "");
+        String ajaxHandlerName = params.getString(AJAX_HANDLER_KEY, AJAX_DEFAULT_HANDLER_NAME);
 
         AbstractAquariusPage page = (AbstractAquariusPage) getComponent();
 
@@ -117,33 +110,29 @@ public class AquariusAjaxBehavior extends AbstractAjaxBehavior {
                 Bundle b = Platform.getBundle(ajaxHandlerBundle);
                 Version ver = b.getVersion();
 
-                logger.debug("Execute Ajax, BUNDLE_NAME: " + b.getBundleId()
-                        + ", VERSION: " + ver + ", HANDLER_NAME: "
+                logger.debug("Execute Ajax, BUNDLE_NAME: " + b.getBundleId() + ", VERSION: " + ver + ", HANDLER_NAME: "
                         + ajaxHandlerName);
 
-                IAquariusAjaxHandler handler = (IAquariusAjaxHandler) b
-                        .loadClass(ajaxHandlerName).newInstance();
+                IAquariusAjaxHandler handler = (IAquariusAjaxHandler) b.loadClass(ajaxHandlerName).newInstance();
                 handler.setDao(page.getDao());
+                handler.setRequest((WebRequest)page.getRequest());
                 result = handler.execute(params);
             } else {
                 // 用指定的, 回傳array應是由小version至大version
-                Bundle[] bs = Platform.getBundles(ajaxHandlerBundle,
-                        ajaxHandlerBundleVersion);
+                Bundle[] bs = Platform.getBundles(ajaxHandlerBundle, ajaxHandlerBundleVersion);
 
                 if (bs != null) {
                     Bundle b = bs[0];
 
-                    logger.debug("Execute Ajax, BUNDLE_NAME: "
-                            + b.getBundleId() + ", VERSION: " + b.getVersion()
+                    logger.debug("Execute Ajax, BUNDLE_NAME: " + b.getBundleId() + ", VERSION: " + b.getVersion()
                             + ", HANDLER_NAME: " + ajaxHandlerName);
 
-                    if (!b.getVersion().toString()
-                            .equals(ajaxHandlerBundleVersion)) {
+                    if (!b.getVersion().toString().equals(ajaxHandlerBundleVersion)) {
                         // 版本不合, 報錯
                         // TODO
                     } else {
-                        IAquariusAjaxHandler handler = (IAquariusAjaxHandler) b
-                                .loadClass(ajaxHandlerName).newInstance();
+                        IAquariusAjaxHandler handler = (IAquariusAjaxHandler) b.loadClass(ajaxHandlerName)
+                                .newInstance();
                         handler.setDao(page.getDao());
                         result = handler.execute(params);
                     }
@@ -157,20 +146,19 @@ public class AquariusAjaxBehavior extends AbstractAjaxBehavior {
             // TODO
             // errorMsg
             logger.error(e.getMessage(), e);
-            
+
             // Add by Chih-Liang Chang
-            ((WebResponse) requestCycle.getResponse()).getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            ((WebResponse) requestCycle.getResponse()).getHttpServletResponse().setStatus(
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             result = "{\"type\":\"" + e.getClass().getName() + "\",\"message\":\"" + e.getMessage() + "\"}";
         }
 
         // 判斷是否為檔案,否則用String輸出
-        if (!(params.containsKey("useDefault") && !params
-                .getBoolean("useDefault"))) {
+        if (!(params.containsKey("useDefault") && !params.getBoolean("useDefault"))) {
 
             // TODO
 
-            requestCycle.setRequestTarget(new StringRequestTarget("text/plain",
-                    "utf-8", result.toString()));
+            requestCycle.setRequestTarget(new StringRequestTarget("text/plain", "utf-8", result.toString()));
         }
     }
 }

@@ -56,7 +56,7 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
             fileSts.setStatus("1");
             fileSts.setName(name);
             getDao().update("SUC003_UPD_HOSTFILESTS_BY_NAME", fileSts);
-            FileUtil.copyFile(FolderType.HOST, FolderType.PROCESS, name);
+            FileUtil.copyFile(FolderType.HOST, FolderType.PROCESS, new String[] { name });
         }
         return "";
     }
