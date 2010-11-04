@@ -144,6 +144,47 @@
         <beans:property name="stepName" value="t27"></beans:property>
     </beans:bean>
 
+    <job id="copyViewJob">
+        <split id="copyView">
+            <flow>
+                <step id="deleteLocalBus" next="copyBusView">
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM LOCAL_BUS"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="copyBusView">
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="INSERT INTO LOCAL_BUS (CUST_NUMB, CUST_TYPE, NATNID_REGNNUMB, CUST_TITL_LINE1, DSCT_DESC_L, BIRTHDAY, BRANCH, DATE_ESTB, CUST_STAT, BIZ_TYPE, CUST_ASSNNATID, CUST_ASSNNAME) SELECT CUST_NUMB, CUST_TYPE, NATNID_REGNNUMB, CUST_TITL_LINE1, DSCT_DESC_L, BIRTHDAY, BRANCH, DATE_ESTB, CUST_STAT, BIZ_TYPE, CUST_ASSNNATID, CUST_ASSNNAME FROM GRB"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <step id="deleteLocalLus" next="copyLusView">
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM LOCAL_LUS"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="copyLusView">
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="INSERT INTO LOCAL_LUS (ACCT_NO, UNINO, PROD_NAME, BALANCE, INTEREST, STATUS, NAME, NEW_B_CODE, PERSON_TYPE, COMPANY, COMM_ADR) SELECT ACCOUNT.ACCT_NO, ACCOUNT.UNINO, ACCOUNT.PROD_NAME, ACCOUNT.BALANCE, ACCOUNT.INTEREST, ACCOUNT.STATUS, CIF.NAME, CIF.NEW_B_CODE, CIF.PERSON_TYPE, CIF.COMPANY, CIF.COMM_ADR FROM ACCOUNT LEFT JOIN CIF ON ACCOUNT.UNINO = CIF.UNINO"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+            </flow>
+        </split>
+    </job>
+
     <job id="convertJob">
 
         <decision id="checkFilesDecision" decider="checkFilesDecider">
