@@ -22,6 +22,7 @@
                                                 <constructor-arg value="yyyyMMdd"></constructor-arg>
                                             </bean>
                                         </constructor-arg>
+                                        <constructor-arg value="true"></constructor-arg>
                                     </bean>
                                 </entry>
                             </map>
@@ -63,6 +64,7 @@
             <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
                 <property name="selectClause" value="SELECT *"></property>
                 <property name="fromClause" value="FROM A73"></property>
+                <property name="sortKey" value="SR_NO"></property>
             </bean>
         </property>
         <property name="rowMapper">
