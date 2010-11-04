@@ -1,9 +1,17 @@
 package tw.com.citi.cdic.client.handler;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.util.upload.DiskFileItemFactory;
+import org.apache.wicket.util.upload.FileItem;
+import org.apache.wicket.util.upload.FileItemFactory;
+import org.apache.wicket.util.upload.ServletFileUpload;
 import org.eclipse.core.runtime.Platform;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -11,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import platform.aquarius.embedserver.AquariusAjaxDaoHandler;
 import tw.com.citi.cdic.client.model.LocalFileSts;
+import tw.com.citi.cdic.utils.FileUtil;
+import tw.com.citi.cdic.utils.FileUtil.FolderType;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,18 +36,37 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
 
     @Override
     public Object execute(PageParameters params) throws Exception {
-        String actionName = params.getString("actionName");
-        if ("getInitInfo".equals(actionName)) {
-            return getInitInfo();
-        } else if ("upload".equals(actionName)) {
-            return upload(params);
-        } else if ("confirm".equals(actionName)) {
-            return confirm(params);
+        HttpServletRequest req = getRequest().getHttpServletRequest();
+        boolean isMultipart = ServletFileUpload.isMultipartContent(req);
+        if (isMultipart) {
+            FileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            List<FileItem> items = upload.parseRequest(req);
+            uploadFiles(items);
+            return "";
+        }else{
+            String actionName = params.getString("actionName");
+            if ("getInitInfo".equals(actionName)) {
+                return getInitInfo();
+            } else if ("confirm".equals(actionName) || "upload".equals(actionName)) {
+                return confirm(params);
+            } else if ("download".equals(actionName)) {
+                return download(params);
+            }
+            throw new IllegalArgumentException("Cannot find actionName: " + actionName);
         }
-        throw new IllegalArgumentException("Cannot find actionName: " + actionName);
     }
 
-    private void saveLocalFileSts(String sql, String name) {
+    private void uploadFiles(List<FileItem> items) throws IOException {
+        for (Iterator<FileItem> iter = items.iterator(); iter.hasNext();) {
+            FileItem item = iter.next();
+            if (!item.isFormField()) {
+                FileUtil.uploadFile(item.getInputStream(), FolderType.PROCESS, item.getName());
+            }
+        }
+    }
+
+    private void saveLocalFileStsByName(String name) {
         String[] args = Platform.getApplicationArgs();
         String processUser = args != null && args.length > 0 ? args[0] : null;
         LocalFileSts fileSts = new LocalFileSts();
@@ -45,19 +74,21 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
         fileSts.setProcessUser(processUser);
         fileSts.setStatus("1");
         fileSts.setUploadDateTime(new Date());
-        getDao().update(sql, fileSts);
+        getDao().update("SUC004_UPD_LOCALFILESTS_BY_FILENAME", fileSts);
+    }
+
+    private Object download(PageParameters params) throws Exception {
+        JSONObject actionParam = new JSONObject(params.getString("actionParam"));
+        String savePath = actionParam.getString("savePath");
+        String fileName = actionParam.getString("fileName");
+        FileUtil.copyFile(FolderType.PROCESS, savePath, fileName);
+        return "";
     }
 
     private Object confirm(PageParameters params) throws Exception {
         JSONObject actionParam = new JSONObject(params.getString("actionParam"));
-        saveLocalFileSts("SUC004_UPD_LOCALFILESTS_BY_FILENAME", actionParam.getString("fileName"));
-        return "";
-    }
-
-    private Object upload(PageParameters params) throws Exception {
-        JSONObject actionParam = new JSONObject(params.getString("actionParam"));
-        saveLocalFileSts("SUC004_INS_LOCALFILESTS", actionParam.getString("fileName"));
-        return "";
+        saveLocalFileStsByName(actionParam.getString("fileName"));
+        return getInitInfo();
     }
 
     private Object getInitInfo() throws Exception {
@@ -65,7 +96,7 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
         if (localFileList != null && localFileList.size() > 0) {
             JsonArray result = new JsonArray();
             for (LocalFileSts localFile : localFileList) {
-                // TODO check local file 是否存在於 process folder
+                localFile.setExist(FileUtil.exist(FolderType.PROCESS, localFile.getName()));
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.create();
                 result.add(gson.toJsonTree(localFile, LocalFileSts.class));

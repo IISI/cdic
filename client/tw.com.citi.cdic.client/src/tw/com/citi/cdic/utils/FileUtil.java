@@ -1,5 +1,8 @@
 package tw.com.citi.cdic.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +43,9 @@ public class FileUtil {
     private static Properties config;
     private static FileSystemManager fsManager;
     private static FileSystemOptions opts;
+    private static final int BUFF_SIZE = 100000;
+    private static final byte[] buffer = new byte[BUFF_SIZE];
+
     static {
         config = new Properties();
         try {
@@ -69,19 +75,8 @@ public class FileUtil {
         return file;
     }
 
-    public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String... sorceFileNames)
-            throws Exception {
-        if (sourceFolder == null) {
-            throw new IllegalArgumentException("input source folder is invalid.");
-        }
-        if (targetFolder == null) {
-            throw new IllegalArgumentException("input target folder is invalid.");
-        }
+    public static void copyFile(FileObject source, FileObject target, String... sorceFileNames) throws Exception {
         List<FileObject> files = new ArrayList<FileObject>();
-        FileObject source = fsManager.resolveFile("smb://" + config.getProperty(sourceFolder.getKey() + ".host")
-                + config.getProperty(sourceFolder.getKey() + ".path"), opts);
-        FileObject target = fsManager.resolveFile("smb://" + config.getProperty(targetFolder.getKey() + ".host")
-                + config.getProperty(targetFolder.getKey() + ".path"), opts);
         if (sorceFileNames == null || sorceFileNames.length == 0) {
             // 全部複製
             FileObject[] objects = source.getChildren();
@@ -111,5 +106,69 @@ public class FileUtil {
             });
             target.copyFrom(source, ffs);
         }
+    }
+
+    public static void copyFile(FolderType sourceFolder, String localPath, String... sorceFileNames) throws Exception {
+        if (sourceFolder == null) {
+            throw new IllegalArgumentException("input source folder is invalid.");
+        }
+        if (localPath == null || "".equals(localPath.trim())) {
+            throw new IllegalArgumentException("input local path is invalid.");
+        }
+        FileObject source = fsManager.resolveFile("smb://" + config.getProperty(sourceFolder.getKey() + ".host")
+                + config.getProperty(sourceFolder.getKey() + ".path"), opts);
+        FileObject target = fsManager.resolveFile("file://" + localPath);
+        copyFile(source, target, sorceFileNames);
+    }
+
+    public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String... sorceFileNames)
+            throws Exception {
+        if (sourceFolder == null) {
+            throw new IllegalArgumentException("input source folder is invalid.");
+        }
+        if (targetFolder == null) {
+            throw new IllegalArgumentException("input target folder is invalid.");
+        }
+        FileObject source = fsManager.resolveFile("smb://" + config.getProperty(sourceFolder.getKey() + ".host")
+                + config.getProperty(sourceFolder.getKey() + ".path"), opts);
+        FileObject target = fsManager.resolveFile("smb://" + config.getProperty(targetFolder.getKey() + ".host")
+                + config.getProperty(targetFolder.getKey() + ".path"), opts);
+        copyFile(source, target, sorceFileNames);
+    }
+
+    public static void uploadFile(InputStream in, FolderType target, String fileName) throws IOException {
+        FileObject folder = fsManager.resolveFile(
+                "smb://" + config.getProperty(target.getKey() + ".host")
+                        + config.getProperty(target.getKey() + ".path"), opts);
+        FileObject file = fsManager.resolveFile(folder, fileName);
+        file.createFile();
+        OutputStream out = null;
+        try {
+            out = file.getContent().getOutputStream(false);
+            while (true) {
+                synchronized (buffer) {
+                    int amountRead = in.read(buffer);
+                    if (amountRead == -1) {
+                        break;
+                    }
+                    out.write(buffer, 0, amountRead);
+                }
+            }
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+            if (out != null) {
+                out.close();
+            }
+        }
+    }
+
+    public static boolean exist(FolderType target, String fileName) throws FileSystemException {
+        FileObject folder = fsManager.resolveFile(
+                "smb://" + config.getProperty(target.getKey() + ".host")
+                        + config.getProperty(target.getKey() + ".path"), opts);
+        FileObject file = fsManager.resolveFile(folder, fileName);
+        return file.exists();
     }
 }
