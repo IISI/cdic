@@ -23,6 +23,7 @@
                                                 <constructor-arg value="yyyyMMdd"></constructor-arg>
                                             </bean>
                                         </constructor-arg>
+                                        <constructor-arg value="true"></constructor-arg>
                                     </bean>
                                 </entry>
                             </map>
@@ -116,6 +117,7 @@
                                                 <constructor-arg value="yyyyMMdd"></constructor-arg>
                                             </bean>
                                         </constructor-arg>
+                                        <constructor-arg value="true"></constructor-arg>
                                     </bean>
                                 </entry>
                             </map>
