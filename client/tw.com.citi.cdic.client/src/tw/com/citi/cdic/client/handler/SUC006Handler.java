@@ -1,5 +1,6 @@
 package tw.com.citi.cdic.client.handler;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import platform.aquarius.embedserver.AquariusAjaxDaoHandler;
 import tw.com.citi.cdic.client.dto.ConfirmDto;
 import tw.com.citi.cdic.client.model.CDICFileSts;
+import tw.com.citi.cdic.utils.FileUtil;
+import tw.com.citi.cdic.utils.FileUtil.FolderType;
 import tw.com.citi.cdic.utils.Messages;
 
 import com.google.gson.Gson;
@@ -62,23 +65,27 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
     }
 
     private Object downloadSample(PageParameters params) throws Exception {
-        // TODO
         JSONObject actionParam = new JSONObject(params.getString("actionParam"));
-        System.out.println(actionParam.get("fileNo"));
+        String savePath = actionParam.getString("savePath");
+        String fileNo = actionParam.getString("fileNo");
         // 根據 fileNo 取得 subFile
         Map<String, Object> queryParams = new HashMap<String, Object>();
-        queryParams.put("fileNo", actionParam.get("fileNo"));
+        queryParams.put("fileNo", fileNo);
         List<CDICFileSts> cdicFileList = getDao().query("SUC006_QRY_CDICFILESTS_BY_FILENO", CDICFileSts.class,
                 queryParams);
         if (cdicFileList != null && cdicFileList.size() > 0) {
+            List<String> files = new ArrayList<String>();
             for (CDICFileSts cdicFile : cdicFileList) {
                 String subFiles = cdicFile.getSubFile();
                 StringTokenizer st = new StringTokenizer(subFiles, " ");
                 while (st.hasMoreElements()) {
                     String file = st.nextToken();
-                    // TODO download file
-                    System.out.println(file);
+                    files.add(file);
                 }
+            }
+            if (files != null && files.size() > 0) {
+                String[] temp = new String[files.size()];
+                FileUtil.copyFile(FolderType.PROCESS, savePath, files.toArray(temp));
             }
         }
         return "";

@@ -17,11 +17,13 @@
             var batchStatusList;
             var sample = function(row){
                 var fileNo = batchStatusList.getCell(row, 'fileNo');
+                var path = callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.SelectFilePathHandler");
                 var payload = {};
                 payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
                 payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC006Handler";
                 payload.actionName = "downloadSample";
                 payload.actionParam = JSON.stringify({
+                    "savePath": path,
                     "fileNo": fileNo
                 });
                 $.ajax({
@@ -30,6 +32,7 @@
                     "dataType": "json",
                     "data": payload,
                     "success": function(data){
+                        CommonAPI.showMessage("檔案下載完畢。");
                     },
                     "error": function(xhr, status, error){
                         var resp = JSON.parse(xhr.responseText);
