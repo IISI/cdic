@@ -76,6 +76,14 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
         }
         if (batches.size() > 0) {
             // TODO trigger batch
+            String[] cmd = new String[] { "cmd", "/C", "PsExe.exe"};
+            Runtime rt = Runtime.getRuntime();
+            int exitVal = 0;
+            Process p = rt.exec(cmd);
+            exitVal = p.waitFor();
+            if(exitVal != 0) {
+                throw new UnsupportedOperationException("trigger batch failed.");
+            }
         }
         return "";
     }
