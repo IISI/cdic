@@ -54,7 +54,7 @@
             </flow>
             <flow>
                 <decision id="f04Decision" decider="f04Decider">
-                    <next on="EXECUTE" to="f04A" />
+                    <next on="EXECUTE" to="f04A-init" />
                     <end on="SKIP" />
                 </decision>
                 <step id="f04A-init" next="f04A">
@@ -75,7 +75,7 @@
             </flow>
             <flow>
                 <decision id="f05Decision" decider="f05Decider">
-                    <next on="EXECUTE" to="f05" />
+                    <next on="EXECUTE" to="f05-init" />
                     <end on="SKIP" />
                 </decision>
                 <step id="f05-init" next="f05">
