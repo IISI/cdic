@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
 
     <job id="group1Job">
-        <split id="f02A-f03A-f04A-f05" next="f07-f08-f18">
+        <split id="f02A-f03A-f04A-f05" next="f08-a31">
             <flow>
                 <decision id="f02Decision" decider="f02Decider">
                     <next on="EXECUTE" to="f02A-a21" />
@@ -95,55 +95,19 @@
                 </step>
             </flow>
         </split>
-        <split id="f07-f08-f18" next="f02B-f03B-F04B">
-            <flow>
-                <decision id="f07Decision" decider="f07Decider">
-                    <next on="EXECUTE" to="f07-a26" />
-                    <end on="SKIP" />
-                </decision>
-                <step id="f07-a26" next="f07-b26">
-                    <description>把 CDICF07H 的資料 import 至 A26 file</description>
-                    <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="a26Processor" writer="a26FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="f07-b26" next="f07-c26">
-                    <description>把 CDICF07H 的資料 import 至 B26 file</description>
-                    <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="b26Processor" writer="b26FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="f07-c26">
-                    <description>把 CDICF07H 的資料 import 至 C26 file</description>
-                    <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-            </flow>
-            <flow>
-                <step id="f08-a31" next="f08-b31">
-                    <description>把 JointAcclist 的資料 import 至 A31</description>
-                    <tasklet>
-                        <chunk reader="jointAcclistFileReader" processor="a31Processor" writer="a31FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="f08-b31">
-                    <description>把 JointAcclist 的資料 import 至 B31</description>
-                    <tasklet>
-                        <chunk reader="jointAcclistFileReader" processor="b31Processor" writer="b31FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-            </flow>
-            <flow>
-                <step id="f18">
-                    <description>Summarise BUS view 的資料，產生 A61</description>
-                    <tasklet>
-                        <chunk reader="busDbReader" processor="SBF18Processor" writer="f18Writer" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-            </flow>
-        </split>
-        <split id="f02B-f03B-F04B">
+        <step id="f08-a31" next="f08-b31">
+            <description>把 JointAcclist 的資料 import 至 A31</description>
+            <tasklet>
+                <chunk reader="jointAcclistFileReader" processor="a31Processor" writer="a31FileWriter" commit-interval="500"></chunk>
+            </tasklet>
+        </step>
+        <step id="f08-b31" next="f02B-f03B-f04B">
+            <description>把 JointAcclist 的資料 import 至 B31</description>
+            <tasklet>
+                <chunk reader="jointAcclistFileReader" processor="b31Processor" writer="b31FileWriter" commit-interval="500"></chunk>
+            </tasklet>
+        </step>
+        <split id="f02B-f03B-f04B">
             <flow>
                 <step id="f02B-update-a21" next="f02B-update-b21">
                     <description>讀取 table A31 的資料來更新 table A21</description>

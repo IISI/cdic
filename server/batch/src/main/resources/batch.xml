@@ -135,6 +135,30 @@
                 </step>
             </flow>
             <flow>
+                <decision id="f07Decision" decider="f07Decider">
+                    <next on="EXECUTE" to="f07-a26" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="f07-a26" next="f07-b26">
+                    <description>把 CDICF07H 的資料 import 至 A26 file</description>
+                    <tasklet>
+                        <chunk reader="cdicF07HFileReader" processor="a26Processor" writer="a26FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f07-b26" next="f07-c26">
+                    <description>把 CDICF07H 的資料 import 至 B26 file</description>
+                    <tasklet>
+                        <chunk reader="cdicF07HFileReader" processor="b26Processor" writer="b26FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f07-c26">
+                    <description>把 CDICF07H 的資料 import 至 C26 file</description>
+                    <tasklet>
+                        <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
                 <split id="f10">
                     <flow>
                         <step id="f10-sample">
@@ -187,6 +211,14 @@
                         </step>
                     </flow>
                 </split>
+            </flow>
+            <flow>
+                <step id="f18">
+                    <description>Summarise BUS view 的資料，產生 A61</description>
+                    <tasklet>
+                        <chunk reader="busDbReader" processor="SBF18Processor" writer="f18Writer" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
             </flow>
             <flow>
                 <split id="f21-1" next="a73db-a73file">
