@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
 
     <job id="group1Job">
-        <split id="f02A-f03A-f04A-f05" next="f08-a31">
+        <split id="f02A-f03A-f04A-f05" next="f08Decision">
             <flow>
                 <decision id="f02Decision" decider="f02Decider">
                     <next on="EXECUTE" to="f02A-a21" />
@@ -95,6 +95,10 @@
                 </step>
             </flow>
         </split>
+        <decision id="f08Decision" decider="f08Decider">
+            <next on="EXECUTE" to="f08-a31" />
+            <end on="SKIP" />
+        </decision>
         <step id="f08-a31" next="f08-b31">
             <description>把 JointAcclist 的資料 import 至 A31</description>
             <tasklet>

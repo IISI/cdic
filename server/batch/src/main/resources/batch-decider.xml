@@ -28,6 +28,10 @@
         <beans:property name="stepName" value="F07"></beans:property>
     </beans:bean>
 
+    <beans:bean id="f08Decider" parent="skipDecider">
+        <beans:property name="stepName" value="F08"></beans:property>
+    </beans:bean>
+
     <beans:bean id="t02Decider" parent="skipDecider">
         <beans:property name="stepName" value="T02"></beans:property>
     </beans:bean>
