@@ -81,67 +81,67 @@
     </beans:bean>
 
     <beans:bean id="f01Decider" parent="skipDecider">
-        <beans:property name="stepName" value="f01"></beans:property>
+        <beans:property name="stepName" value="F01"></beans:property>
     </beans:bean>
 
     <beans:bean id="f02Decider" parent="skipDecider">
-        <beans:property name="stepName" value="f02"></beans:property>
+        <beans:property name="stepName" value="F02"></beans:property>
     </beans:bean>
 
     <beans:bean id="f07Decider" parent="skipDecider">
-        <beans:property name="stepName" value="f07"></beans:property>
+        <beans:property name="stepName" value="F07"></beans:property>
     </beans:bean>
 
     <beans:bean id="t02Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t02"></beans:property>
+        <beans:property name="stepName" value="T02"></beans:property>
     </beans:bean>
 
     <beans:bean id="t03Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t03"></beans:property>
+        <beans:property name="stepName" value="T03"></beans:property>
     </beans:bean>
 
     <beans:bean id="t04Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t04"></beans:property>
+        <beans:property name="stepName" value="T04"></beans:property>
     </beans:bean>
 
     <beans:bean id="t08Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t08"></beans:property>
+        <beans:property name="stepName" value="T08"></beans:property>
     </beans:bean>
 
     <beans:bean id="t09Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t09"></beans:property>
+        <beans:property name="stepName" value="T09"></beans:property>
     </beans:bean>
 
     <beans:bean id="t10Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t10"></beans:property>
+        <beans:property name="stepName" value="T10"></beans:property>
     </beans:bean>
 
     <beans:bean id="t11Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t11"></beans:property>
+        <beans:property name="stepName" value="T11"></beans:property>
     </beans:bean>
 
     <beans:bean id="t13Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t13"></beans:property>
+        <beans:property name="stepName" value="T13"></beans:property>
     </beans:bean>
 
     <beans:bean id="t14Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t14"></beans:property>
+        <beans:property name="stepName" value="T14"></beans:property>
     </beans:bean>
 
     <beans:bean id="t18Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t18"></beans:property>
+        <beans:property name="stepName" value="T18"></beans:property>
     </beans:bean>
 
     <beans:bean id="t20Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t20"></beans:property>
+        <beans:property name="stepName" value="T20"></beans:property>
     </beans:bean>
 
     <beans:bean id="t21Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t21"></beans:property>
+        <beans:property name="stepName" value="T21"></beans:property>
     </beans:bean>
 
     <beans:bean id="t27Decider" parent="skipDecider">
-        <beans:property name="stepName" value="t27"></beans:property>
+        <beans:property name="stepName" value="T27"></beans:property>
     </beans:bean>
 
     <job id="copyViewJob">
