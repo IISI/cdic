@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/batch" xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
+
+    <job id="group1Job">
+        <split id="f02A-f03A-f04A-f05" next="f08Decision">
+            <flow>
+                <decision id="f02Decision" decider="f02Decider">
+                    <next on="EXECUTE" to="f02A-a21" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="f02A-a21" next="f02A-b21">
+                    <description>把 CDICF02I 的資料 import 至 A21 table</description>
+                    <tasklet>
+                        <chunk reader="cdicF02IFileReader" writer="a21DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f02A-b21" next="f02A-c21">
+                    <description>把 CDICF02R 的資料 import 至 B21 table</description>
+                    <tasklet>
+                        <chunk reader="cdicF02RFileReader" processor="b21Processor" writer="b21DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f02A-c21">
+                    <description>把 CDICF02R 的資料 import 至 C21 file 及 C21 table</description>
+                    <tasklet>
+                        <chunk reader="cdicF02RFileReader" processor="c21Processor" writer="c21Writer" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="f03Decision" decider="f03Decider">
+                    <next on="EXECUTE" to="f03A-a22" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="f03A-a22" next="f03A-b22">
+                    <description>把 CDICF03 的資料 import 至 A22 table</description>
+                    <tasklet>
+                        <chunk reader="cdicF03FileReader" processor="a22Processor" writer="a22DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f03A-b22" next="f03A-c22">
+                    <description>把 CDICF03 的資料 import 至 B22 table</description>
+                    <tasklet>
+                        <chunk reader="cdicF03FileReader" processor="b22Processor" writer="b22DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f03A-c22">
+                    <description>把 CDICF03 的資料 import 至 C22 table 及 C22 file</description>
+                    <tasklet>
+                        <chunk reader="cdicF03FileReader" processor="c22Processor" writer="c22Writer" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="f04Decision" decider="f04Decider">
+                    <next on="EXECUTE" to="f04A-init" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="f04A-init" next="f04A">
+                    <description>刪除 table A23 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM A23"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f04A">
+                    <description>把 CDICF04 的資料 import 至 A23 table</description>
+                    <tasklet>
+                        <chunk reader="cdicF04FileReader" writer="a23DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="f05Decision" decider="f05Decider">
+                    <next on="EXECUTE" to="f05-init" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="f05-init" next="f05">
+                    <description>刪除 table A24 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM A24"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f05">
+                    <description>讀取 LUS view 的資料，然後產生 A24 table 及 file。</description>
+                    <tasklet>
+                        <chunk reader="lusDbReader" writer="a24Writer" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+        </split>
+        <decision id="f08Decision" decider="f08Decider">
+            <next on="EXECUTE" to="f08-a31" />
+            <end on="SKIP" />
+        </decision>
+        <step id="f08-a31" next="f08-b31">
+            <description>把 JointAcclist 的資料 import 至 A31</description>
+            <tasklet>
+                <chunk reader="jointAcclistFileReader" processor="a31Processor" writer="a31FileWriter" commit-interval="500"></chunk>
+            </tasklet>
+        </step>
+        <step id="f08-b31" next="f02B-f03B-f04B">
+            <description>把 JointAcclist 的資料 import 至 B31</description>
+            <tasklet>
+                <chunk reader="jointAcclistFileReader" processor="b31Processor" writer="b31FileWriter" commit-interval="500"></chunk>
+            </tasklet>
+        </step>
+        <split id="f02B-f03B-f04B">
+            <flow>
+                <step id="f02B-update-a21" next="f02B-update-b21">
+                    <description>讀取 table A31 的資料來更新 table A21</description>
+                    <tasklet>
+                        <chunk reader="a31FileReader" processor="f02B-a21Processor" writer="f02B-a21DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f02B-update-b21" next="f02B-copy-a21">
+                    <description>讀取 table B31 的資料來更新 table B21</description>
+                    <tasklet>
+                        <chunk reader="b31FileReader" processor="f02B-b21Processor" writer="f02B-b21DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f02B-copy-a21" next="f02B-copy-b21">
+                    <description>將 tabel A21 的資料 export 至 file</description>
+                    <tasklet>
+                        <chunk reader="a21DbReader" writer="a21FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f02B-copy-b21">
+                    <description>將 table B21 的資料 export 至 file</description>
+                    <tasklet>
+                        <chunk reader="b21DbReader" writer="b21FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <step id="f03B-update-a22" next="f03B-update-b22">
+                    <description>讀取 table A31 的資料來更新 table A22</description>
+                    <tasklet>
+                        <chunk reader="a31FileReader" processor="f03B-a22Processor" writer="f03B-a22DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f03B-update-b22" next="f03B-copy-a22">
+                    <description>讀取 table B31 的資料來更新 table B22</description>
+                    <tasklet>
+                        <chunk reader="b31FileReader" processor="f03B-b22Processor" writer="f03B-b22DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f03B-copy-a22" next="f03B-copy-b22">
+                    <description>將 tabel A22 的資料 export 至 file</description>
+                    <tasklet>
+                        <chunk reader="a22DbReader" writer="a22FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f03B-copy-b22">
+                    <description>將 tabel B22 的資料 export 至 file</description>
+                    <tasklet>
+                        <chunk reader="b22DbReader" writer="b22FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <step id="f04B-update" next="f04B-copy">
+                    <description>讀取 table A31 的資料來更新 table A23</description>
+                    <tasklet>
+                        <chunk reader="a31FileReader" processor="f04B-a23Processor" writer="f04B-a23DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f04B-copy">
+                    <description>將 tabel A23 的資料 export 至 file</description>
+                    <tasklet>
+                        <chunk reader="a23DbReader" writer="a23FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+        </split>
+    </job>
+
+</beans:beans>
