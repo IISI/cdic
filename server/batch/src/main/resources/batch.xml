@@ -213,6 +213,10 @@
                 </split>
             </flow>
             <flow>
+                <decision id="f18Decision" decider="f18Decider">
+                    <next on="EXECUTE" to="f18" />
+                    <end on="SKIP" />
+                </decision>
                 <step id="f18">
                     <description>Summarise BUS view 的資料，產生 A61</description>
                     <tasklet>
