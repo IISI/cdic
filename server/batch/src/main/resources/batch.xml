@@ -75,7 +75,7 @@
     <beans:bean id="itemSqlParameterSourceProvider" class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"></beans:bean>
 
     <job id="copyViewJob">
-        <split id="copyView">
+        <split id="copyView" next="updateTableFlowInitStatus">
             <flow>
                 <step id="deleteLocalBus" next="copyBusView">
                     <tasklet>
@@ -113,6 +113,14 @@
                 </step>
             </flow>
         </split>
+        <step id="updateTableFlowInitStatus">
+            <tasklet>
+                <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                    <beans:property name="dataSource" ref="dataSource"></beans:property>
+                    <beans:property name="sql" value="UPDATE TABLEFLOW SET INITSTATUS = '2'"></beans:property>
+                </beans:bean>
+            </tasklet>
+        </step>
     </job>
 
     <job id="convertJob">
