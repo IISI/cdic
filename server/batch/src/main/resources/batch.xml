@@ -116,34 +116,6 @@
     </job>
 
     <job id="convertJob">
-
-        <decision id="checkFilesDecision" decider="checkFilesDecider">
-            <next on="EXECUTE" to="checkFiles" />
-            <next on="SKIP" to="copyFilesDecision" />
-        </decision>
-        <step id="checkFiles">
-            <description>檢查檔案是否已經準備好</description>
-            <tasklet>
-                <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CheckFilesTasklet" />
-            </tasklet>
-            <fail on="FAILED" exit-code="FILE INCOMPLETE" />
-            <next on="*" to="copyFilesDecision" />
-        </step>
-
-        <decision id="copyFilesDecision" decider="copyFilesDecider">
-            <next on="EXECUTE" to="copyFiles" />
-            <next on="SKIP" to="importFiles" />
-        </decision>
-        <step id="copyFiles" next="importFiles">
-            <description>將檔案複製一份至 process 資料夾</description>
-            <tasklet>
-                <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                    <beans:property name="sourceDir" value="z:/input"></beans:property>
-                    <beans:property name="targetDir" value="z:/process"></beans:property>
-                </beans:bean>
-            </tasklet>
-        </step>
-
         <split id="importFiles">
             <flow>
                 <decision id="f01Decision" decider="f01Decider">
@@ -480,7 +452,6 @@
                 </step>
             </flow>
         </split>
-
     </job>
 
 </beans:beans>

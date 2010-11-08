@@ -4,14 +4,6 @@
 
     <beans:bean id="skipDecider" class="tw.com.citi.cdic.batch.job.flow.SkipDecider" abstract="true"></beans:bean>
 
-    <beans:bean id="checkFilesDecider" parent="skipDecider">
-        <beans:property name="stepName" value="checkFiles"></beans:property>
-    </beans:bean>
-
-    <beans:bean id="copyFilesDecider" parent="skipDecider">
-        <beans:property name="stepName" value="copyFiles"></beans:property>
-    </beans:bean>
-
     <beans:bean id="f01Decider" parent="skipDecider">
         <beans:property name="stepName" value="F01"></beans:property>
     </beans:bean>
