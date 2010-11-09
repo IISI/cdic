@@ -19,7 +19,7 @@ public class DbInfo {
     private String password;
 
     public DbInfo() throws ConfigurationException {
-        Configuration config = new HierarchicalINIConfiguration("security.ini");
+        Configuration config = new HierarchicalINIConfiguration("database.ini");
         String mode = config.getString("CONFIG.DEVELOPVERSION");
         serverName = config.getString(mode + ".SECServerName");
         dbName = config.getString(mode + ".SECDBName");
