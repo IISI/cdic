@@ -10,10 +10,6 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <files>
         <file>
-            <source>cdic.cmd</source>
-            <outputDirectory>/</outputDirectory>
-        </file>
-        <file>
             <source>launch.cmd</source>
             <outputDirectory>/</outputDirectory>
         </file>
