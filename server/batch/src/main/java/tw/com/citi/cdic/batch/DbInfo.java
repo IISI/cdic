@@ -12,7 +12,11 @@ public class DbInfo {
 
     private String serverName;
 
+    private String serverPort;
+
     private String dbName;
+
+    private String parameters;
 
     private String username;
 
@@ -21,16 +25,28 @@ public class DbInfo {
     public DbInfo() throws ConfigurationException {
         Configuration config = new HierarchicalINIConfiguration("database.ini");
         String mode = config.getString("CONFIG.DEVELOPVERSION");
-        serverName = config.getString(mode + ".SECServerName");
-        dbName = config.getString(mode + ".SECDBName");
+        serverName = config.getString(mode + ".ServerName");
+        serverPort = config.getString(mode + ".ServerPort");
+        dbName = config.getString(mode + ".DBName");
+        parameters = config.getString(mode + ".Parameters", "");
+        username = config.getString(mode + ".Username");
+        password = config.getString(mode + ".Password");
     }
 
     public String getServerName() {
         return serverName;
     }
 
+    public String getServerPort() {
+        return serverPort;
+    }
+
     public String getDbName() {
         return dbName;
+    }
+
+    public String getParameters() {
+        return parameters;
     }
 
     public String getUsername() {
