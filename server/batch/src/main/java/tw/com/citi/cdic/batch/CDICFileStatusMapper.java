@@ -19,7 +19,7 @@ public class CDICFileStatusMapper implements RowMapper<CDICFileStatus> {
         fileStatus.setFileNo(rs.getString("FILENO"));
         fileStatus.setFileGroup(rs.getString("FILEGROUP"));
         fileStatus.setSubFile(rs.getString("SUBFILE"));
-        fileStatus.setFilename(rs.getNString("FILENAME"));
+        fileStatus.setFilename(rs.getString("FILENAME"));
         fileStatus.setStatus(rs.getString("STATUS"));
         fileStatus.setConfirmer(rs.getString("CONFIRMER"));
         fileStatus.setConfirmDateTime(rs.getDate("CONFIRMDATETIME"));
