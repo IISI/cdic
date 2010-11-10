@@ -13,6 +13,10 @@
             <source>launch.cmd</source>
             <outputDirectory>/</outputDirectory>
         </file>
+        <file>
+            <source>src/main/resources/database.ini</source>
+            <outputDirectory>conf/</outputDirectory>
+        </file>
     </files>
     <dependencySets>
         <dependencySet>

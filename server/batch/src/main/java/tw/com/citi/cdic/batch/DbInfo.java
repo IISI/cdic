@@ -1,14 +1,22 @@
 package tw.com.citi.cdic.batch;
 
+import java.io.IOException;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 /**
  * @author Chih-Liang Chang
  * @since 2010/9/29
  */
 public class DbInfo {
+
+    protected static final Logger logger = LoggerFactory.getLogger(DbInfo.class);
 
     private String serverName;
 
@@ -22,8 +30,10 @@ public class DbInfo {
 
     private String password;
 
-    public DbInfo() throws ConfigurationException {
-        Configuration config = new HierarchicalINIConfiguration("database.ini");
+    public DbInfo() throws ConfigurationException, IOException {
+        Resource resource = new ClassPathResource("database.ini");
+        logger.debug("database.ini exists = {}", resource.exists());
+        Configuration config = new HierarchicalINIConfiguration(resource.getFile());
         String mode = config.getString("CONFIG.DEVELOPVERSION");
         serverName = config.getString(mode + ".ServerName");
         serverPort = config.getString(mode + ".ServerPort");
