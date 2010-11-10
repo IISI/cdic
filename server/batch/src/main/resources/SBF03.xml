@@ -9,6 +9,7 @@
                 <constructor-arg value="z:/input/CDICF03.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
