@@ -203,11 +203,15 @@ public class FileUtil {
     }
 
     public static boolean exist(FolderType target, String fileName) throws FileSystemException {
-        FileObject folder = fsManager.resolveFile(
-                "smb://" + config.getProperty(target.getKey() + ".host")
-                        + config.getProperty(target.getKey() + ".path"), opts);
-        FileObject file = fsManager.resolveFile(folder, fileName);
-        return file.exists();
+        boolean tf = false;
+        if (fileName != null) {
+            FileObject folder = fsManager.resolveFile(
+                    "smb://" + config.getProperty(target.getKey() + ".host")
+                            + config.getProperty(target.getKey() + ".path"), opts);
+            FileObject file = fsManager.resolveFile(folder, fileName);
+            tf = file.exists();
+        }
+        return tf;
     }
 
     public static void createFile(FolderType target, String fileName) throws FileSystemException {

@@ -99,7 +99,8 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
                 ConfirmDto dto = new ConfirmDto();
                 dto.setConfirmer(cdicFile.getConfirmer());
                 StringBuffer fileSet = new StringBuffer();
-                fileSet = fileSet.append(cdicFile.getFileNo()).append("(").append(cdicFile.getSubFile()).append(")");
+                fileSet = fileSet.append(cdicFile.getFileNo()).append("(")
+                        .append(cdicFile.getSubFile() != null ? cdicFile.getSubFile().trim() : "").append(")");
                 dto.setFileSet(fileSet.toString());
                 dto.setGroup(cdicFile.getFileGroup());
                 dto.setFileNo(cdicFile.getFileNo());
