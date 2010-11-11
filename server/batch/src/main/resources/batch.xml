@@ -124,7 +124,7 @@
     </job>
 
     <job id="convertJob">
-        <split id="importFiles">
+        <split id="importFiles" next="f99Decision">
             <flow>
                 <decision id="f01Decision" decider="f01Decider">
                     <next on="EXECUTE" to="f01" />
@@ -496,6 +496,17 @@
                 </step>
             </flow>
         </split>
+        <decision id="f99Decision" decider="f99Decider">
+            <next on="EXECUTE" to="genReport" />
+            <end on="SKIP" />
+        </decision>
+        <step id="genReport">
+            <tasklet>
+                <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.GenerateReportTasklet">
+                    <beans:property name="resource" value="file://D:/temp/aaa.pdf"></beans:property>
+                </beans:bean>
+            </tasklet>
+        </step>
     </job>
 
 </beans:beans>
