@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/">
+    <wicket:head>
+        <title>主機檔案檢查及複製</title>
+    </wicket:head>
+    <wicket:extend>
+        <div id="hostFileList" />
+        <p>
+            &nbsp;&nbsp;
+        </p>
+        <a id="confirm" class="fg-button ui-state-default ui-corner-all" style="float:none;">確認</a>
+        <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <script type="text/javascript">
+            <!--
+            $(function(){
+                var hostFileList = $('#hostFileList').iGrid({
+                    datatype: "local",
+                    height: 400,
+                    needPager: false,
+                    sortname: 'name',
+                    colModel: [{
+                        colHeader: 'Copy',
+                        name: 'copy',
+                        formatter: 'checkbox',
+                        formatoptions: {
+                            disabled: false
+                        },
+                        editable: true,
+                        edittype: 'checkbox',
+                        sortable: false
+                    }, {
+                        colHeader: 'Status',
+                        name: 'status',
+                        sortable: false
+                    }, {
+                        colHeader: 'FileName',
+                        name: 'name',
+                        sortable: false
+                    }, {
+                        colHeader: 'Host-datetime',
+                        name: 'hostDateTimeFmt',
+                        sortable: false
+                    }, {
+                        colHeader: 'size',
+                        name: 'size',
+                        sortable: false
+                    }, {
+                        colHeader: 'Record',
+                        name: 'record',
+                        sortable: false
+                    }, {
+                        colHeader: 'Copy-datetime',
+                        name: 'copyDateTimeFmt',
+                        sortable: false
+                    }, {
+                        colHeader: 'Process-user',
+                        name: 'processUser',
+                        sortable: false
+                    }]
+                });
+                $(window).bind('resize', function(){
+                    hostFileList.setGridWidth($(window).width() - 5);
+                });
+                function loadInitInfo(){
+                    var payload = {};
+                    payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC003Handler";
+                    payload.actionName = "getInitInfo";
+                    $.ajax({
+                        "url": __ajaxHandler,
+                        "type": "post",
+                        "dataType": "json",
+                        "data": payload,
+                        "success": function(data){
+                            hostFileList.addGridData(data);
+                            var ids = hostFileList.getDataIDs();
+                            for (var i = 0; i < ids.length; i++) {
+                                // enable/disable checkbox
+                                var status = hostFileList.getCell(ids[i], "status");
+                                var checkBox = $("#" + ids[i]).find("td[aria-describedby$=copy] :checkbox");
+                                var batchName = hostFileList.getCell(ids[i], "batchName");
+                                status == '檔案不存在' ? checkBox.attr("disabled", true) : checkBox.attr("disabled", false);
+								status == '1' && hostFileList.setCell(ids[i], "status", "檔案已複製");
+                            }
+                        },
+                        "error": function(xhr, status, error){
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
+                    });
+                }
+                
+                loadInitInfo();
+                
+                $("#confirm").click(function(){
+                    var data = new Array();
+                    var ids = hostFileList.getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        $("#" + ids[i]).find("td[aria-describedby$=copy] :checkbox").attr("checked") && data.push(hostFileList.getCell(ids[i], "name"));
+                    }
+                    var payload = {};
+                    payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC003Handler";
+                    payload.actionName = "confirm";
+                    payload.actionParam = JSON.stringify({
+                        "data": data
+                    });
+                    $.ajax({
+                        "url": __ajaxHandler,
+                        "type": "post",
+                        "dataType": "json",
+                        "data": payload,
+                        "success": function(data){
+                            hostFileList.clearGridData();
+                            loadInitInfo();
+                        },
+                        "error": function(xhr, status, error){
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
+                    });
+                });
+                
+                $("#exit").click(function(){
+                    callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.CloseBrowserHandler");
+                });
+                
+                var msgDialog = $("<div></div>").dialog({
+                    "title": "ERROR",
+                    "autoOpen": false,
+                    "modal": true
+                });
+                
+            });
+            -->
+        </script>
+    </wicket:extend>
+</html>

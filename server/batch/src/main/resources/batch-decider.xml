@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="skipDecider" class="tw.com.citi.cdic.batch.job.flow.SkipDecider" abstract="true">
+        <property name="CDICFileStatusDao" ref="CDICFileStatusDao"></property>
+    </bean>
+
+    <bean id="f01Decider" parent="skipDecider">
+        <property name="stepName" value="F01"></property>
+    </bean>
+
+    <bean id="f02Decider" parent="skipDecider">
+        <property name="stepName" value="F02"></property>
+    </bean>
+
+    <bean id="f03Decider" parent="skipDecider">
+        <property name="stepName" value="F03"></property>
+    </bean>
+
+    <bean id="f04Decider" parent="skipDecider">
+        <property name="stepName" value="F04"></property>
+    </bean>
+
+    <bean id="f05Decider" parent="skipDecider">
+        <property name="stepName" value="F05"></property>
+    </bean>
+
+    <bean id="f07Decider" parent="skipDecider">
+        <property name="stepName" value="F07"></property>
+    </bean>
+
+    <bean id="f08Decider" parent="skipDecider">
+        <property name="stepName" value="F08"></property>
+    </bean>
+
+    <bean id="f18Decider" parent="skipDecider">
+        <property name="stepName" value="F18"></property>
+    </bean>
+
+    <bean id="t02Decider" parent="skipDecider">
+        <property name="stepName" value="T02"></property>
+    </bean>
+
+    <bean id="t03Decider" parent="skipDecider">
+        <property name="stepName" value="T03"></property>
+    </bean>
+
+    <bean id="t04Decider" parent="skipDecider">
+        <property name="stepName" value="T04"></property>
+    </bean>
+
+    <bean id="t08Decider" parent="skipDecider">
+        <property name="stepName" value="T08"></property>
+    </bean>
+
+    <bean id="t09Decider" parent="skipDecider">
+        <property name="stepName" value="T09"></property>
+    </bean>
+
+    <bean id="t10Decider" parent="skipDecider">
+        <property name="stepName" value="T10"></property>
+    </bean>
+
+    <bean id="t11Decider" parent="skipDecider">
+        <property name="stepName" value="T11"></property>
+    </bean>
+
+    <bean id="t13Decider" parent="skipDecider">
+        <property name="stepName" value="T13"></property>
+    </bean>
+
+    <bean id="t14Decider" parent="skipDecider">
+        <property name="stepName" value="T14"></property>
+    </bean>
+
+    <bean id="t18Decider" parent="skipDecider">
+        <property name="stepName" value="T18"></property>
+    </bean>
+
+    <bean id="t20Decider" parent="skipDecider">
+        <property name="stepName" value="T20"></property>
+    </bean>
+
+    <bean id="t21Decider" parent="skipDecider">
+        <property name="stepName" value="T21"></property>
+    </bean>
+
+    <bean id="t27Decider" parent="skipDecider">
+        <property name="stepName" value="T27"></property>
+    </bean>
+
+    <bean id="f99Decider" parent="skipDecider">
+        <property name="stepName" value="F99"></property>
+    </bean>
+
+</beans>

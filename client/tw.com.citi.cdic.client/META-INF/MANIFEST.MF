@@ -10,6 +10,14 @@ Require-Bundle: org.eclipse.core.runtime,
  com.springsource.org.json;bundle-version="1.0.0",
  slf4j.api;bundle-version="1.5.11",
  com.google.gson;bundle-version="1.4.0",
- org.springframework.jdbc;bundle-version="3.0.4"
+ org.springframework.jdbc;bundle-version="3.0.4",
+ tw.com.citi.cdic.client.resources;bundle-version="1.0.0",
+ javax.servlet;bundle-version="2.5.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: IISI
+Bundle-ClassPath: .,
+ libs/commons-vfs-2.0-20090326.033229-1.jar,
+ libs/commons-vfs-sandbox-2.0-20090326.033229-1.jar,
+ libs/jcifs-0.8.3.jar,
+ libs/jcl-over-slf4j-1.5.10.jar

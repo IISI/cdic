@@ -13,12 +13,20 @@ public class HostFileSts {
     private int recLen;
 
     private Date hostDateTime;
+    
+    private String hostDateTimeFmt;
 
     private Date copyDateTime;
+    
+    private String copyDateTimeFmt;
 
     private String processUser;
 
     private String status;
+    
+    private int size;
+    
+    private int record;
 
     public String getName() {
         return name;
@@ -66,6 +74,38 @@ public class HostFileSts {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setHostDateTimeFmt(String hostDateTimeFmt) {
+        this.hostDateTimeFmt = hostDateTimeFmt;
+    }
+
+    public String getHostDateTimeFmt() {
+        return hostDateTimeFmt;
+    }
+
+    public void setCopyDateTimeFmt(String copyDateTimeFmt) {
+        this.copyDateTimeFmt = copyDateTimeFmt;
+    }
+
+    public String getCopyDateTimeFmt() {
+        return copyDateTimeFmt;
+    }
+
+    public void setRecord(int record) {
+        this.record = record;
+    }
+
+    public int getRecord() {
+        return record;
     }
 
 }

@@ -5,6 +5,10 @@ import java.io.Writer;
 
 import org.springframework.batch.item.file.FlatFileHeaderCallback;
 
+/**
+ * @author Chih-Liang Chang
+ * @since 2010/10/20
+ */
 public class SingleLineHeaderCallback implements FlatFileHeaderCallback {
 
     private String line;

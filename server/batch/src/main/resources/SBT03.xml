@@ -8,6 +8,7 @@
                 <constructor-arg value="z:/input/CDICT03G.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
@@ -53,8 +54,8 @@
         </property>
     </bean>
 
-    <bean id="t03Processor" class="tw.com.citi.cdic.batch.item.SBT03Processor" />
+    <bean id="t03Processor" class="tw.com.citi.cdic.batch.item.SBT03T03Processor" />
 
-    <bean id="t12Processor" class="tw.com.citi.cdic.batch.item.SBT12Processor" />
+    <bean id="t12Processor" class="tw.com.citi.cdic.batch.item.SBT03T12Processor" />
 
 </beans>

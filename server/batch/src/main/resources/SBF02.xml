@@ -9,6 +9,7 @@
                 <constructor-arg value="z:/input/CDICF02I.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
@@ -23,6 +24,7 @@
                                                 <constructor-arg value="yyyyMMdd"></constructor-arg>
                                             </bean>
                                         </constructor-arg>
+                                        <constructor-arg value="true"></constructor-arg>
                                     </bean>
                                 </entry>
                             </map>
@@ -102,6 +104,7 @@
                 <constructor-arg value="Z:/out/A31.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
@@ -116,6 +119,7 @@
                                                 <constructor-arg value="yyyyMMdd"></constructor-arg>
                                             </bean>
                                         </constructor-arg>
+                                        <constructor-arg value="true"></constructor-arg>
                                     </bean>
                                 </entry>
                             </map>

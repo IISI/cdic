@@ -11,26 +11,58 @@
             &nbsp;&nbsp;
         </p>
         <a id="confirm" class="fg-button ui-state-default ui-corner-all" style="float:none;">確認</a>
-        <a id="cancel" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
         <script type="text/javascript">
-            var sample = function(id){
-                alert('check: ' + id);
+            <!--
+            var batchStatusList;
+            var sample = function(row){
+                var fileNo = batchStatusList.getCell(row, 'fileNo');
+                var path = callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.SelectFilePathHandler");
+                var payload = {};
+                payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC006Handler";
+                payload.actionName = "downloadSample";
+                payload.actionParam = JSON.stringify({
+                    "savePath": path,
+                    "fileNo": fileNo
+                });
+                $.ajax({
+                    "url": __ajaxHandler,
+                    "type": "post",
+                    "dataType": "json",
+                    "data": payload,
+                    "success": function(data){
+                        CommonAPI.showMessage("檔案下載完畢。");
+                    },
+                    "error": function(xhr, status, error){
+                        var resp = JSON.parse(xhr.responseText);
+                        msgDialog.html(resp.message).dialog("open");
+                    }
+                });
             };
-            $().ready(function(){
-                var batchStatusList = $('#batchStatusList').iGrid({
+            $(function(){
+                var confirmButton = $("#confirm").css('display', 'none');
+                batchStatusList = $('#batchStatusList').iGrid({
                     datatype: "local",
                     height: 200,
                     needPager: false,
-                    sortname: 'batchId',
+                    sortname: 'fileSet',
                     colModel: [{
-                        colHeader: '群組/檔案',
-                        name: 'batchId'
+                        colHeader: 'Group',
+                        name: 'group',
+                        sortable: false
                     }, {
-                        colHeader: '狀態',
-                        name: 'batchStatus'
+                        colHeader: 'FileName',
+                        name: 'fileSet',
+                        sortable: false
                     }, {
-                        colHeader: ' ',
-                        name: 'downloadSample'
+                        colHeader: 'Status',
+                        name: 'status',
+                        sortable: false
+                    }, {
+                        colHeader: '下載',
+                        name: 'downloadSample',
+                        sortable: false
                     }, {
                         colHeader: '確認',
                         name: 'confirm',
@@ -39,22 +71,127 @@
                             disabled: false
                         },
                         editable: true,
-                        edittype: 'checkbox'
+                        edittype: 'checkbox',
+                        sortable: false
                     }, {
-                        colHeader: '最後確認人員',
-                        name: 'lastConfirmer'
+                        colHeader: '最後確認者',
+                        name: 'confirmer',
+                        sortable: false
+                    }, {
+                        name: 'fileNo',
+                        hidden: true
                     }]
+                }).delegate("td[aria-describedby$=confirm] :checkbox", "click", function(){
+                    var $this = $(this);
+                    if ($this.attr("checked")) {
+                        confirmButton.css('display', 'inline');
+                    }
+                    else {
+                        enableConfirmButton();
+                    }
                 });
-                batchStatusList.addGridData([[true, 'Group1', ' ', 'OK', '123'], [false, 'Group2', ' ', 'OK', '234']]);
-                var ids = batchStatusList.getDataIDs();
-                for (var i = 0; i < ids.length; i++) {
-                    var cl = ids[i];
-                    be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='sample(" + cl + ");'>下載 Sample</a>";
-                    batchStatusList.setRowData(ids[i], {
-                        downloadSample: be
-                    })
+                $(window).bind('resize', function(){
+                    batchStatusList.setGridWidth($(window).width() - 5);
+                });
+                
+                function enableConfirmButton(){
+                    var confirmed = false;
+                    var ids = batchStatusList.getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        if (batchStatusList.getCell(ids[i], "confirm") == "Yes") {
+                            confirmed = true;
+                            break;
+                        }
+                    }
+                    if (confirmed) {
+                        confirmButton.css('display', 'inline');
+                    }
+                    else {
+                        confirmButton.css('display', 'none');
+                    }
                 }
+                
+                function loadInitInfo(){
+                    var payload = {};
+                    payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC006Handler";
+                    payload.actionName = "getInitInfo";
+                    $.ajax({
+                        "url": __ajaxHandler,
+                        "type": "post",
+                        "dataType": "json",
+                        "data": payload,
+                        "success": function(data){
+                            batchStatusList.addGridData(data);
+                            var ids = batchStatusList.getDataIDs();
+                            for (var i = 0; i < ids.length; i++) {
+                                var checkBox = $("#" + ids[i]).find("td[aria-describedby$=confirm] :checkbox");
+                                checkBox.attr("disabled", true);
+                                var status = batchStatusList.getCell(ids[i], "status");
+                                if (status == "已確認" || status == "已完成") {
+                                    be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='sample(" + ids[i] + ");'>下載 Sample</a>";
+                                    batchStatusList.setRowData(ids[i], {
+                                        downloadSample: be
+                                    })
+                                    if (status == "已完成") {
+                                        checkBox.attr("disabled", false);
+                                    }
+                                    else {
+                                        checkBox.attr("disabled", true);
+                                    }
+                                }
+                            }
+                        },
+                        "error": function(xhr, status, error){
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
+                    });
+                }
+                
+                loadInitInfo();
+                
+                $("#confirm").click(function(){
+                    var data = new Array();
+                    var ids = batchStatusList.getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        $("#" + ids[i]).find("td[aria-describedby$=confirm] :checkbox").attr("checked") && data.push(batchStatusList.getCell(ids[i], "fileNo"));
+                    }
+                    var payload = {};
+                    payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC006Handler";
+                    payload.actionName = "confirm";
+                    payload.actionParam = JSON.stringify({
+                        "data": data
+                    });
+                    $.ajax({
+                        "url": __ajaxHandler,
+                        "type": "post",
+                        "dataType": "json",
+                        "data": payload,
+                        "success": function(data){
+                            batchStatusList.clearGridData();
+                            loadInitInfo();
+                        },
+                        "error": function(xhr, status, error){
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
+                    });
+                });
+                
+                $("#exit").click(function(){
+                    callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.CloseBrowserHandler");
+                });
+                
+                var msgDialog = $("<div></div>").dialog({
+                    "title": "ERROR",
+                    "autoOpen": false,
+                    "modal": true
+                });
+                
             });
+            -->
         </script>
     </wicket:extend>
 </html>

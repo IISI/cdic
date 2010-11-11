@@ -11,15 +11,87 @@
             &nbsp;&nbsp;
         </p>
         <a id="start" class="fg-button ui-state-default ui-corner-all" style="float:none;">開始</a>
-        <a id="cancel" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <div id="sourceInfoDialog" title="來源檔案資訊">
+            <div>
+                <div id="fileNo" /><div id="infoGrid" />
+            </div>
+        </div>
         <script type="text/javascript">
-            var check = function(id){
-                alert('check: ' + id);
+            <!--
+            var batchList;
+            
+            var infoGrid;
+            
+            var sourceInfoDialog = $('#sourceInfoDialog').dialog({
+                "autoOpen": false,
+                "modal": true,
+                "width": 960,
+                "buttons": {
+                    "離開": function(event, ui){
+                        $(this).dialog("close");
+                    }
+                }
+            }).bind("dialogresizestop", function(event, ui){
+                infoGrid.setGridWidth(sourceInfoDialog.width() - 10);
+            });
+            
+            var check = function(row){
+                var fileNo = batchList.getCell(row, 'batchName');
+                $('#fileNo').text(fileNo);
+                var payload = {};
+                payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC005Handler";
+                payload.actionName = "getFileInfo";
+                payload.actionParam = JSON.stringify({
+                    "fileNo": fileNo
+                });
+                $.ajax({
+                    "url": __ajaxHandler,
+                    "type": "post",
+                    "dataType": "json",
+                    "data": payload,
+                    "success": function(data){
+                        infoGrid.addGridData(data);
+                    },
+                    "error": function(xhr, status, error){
+                        var resp = JSON.parse(xhr.responseText);
+                        msgDialog.html(resp.message).dialog("open");
+                    }
+                });
+                sourceInfoDialog.dialog("open").trigger("dialogresizestop");
             };
-            $().ready(function(){
-                var batchList = $('#batchList').iGrid({
+            
+            $(function(){
+                infoGrid = $('#infoGrid').iGrid({
                     datatype: "local",
                     height: 200,
+                    needPager: false,
+                    sortname: 'fileName',
+                    colModel: [{
+                        colHeader: 'File Name',
+                        name: 'name',
+                        sortable: false,
+						width: 50
+                    }, {
+                        colHeader: 'Source Type',
+                        name: 'depType',
+                        sortable: false,
+                        width: 50
+                    }, {
+                        colHeader: 'Host/Upload/Confirm DateTime',
+                        name: 'lastDateTime',
+                        sortable: false
+                    }, {
+                        colHeader: 'process user',
+                        name: 'processUser',
+                        sortable: false,
+                        width: 50
+                    }]
+                });
+                batchList = $('#batchList').iGrid({
+                    datatype: "local",
+                    height: 400,
                     needPager: false,
                     sortname: 'batchId',
                     colModel: [{
@@ -30,31 +102,155 @@
                             disabled: false
                         },
                         editable: true,
-                        edittype: 'checkbox'
+                        edittype: 'checkbox',
+                        sortable: false,
+                        width: 20
                     }, {
                         colHeader: '群組/檔案',
-                        name: 'batchId'
+                        name: 'batchName',
+                        sortable: false,
+                        width: 50
                     }, {
                         colHeader: '狀態',
-                        name: 'batchStatus'
+                        name: 'status',
+                        sortable: false,
+                        width: 50
                     }, {
-                        colHeader: '來源檔案',
-                        name: 'sourceFile'
+                        colHeader: '已備妥來源檔案',
+                        name: 'sourceReady',
+                        sortable: false
+                    }, {
+                        colHeader: '未備妥來源檔案',
+                        name: 'sourceNotReady',
+                        sortable: false
                     }, {
                         colHeader: ' ',
-                        name: 'process'
+                        name: 'process',
+                        sortable: false,
+                        width: 50
+                    }, {
+                        name: 'allowExecution',
+                        hidden: true
+                    }, {
+                        name: 'hasGroup',
+                        hidden: true
                     }]
                 });
-                batchList.addGridData([[true, 'Group1', 'OK', '123'], [false, 'Group2', 'OK', '234']]);
-                var ids = batchList.getDataIDs();
-                for (var i = 0; i < ids.length; i++) {
-                    var cl = ids[i];
-                    be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='check(" + cl + ");'>檢視來源檔案</a>";
-                    batchList.setRowData(ids[i], {
-                        process: be
-                    })
+                $(window).bind('resize', function(){
+                    batchList.setGridWidth($(window).width() - 5);
+                });
+                function loadInitInfo(){
+                    var payload = {};
+                    payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC005Handler";
+                    payload.actionName = "getInitInfo";
+                    $.ajax({
+                        "url": __ajaxHandler,
+                        "type": "post",
+                        "dataType": "json",
+                        "data": payload,
+                        "success": function(data){
+                            batchList.addGridData(data);
+                            var ids = batchList.getDataIDs();
+                            for (var i = 0; i < ids.length; i++) {
+                                // enable/disable checkbox, show/hidden checkbox
+                                var hasGroup = batchList.getCell(ids[i], "hasGroup");
+                                var allow = batchList.getCell(ids[i], "allowExecution");
+                                var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
+                                var batchName = batchList.getCell(ids[i], "batchName");
+                                var status = data[i].status;
+                                if (hasGroup == 'true') {
+                                    checkBox.remove();
+                                    batchList.setCell(ids[i], "batchName", "  " + batchName);
+                                }
+                                else {
+                                    allow == 'true' && status != "4" ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true);
+                                }
+                                var sourceReady = batchList.getCell(ids[i], "sourceReady");
+                                var sourceNotReady = batchList.getCell(ids[i], "sourceNotReady");
+                                if (sourceReady != '' || sourceNotReady != '') {
+                                    be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='check(" + ids[i] + ");'>檢視來源檔案</a>";
+                                    batchList.setRowData(ids[i], {
+                                        process: be
+                                    })
+                                }
+                                if (sourceNotReady != '') {
+                                    batchList.setCell(ids[i], "status", "資料未備妥")
+                                }
+                                else {
+                                    switch (status) {
+                                        case '0':
+                                            batchList.setCell(ids[i], "status", "未開始")
+                                            break;
+                                        case '1':
+                                            batchList.setCell(ids[i], "status", "待執行")
+                                            break;
+                                        case '2':
+                                            batchList.setCell(ids[i], "status", "已完成")
+                                            break;
+                                        case '3':
+                                            batchList.setCell(ids[i], "status", "已確認")
+                                            break;
+                                        case '4':
+                                            batchList.setCell(ids[i], "status", "執行中")
+                                            break;
+                                        case '5':
+                                            batchList.setCell(ids[i], "status", "執行失敗")
+                                            break;
+                                    }
+                                }
+                            }
+                        },
+                        "error": function(xhr, status, error){
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
+                    });
                 }
+                
+                loadInitInfo();
+                
+                $("#start").click(function(){
+                    var data = new Array();
+                    var ids = batchList.getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox").attr("checked") && data.push(batchList.getCell(ids[i], "batchName"));
+                    }
+                    var payload = {};
+                    payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
+                    payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC005Handler";
+                    payload.actionName = "start";
+                    payload.actionParam = JSON.stringify({
+                        "data": data
+                    });
+                    $.ajax({
+                        "url": __ajaxHandler,
+                        "type": "post",
+                        "dataType": "json",
+                        "data": payload,
+                        "success": function(data){
+                            batchList.clearGridData();
+                            loadInitInfo();
+                        },
+                        "error": function(xhr, status, error){
+                            var resp = JSON.parse(xhr.responseText);
+                            msgDialog.html(resp.message).dialog("open");
+                        }
+                    });
+                });
+                
+                $("#exit").click(function(){
+                    callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.CloseBrowserHandler");
+                });
+                
+                var msgDialog = $("<div></div>").dialog({
+                    "title": "ERROR",
+                    "autoOpen": false,
+                    "modal": true
+                });
+                
             });
+            -->
         </script>
     </wicket:extend>
 </html>

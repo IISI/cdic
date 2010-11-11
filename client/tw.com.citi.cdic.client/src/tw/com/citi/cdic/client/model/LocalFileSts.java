@@ -15,6 +15,8 @@ public class LocalFileSts {
     private String processUser;
 
     private String status;
+    
+    private boolean exist;
 
     public String getName() {
         return name;
@@ -46,6 +48,14 @@ public class LocalFileSts {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setExist(boolean exist) {
+        this.exist = exist;
+    }
+
+    public boolean isExist() {
+        return exist;
     }
 
 }

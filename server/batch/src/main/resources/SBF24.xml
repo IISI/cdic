@@ -8,6 +8,7 @@
                 <constructor-arg value="z:/input/CDICF24.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
@@ -22,6 +23,7 @@
                                                 <constructor-arg value="yyyyMMdd"></constructor-arg>
                                             </bean>
                                         </constructor-arg>
+                                        <constructor-arg value="true"></constructor-arg>
                                     </bean>
                                 </entry>
                             </map>
@@ -39,7 +41,7 @@
     </bean>
 
     <!-- sample file writer -->
-    <bean id="a41SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+    <bean id="a76SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="z:/out/A76.csv"></constructor-arg>
