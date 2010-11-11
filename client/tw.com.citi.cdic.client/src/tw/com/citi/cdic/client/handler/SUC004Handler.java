@@ -71,6 +71,7 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
                 }
             }
         }
+        // TODO 檢核
         FileUtil.uploadFile(is, FolderType.PROCESS, name);
     }
 
