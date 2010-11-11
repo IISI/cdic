@@ -6,19 +6,46 @@
         <split id="f02A-f03A-f04A-f05" next="f08Decision">
             <flow>
                 <decision id="f02Decision" decider="f02Decider">
-                    <next on="EXECUTE" to="f02A-a21" />
+                    <next on="EXECUTE" to="f02A-a21-init" />
                     <end on="SKIP" />
                 </decision>
-                <step id="f02A-a21" next="f02A-b21">
+                <step id="f02A-a21-init" next="f02A-a21">
+                    <description>刪除 table A21 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM A21"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f02A-a21" next="f02A-b21-init">
                     <description>把 CDICF02I 的資料 import 至 A21 table</description>
                     <tasklet>
                         <chunk reader="cdicF02IFileReader" writer="a21DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="f02A-b21" next="f02A-c21">
+                <step id="f02A-b21-init" next="f02A-b21">
+                    <description>刪除 table B21 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM B21"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f02A-b21" next="f02A-c21-init">
                     <description>把 CDICF02R 的資料 import 至 B21 table</description>
                     <tasklet>
                         <chunk reader="cdicF02RFileReader" processor="b21Processor" writer="b21DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f02A-c21-init" next="f02A-c21">
+                    <description>刪除 table C21 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM C21"></beans:property>
+                        </beans:bean>
                     </tasklet>
                 </step>
                 <step id="f02A-c21">
@@ -30,19 +57,46 @@
             </flow>
             <flow>
                 <decision id="f03Decision" decider="f03Decider">
-                    <next on="EXECUTE" to="f03A-a22" />
+                    <next on="EXECUTE" to="f03A-a22-init" />
                     <end on="SKIP" />
                 </decision>
-                <step id="f03A-a22" next="f03A-b22">
+                <step id="f03A-a22-init" next="f03A-a22">
+                    <description>刪除 table A22 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM A22"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f03A-a22" next="f03A-b22-init">
                     <description>把 CDICF03 的資料 import 至 A22 table</description>
                     <tasklet>
                         <chunk reader="cdicF03FileReader" processor="a22Processor" writer="a22DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="f03A-b22" next="f03A-c22">
+                <step id="f03A-b22-init" next="f03A-b22">
+                    <description>刪除 table B22 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM B22"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f03A-b22" next="f03A-c22-init">
                     <description>把 CDICF03 的資料 import 至 B22 table</description>
                     <tasklet>
                         <chunk reader="cdicF03FileReader" processor="b22Processor" writer="b22DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f03A-c22-init" next="f03A-c22">
+                    <description>刪除 table C22 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM C22"></beans:property>
+                        </beans:bean>
                     </tasklet>
                 </step>
                 <step id="f03A-c22">

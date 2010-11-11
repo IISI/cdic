@@ -10,12 +10,16 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <files>
         <file>
-            <source>cdic.cmd</source>
+            <source>launch.cmd</source>
             <outputDirectory>/</outputDirectory>
         </file>
         <file>
-            <source>launch.cmd</source>
-            <outputDirectory>/</outputDirectory>
+            <source>src/main/resources/database.ini</source>
+            <outputDirectory>conf/</outputDirectory>
+        </file>
+        <file>
+            <source>src/main/resources/logback.xml</source>
+            <outputDirectory>conf/</outputDirectory>
         </file>
     </files>
     <dependencySets>

@@ -8,6 +8,7 @@
                 <constructor-arg value="z:/input/CDICT08.csv"></constructor-arg>
             </bean>
         </property>
+        <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
