@@ -2,6 +2,31 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>SQL Command</comment>
+<entry key="SUC001_QRY_USERSYS">
+SELECT sec_grpbasic.grp_id_c, sec_sysbasic.sys_id_c, sec_sysbasic.sys_code_c, sec_sysbasic.exe_path_c, sec_sysbasic.pri_path_c
+FROM sec_grpbasic
+  INNER JOIN sec_sysbasic ON sec_grpbasic.sys_id_c = sec_sysbasic.sys_id_c
+  INNER JOIN sec_usrgroup ON sec_grpbasic.grp_id_c = sec_usrgroup.grp_id_c
+WHERE (sec_usrgroup.usr_id_c = :userId)
+ORDER BY sec_sysbasic.sys_id_c
+</entry>
+<entry key="SUC001_QRY_USERRIGHT">
+SELECT distinct sec_grpright.fun_id_c, sec_grpright.add_rght_f, sec_grpright.cha_rght_f, sec_grpright.del_rght_f, sec_grpright.inq_rght_f, sec_grpright.exe_rght_f, sec_grpright.pri_rght_f, sec_menu.SubMenu, sec_menu.ItemSeq, fun_name_c
+FROM sec_usrgroup
+  INNER JOIN sec_grpbasic ON sec_usrgroup.grp_id_c = sec_grpbasic.grp_id_c
+  INNER JOIN sec_grpright ON sec_grpbasic.grp_id_c = sec_grpright.grp_id_c
+  LEFT JOIN sec_menu on sec_menu.FunctionID = sec_grpright.fun_id_c
+  LEFT JOIN sec_funbasic on sec_funbasic.fun_id_c = sec_grpright.fun_id_c
+WHERE (sec_usrgroup.usr_id_c = :userId)
+  AND (sec_grpbasic.sys_id_c = :sysId)
+  AND ((sec_grpright.add_rght_f = 'V')
+  OR (sec_grpright.cha_rght_f = 'V')
+  OR (sec_grpright.del_rght_f = 'V')
+  OR (sec_grpright.inq_rght_f = 'V')
+  OR (sec_grpright.exe_rght_f = 'V')
+  OR (sec_grpright.pri_rght_f = 'V'))
+ORDER BY itemSeq, subMenu
+</entry>
 <entry key="SUC002_DEL_TABLEFLOW">
 DELETE FROM TABLEFLOW;
 </entry>

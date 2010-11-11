@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -16,9 +22,13 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.springframework.jdbc.core.RowMapper;
 
 import platform.aquarius.browser.BrowserEditorInput;
 import platform.aquarius.browser.BrowserEditorPart;
+import platform.aquarius.embedserver.jdbc.IDao;
 import aquarius.Activator;
 
 import com.google.gson.GsonBuilder;
@@ -26,6 +36,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 public class TreeView extends ViewPart {
@@ -109,10 +120,91 @@ public class TreeView extends ViewPart {
     }
 
     private class CustomerDeserializer implements JsonDeserializer<JsonArray> {
+
+        private List<AppFunction> functionList = null;
+
         @Override
         public JsonArray deserialize(JsonElement element, Type type,
                 JsonDeserializationContext context) throws JsonParseException {
-            return element.getAsJsonArray();
+            return filter(element.getAsJsonArray());
         }
+
+        private JsonArray filter(JsonArray array) {
+            JsonArray array2 = new JsonArray();
+            for (Iterator<JsonElement> iter = array.iterator(); iter.hasNext();) {
+                JsonObject function = iter.next().getAsJsonObject();
+                boolean allowed = false;
+                JsonElement id = function.get("id");
+                if (id != null) {
+                    for (AppFunction func : getFunctionList()) {
+                        if (id.equals(func.getFunctionId())) {
+                            allowed = true;
+                            break;
+                        }
+                    }
+                    
+                    if (allowed) {
+                        if (function.has("node")) {
+                            JsonElement node = function.get("node");
+                            JsonArray array3 = filter(node.getAsJsonArray());
+                            if (array3.size() > 0) {
+                                function.add("node", array3);
+                                array2.add(function);
+                            }
+                        } else {
+                            array2.add(function);
+                        }
+                    }
+                } else {
+                    if (function.has("node")) {
+                        JsonElement node = function.get("node");
+                        JsonArray array3 = filter(node.getAsJsonArray());
+                        if (array3.size() > 0) {
+                            function.add("node", array3);
+                            array2.add(function);
+                        }
+                    }
+                }
+            }
+            return array2;
+        }
+
+        private IDao getDao() {
+            BundleContext bc = Platform.getBundle(Activator.PLUGIN_ID).getBundleContext();
+            ServiceReference daoRef = bc.getServiceReference(IDao.class.getName());
+            IDao dao = (IDao) bc.getService(daoRef);
+            return dao;
+        }
+
+        private List<AppFunction> getFunctionList() {
+            if (functionList != null) {
+                return functionList;
+            }
+            
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("userId", "");
+            params.put("sysId", "");
+            return getDao().query("SUC001_QRY_USERRIGHT", new RowMapper<AppFunction>() {
+
+                @Override
+                public AppFunction mapRow(ResultSet rs, int rowNum)
+                        throws SQLException {
+                    AppFunction func = new AppFunction();
+                    func.setFunctionId(rs.getString("fun_id_c"));
+                    func.setAddRight("V".equals(rs.getString("add_rght_f")));
+                    func.setChangeRight("V".equals(rs.getString("cha_rght_f")));
+                    func.setDeleteRight("V".equals(rs.getString("del_rght_f")));
+                    func.setInqueryRight("V".equals(rs.getString("inq_rght_f")));
+                    func.setExecuteRight("V".equals(rs.getString("exe_rght_f")));
+                    func.setPrimaryRight("V".equals(rs.getString("pri_rght_f")));
+                    func.setSubMenu(rs.getString("SubMenu"));
+                    func.setItemSeq(rs.getString("ItemSeq"));
+                    func.setFunctionName(rs.getString("fun_name_c"));
+                    return func;
+                }
+            }, params);
+        }
+
     }
+
 }
