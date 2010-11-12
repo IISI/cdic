@@ -27,6 +27,9 @@ WHERE (sec_usrgroup.usr_id_c = :userId)
   OR (sec_grpright.pri_rght_f = 'V'))
 ORDER BY itemSeq, subMenu
 </entry>
+<entry key="SUC001_QRY_USER_PASSWORD">
+SELECT USR_PWD_C FROM SEC_USRBASIC WHERE USR_ID_C = :userId;
+</entry>
 <entry key="SUC002_DEL_TABLEFLOW">
 DELETE FROM TABLEFLOW;
 </entry>
