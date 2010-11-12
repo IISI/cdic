@@ -193,10 +193,10 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                 boolean hasGroup = false;
                 String group = cdicFile.getFileGroup();
                 if (group != null && !"".equals(group.trim())) {
-                    batchId = group;
+                    batchId = group + "_";
                     hasGroup = true;
-                    if (batchMap.get("group") == null) {
-                        batchMap.put(group, generateGroupBatchDto(group));
+                    if (batchMap.get(batchId) == null) {
+                        batchMap.put(batchId, generateGroupBatchDto(group));
                     }
                 }
                 batchName = cdicFile.getFileNo();
@@ -258,9 +258,9 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                 }
                 // 有未準備好的來源，將 group 的 allowExecution 設為 false
                 if (sourceNotReady.length() != 0 && hasGroup) {
-                    BatchDto groupDto = batchMap.get(group);
+                    BatchDto groupDto = batchMap.get(group + "_");
                     groupDto.setAllowExecution(false);
-                    batchMap.put(group, groupDto);
+                    batchMap.put(group + "_", groupDto);
                 }
                 dto.setStatus(cdicFile.getStatus());
                 batchMap.put(batchId, dto);
