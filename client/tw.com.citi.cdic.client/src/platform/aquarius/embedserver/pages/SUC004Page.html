@@ -153,11 +153,13 @@
                         colHeader: ' ',
                         name: 'download',
                         sortable: false,
-                        width: 50
+                        width: 50,
+                        align: 'center'
                     }, {
                         colHeader: 'Upload/Confirm DateTime',
                         name: 'uploadDateTime',
-                        sortable: false
+                        sortable: false,
+                        align: 'center'
                     }, {
                         colHeader: 'User ID',
                         name: 'processUser',
@@ -166,12 +168,14 @@
                         colHeader: 'Status',
                         name: 'status',
                         sortable: false,
-                        width: 50
+                        width: 50,
+                        align: 'center'
                     }, {
                         colHeader: 'Process',
                         name: 'process',
                         sortable: false,
-                        width: 100
+                        width: 100,
+                        align: 'center'
                     }, {
                         name: 'exist',
                         hidden: true
@@ -181,7 +185,7 @@
                     }]
                 });
                 $(window).bind('resize', function(){
-                    localFileList.setGridWidth($(window).width() - 5);
+                    localFileList.setGridWidth($(window).width() - 10);
                 });
                 
                 function loadInitInfo(){

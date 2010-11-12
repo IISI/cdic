@@ -25,20 +25,22 @@
                     sortname: 'fileSet',
                     colModel: [{
                         colHeader: 'Group',
-                        name: 'group'
+                        name: 'group',
+                        align: 'center'
                     }, {
                         colHeader: 'FileName',
                         name: 'fileSet'
                     }, {
                         colHeader: 'Status',
-                        name: 'status'
+                        name: 'status',
+                        align: 'center'
                     }, {
                         colHeader: '最後確認者',
                         name: 'confirmer'
                     }]
                 });
                 $(window).bind('resize', function(){
-                    confirmList.setGridWidth($(window).width() - 5);
+                    confirmList.setGridWidth($(window).width() - 10);
                 });
                 
                 function loadInitInfo(){
