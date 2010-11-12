@@ -57,7 +57,21 @@
             
             var confirm = function(row){
                 var fileName = localFileList.getCell(row, 'name');
-                updateStatus('confirm', fileName);
+                CommonAPI.iConfirmDialog({
+                    id: "sysMessage" + parseInt(Math.random() * 1000, 10),
+                    closeName: "取消",
+                    title: "Confirm",
+                    message: fileName + "資料是否正確？",
+                    buttons: {
+                        "確認 ": function(){
+                            updateStatus('confirm', fileName);
+                            $(this).dialog("destroy");
+                        },
+                        "取消": function(){
+                            $(this).dialog("close");
+                        }
+                    }
+                });
             };
             
             var download = function(row){
