@@ -137,7 +137,7 @@ public class TreeView extends ViewPart {
                 JsonElement id = function.get("id");
                 if (id != null) {
                     for (AppFunction func : getFunctionList()) {
-                        if (id.equals(func.getFunctionId())) {
+                        if (id.getAsString().equals(func.getFunctionId())) {
                             allowed = true;
                             break;
                         }
@@ -181,9 +181,18 @@ public class TreeView extends ViewPart {
                 return functionList;
             }
             
+            String[] args = Platform.getApplicationArgs();
             Map<String, String> params = new HashMap<String, String>();
-            params.put("userId", "");
-            params.put("sysId", "");
+            for (String arg : args) {
+                String[] keyValue = arg.split("=", 2);
+                if ("userId".equalsIgnoreCase(keyValue[0])) {
+                    params.put("userId", keyValue[1]);
+                }
+                if ("systemId".equalsIgnoreCase(keyValue[0])) {
+                    params.put("sysId", keyValue[1]);
+                }
+            }
+            
             return getDao().query("SUC001_QRY_USERRIGHT", new RowMapper<AppFunction>() {
 
                 @Override
