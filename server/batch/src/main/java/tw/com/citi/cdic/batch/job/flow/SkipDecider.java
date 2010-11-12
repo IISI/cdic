@@ -13,7 +13,8 @@ import tw.com.citi.cdic.batch.model.CDICFileStatus;
 
 /**
  * 查詢 db 的資料來判斷是否要執行接下來的步驟，或是跳過接下來的步驟。
- * 如果要執行，則會回傳 "EXECUTE"；如果要跳過，則會回傳 "SKIP"。
+ * 如果要執行，則會回傳 "EXECUTE"，並將 status 更新成 4 執行中；
+ * 如果要跳過，則會回傳 "SKIP"。
  * 
  * @author Chih-Liang Chang
  * @since 2010/9/29
@@ -32,6 +33,8 @@ public class SkipDecider implements JobExecutionDecider {
         // 根據 db 的資料來決定是要回傳 SKIP 或是 EXECUTE
         CDICFileStatus fileStatus = CDICFileStatusDao.findByFileNo(stepName);
         if ("1".equals(fileStatus.getStatus())) {
+            fileStatus.setStatus("4");
+            CDICFileStatusDao.update(fileStatus);
             return new FlowExecutionStatus("EXECUTE");
         } else {
             return new FlowExecutionStatus("SKIP");

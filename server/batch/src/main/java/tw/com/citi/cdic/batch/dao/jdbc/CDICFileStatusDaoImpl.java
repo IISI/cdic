@@ -3,6 +3,7 @@ package tw.com.citi.cdic.batch.dao.jdbc;
 import java.util.List;
 
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
 
 import tw.com.citi.cdic.batch.CDICFileStatusMapper;
@@ -21,6 +22,11 @@ public class CDICFileStatusDaoImpl extends SimpleJdbcDaoSupport implements
     public CDICFileStatus findByFileNo(FileStep fileStep) {
         List<CDICFileStatus> results = super.getSimpleJdbcTemplate().query("SELECT * FROM CDICFILESTS WHERE FILENO = ?", new CDICFileStatusMapper(), fileStep.name());
         return DataAccessUtils.singleResult(results);
+    }
+
+    @Override
+    public int update(CDICFileStatus CDICFileStatus) {
+        return super.getSimpleJdbcTemplate().update("UPDATE CDICFILESTS SET FILENO = :fileNo, FILEGROUP = :fileGroup, SUBFILE = :subFile, FILENAME = :filename, STATUS = :status, CONFIRMER = :confirmer, CONFIRMDATETIME = :confirmDateTime", new BeanPropertySqlParameterSource(CDICFileStatus));
     }
 
 }

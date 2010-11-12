@@ -11,4 +11,6 @@ public interface CDICFileStatusDao {
 
     CDICFileStatus findByFileNo(FileStep fileStep);
 
+    int update(CDICFileStatus CDICFileStatus);
+
 }
