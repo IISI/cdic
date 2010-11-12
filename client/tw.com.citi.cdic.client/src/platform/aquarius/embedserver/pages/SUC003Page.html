@@ -11,6 +11,8 @@
         </p>
         <a id="confirm" class="fg-button ui-state-default ui-corner-all" style="float:none;">確認</a>
         <a id="exit" class="fg-button ui-state-default ui-corner-all" style="float:none;">離開</a>
+        <div id="wait" title="Info">
+        </div>
         <script type="text/javascript">
             <!--
             $(function(){
@@ -28,11 +30,13 @@
                         },
                         editable: true,
                         edittype: 'checkbox',
-                        sortable: false
+                        sortable: false,
+                        align: 'center'
                     }, {
                         colHeader: 'Status',
                         name: 'status',
-                        sortable: false
+                        sortable: false,
+                        align: 'center'
                     }, {
                         colHeader: 'FileName',
                         name: 'name',
@@ -40,19 +44,31 @@
                     }, {
                         colHeader: 'Host-datetime',
                         name: 'hostDateTimeFmt',
-                        sortable: false
+                        sortable: false,
+                        align: 'center'
                     }, {
                         colHeader: 'size',
                         name: 'size',
-                        sortable: false
+                        sortable: false,
+                        align: 'right',
+                        formatter: 'integer',
+                        formatoptions: {
+                            thousandsSeparator: ','
+                        }
                     }, {
                         colHeader: 'Record',
                         name: 'record',
-                        sortable: false
+                        sortable: false,
+                        align: 'right',
+                        formatter: 'integer',
+                        formatoptions: {
+                            thousandsSeparator: ','
+                        }
                     }, {
                         colHeader: 'Copy-datetime',
                         name: 'copyDateTimeFmt',
-                        sortable: false
+                        sortable: false,
+                        align: 'center'
                     }, {
                         colHeader: 'Process-user',
                         name: 'processUser',
@@ -60,7 +76,7 @@
                     }]
                 });
                 $(window).bind('resize', function(){
-                    hostFileList.setGridWidth($(window).width() - 5);
+                    hostFileList.setGridWidth($(window).width() - 10);
                 });
                 function loadInitInfo(){
                     var payload = {};
@@ -81,7 +97,7 @@
                                 var checkBox = $("#" + ids[i]).find("td[aria-describedby$=copy] :checkbox");
                                 var batchName = hostFileList.getCell(ids[i], "batchName");
                                 status == '檔案不存在' ? checkBox.attr("disabled", true) : checkBox.attr("disabled", false);
-								status == '1' && hostFileList.setCell(ids[i], "status", "檔案已複製");
+                                status == '1' && hostFileList.setCell(ids[i], "status", "檔案已複製");
                             }
                         },
                         "error": function(xhr, status, error){
@@ -106,6 +122,18 @@
                     payload.actionParam = JSON.stringify({
                         "data": data
                     });
+                    //                    var uploadMsg = CommonAPI.showMessage("Info", "檔案複製中，請耐心等候...", function(){
+                    //                        return;
+                    //                    });
+                    var uploadMsg = $("#wait").dialog({
+                        bgiframe: false,
+						autoOpen : false,
+                        modal: true,
+                        closeOnEscape: false,
+                        open: function(event, ui){
+                            $(".ui-dialog-titlebar-close").hide();
+                        }
+                    }).html("檔案複製中，請耐心等候...").dialog('open');
                     $.ajax({
                         "url": __ajaxHandler,
                         "type": "post",
@@ -114,6 +142,8 @@
                         "success": function(data){
                             hostFileList.clearGridData();
                             loadInitInfo();
+                            uploadMsg.dialog('close');
+                            CommonAPI.showMessage("檔案複製完畢。");
                         },
                         "error": function(xhr, status, error){
                             var resp = JSON.parse(xhr.responseText);
