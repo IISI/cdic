@@ -38,6 +38,7 @@
       <plugin id="com.springsource.org.apache.commons.io"/>
       <plugin id="com.springsource.org.apache.commons.logging"/>
       <plugin id="com.springsource.org.apache.log4j"/>
+      <plugin id="com.springsource.org.apache.tools.ant"/>
       <plugin id="com.springsource.org.jdom"/>
       <plugin id="com.springsource.org.json"/>
       <plugin id="groovy-all"/>
@@ -49,8 +50,11 @@
       <plugin id="log4j.config" fragment="true"/>
       <plugin id="org.apache.commons.beanutils"/>
       <plugin id="org.apache.commons.codec"/>
+      <plugin id="org.apache.commons.configuration"/>
       <plugin id="org.apache.commons.digester"/>
       <plugin id="org.apache.commons.httpclient"/>
+      <plugin id="org.apache.commons.jxpath"/>
+      <plugin id="org.apache.commons.lang"/>
       <plugin id="org.apache.commons.logging"/>
       <plugin id="org.apache.wicket.wicket"/>
       <plugin id="org.apache.wicket.wicket-extensions"/>
