@@ -72,8 +72,11 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
         tableFlow.setStarter(null);
         tableFlow.setInitUserId(null);
         String[] args = Platform.getApplicationArgs();
-        if (args != null && args.length > 0) {
-            tableFlow.setInitUserId(args[0]);
+        for (String arg : args) {
+            String[] keyValue = arg.split("=", 2);
+            if ("userId".equalsIgnoreCase(keyValue[0])) {
+                tableFlow.setInitUserId(keyValue[1]);
+            }
         }
         tableFlow.setInitDateTime(new Date());
         tableFlow.setInitStatus("1");
