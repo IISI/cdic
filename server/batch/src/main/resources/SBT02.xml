@@ -64,6 +64,8 @@
         </property>
     </bean>
 
-    <bean id="t02Processor" class="tw.com.citi.cdic.batch.item.SBT02Processor" />
+    <bean id="t02Processor" class="tw.com.citi.cdic.batch.item.SBT02Processor">
+        <property name="dao" ref="fmBCDWN4Dao"></property>
+    </bean>
 
 </beans>

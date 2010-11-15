@@ -102,15 +102,15 @@ jQuery.extend({
             return;
         }
         // 檢核副檔名
-        if (!s.fileCheck)
-            return;
+//        if (!s.fileCheck)
+//            return;
         var regs = "";
         $(s.fileCheck).each(function(index, value) {
             regs += (value + "|");
         });
 
         regs = regs.replace(/\|$/, "");
-        if (!((new RegExp("(" + regs + ")$", "i")).test(val))) {
+        if (s.fileCheck && !((new RegExp("(" + regs + ")$", "i")).test(val))) {
             CommonAPI.showMessage("請使用正確檔案,副檔名為 (" + regs + ")");
             return;
         } else {

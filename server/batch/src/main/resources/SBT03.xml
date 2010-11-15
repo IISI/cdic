@@ -54,7 +54,9 @@
         </property>
     </bean>
 
-    <bean id="t03Processor" class="tw.com.citi.cdic.batch.item.SBT03T03Processor" />
+    <bean id="t03Processor" class="tw.com.citi.cdic.batch.item.SBT03T03Processor">
+        <property name="t06Dao" ref="t06Dao"></property>
+    </bean>
 
     <bean id="t12Processor" class="tw.com.citi.cdic.batch.item.SBT03T12Processor" />
 

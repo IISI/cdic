@@ -26,28 +26,22 @@
                     "確認 ": function(){
                         var fileName = $("#file").val();
                         var required = $("#fileName").text();
-                        if (required != fileName) {
-                            CommonAPI.showMessage("請選擇正確檔案，檔名為 " + required + "");
-                        }
-                        else {
-                            $.capFileUpload({
-                                url: __ajaxHandler +
-                                '&_ab=tw.com.citi.cdic.client' +
-                                '&_ah=tw.com.citi.cdic.client.handler.SUC004Handler',
-                                fileCheck: [$("#fileName").text()],
-                                secureuri: false,
-                                fileElementId: 'file',
-                                timeout: 5 * 60 * 1000,
-                                successMsg: "檔案上傳完畢",
-                                data: {
-                                    fileName: fileName
-                                },
-                                complete: function(xhr, status, json){
-                                    uploadDialog.dialog("close");
-                                    updateStatus('upload', fileName);
-                                }
-                            });
-                        }
+                        $.capFileUpload({
+                            url: __ajaxHandler +
+                            '&_ab=tw.com.citi.cdic.client' +
+                            '&_ah=tw.com.citi.cdic.client.handler.SUC004Handler',
+                            secureuri: false,
+                            fileElementId: 'file',
+                            timeout: 5 * 60 * 1000,
+                            successMsg: "檔案上傳完畢",
+                            data: {
+                                name: required
+                            },
+                            complete: function(xhr, status, json){
+                                uploadDialog.dialog("close");
+                                updateStatus('upload', required);
+                            }
+                        });
                     },
                     "取消": function(){
                         $(this).dialog("close");
@@ -83,7 +77,7 @@
                     "dataType": "json",
                     "data": payload,
                     "success": function(data){
-						CommonAPI.showMessage("檔案下載完畢。");
+                        CommonAPI.showMessage("檔案下載完畢。");
                     },
                     "error": function(xhr, status, error){
                         var resp = JSON.parse(xhr.responseText);
@@ -159,11 +153,13 @@
                         colHeader: ' ',
                         name: 'download',
                         sortable: false,
-                        width: 50
+                        width: 50,
+                        align: 'center'
                     }, {
                         colHeader: 'Upload/Confirm DateTime',
                         name: 'uploadDateTime',
-                        sortable: false
+                        sortable: false,
+                        align: 'center'
                     }, {
                         colHeader: 'User ID',
                         name: 'processUser',
@@ -172,19 +168,24 @@
                         colHeader: 'Status',
                         name: 'status',
                         sortable: false,
-                        width: 50
+                        width: 50,
+                        align: 'center'
                     }, {
                         colHeader: 'Process',
                         name: 'process',
                         sortable: false,
-                        width: 100
+                        width: 100,
+                        align: 'center'
                     }, {
                         name: 'exist',
+                        hidden: true
+                    }, {
+                        name: 'uploadFileName',
                         hidden: true
                     }]
                 });
                 $(window).bind('resize', function(){
-                    localFileList.setGridWidth($(window).width() - 5);
+                    localFileList.setGridWidth($(window).width() - 10);
                 });
                 
                 function loadInitInfo(){

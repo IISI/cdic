@@ -76,6 +76,14 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
         }
         if (batches.size() > 0) {
             // TODO trigger batch
+            String[] cmd = new String[] { "cmd", "/C", "PsExe.exe" };
+            Runtime rt = Runtime.getRuntime();
+            int exitVal = 0;
+            Process p = rt.exec(cmd);
+            exitVal = p.waitFor();
+            if (exitVal != 0) {
+                throw new UnsupportedOperationException("trigger batch failed.");
+            }
         }
         return "";
     }
@@ -213,11 +221,32 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                 if (sources != null && sources.size() > 0) {
                     for (FileDepend depend : sources) {
                         String temp = depend.getDepType().trim() + depend.getDependency().trim();
-                        if (readyFiles.contains(temp)) {
-                            sourceReady.append(depend.getDependency().trim()).append(" ");
-                        } else {
-                            sourceNotReady.append(depend.getDependency().trim()).append(" ");
-                        }
+                        // 若 depType 為 CDIC，則再撈出其 dependency
+//                        if (DepType.CDIC.toString().equals(depend.getDepType().trim())) {
+//                            FileDepend param = new FileDepend();
+//                            param.setName(depend.getDependency());
+//                            List<FileDepend> subSources = getDao().query("SUC005_QRY_FILEDEPEND_BY_NAME",
+//                                    FileDepend.class, param);
+//                            boolean ready = true;
+//                            for (FileDepend subDepend : subSources) {
+//                                String subTemp = subDepend.getDepType().trim() + subDepend.getDependency().trim();
+//                                if (!readyFiles.contains(subTemp)) {
+//                                    ready = false;
+//                                    break;
+//                                }
+//                            }
+//                            if (ready) {
+//                                sourceReady.append(depend.getDependency().trim()).append(" ");
+//                            } else {
+//                                sourceNotReady.append(depend.getDependency().trim()).append(" ");
+//                            }
+//                        } else {
+                            if (readyFiles.contains(temp)) {
+                                sourceReady.append(depend.getDependency().trim()).append(" ");
+                            } else {
+                                sourceNotReady.append(depend.getDependency().trim()).append(" ");
+                            }
+//                        }
                     }
                 }
                 dto.setSourceReady(sourceReady.toString());
