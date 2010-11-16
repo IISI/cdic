@@ -2,6 +2,7 @@ package tw.com.citi.cdic.client;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Date;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
@@ -48,17 +49,19 @@ public class BatchServiceImpl implements BatchService {
                 logger.error(e.getMessage(), e);
                 throw e;
             }
+        } else {
+            logger.error("Can not find file: PsExec.exe");
         }
     }
 
     @Override
     public void init() throws Exception {
-        callRemote("C:/Documents and Settings/Administrator/My Documents/batch-1.0-SNAPSHOT/launch.cmd", "copyViewJob");
+        callRemote("C:/Documents and Settings/Administrator/My Documents/batch-1.0-SNAPSHOT/launch.cmd", "copyViewJob", "schedule.timestamp(long)=" + new Date().getTime());
     }
 
     @Override
     public void launch() throws Exception {
-        callRemote("C:/Documents and Settings/Administrator/My Documents/batch-1.0-SNAPSHOT/launch.cmd", "convertJob");
+        callRemote("C:/Documents and Settings/Administrator/My Documents/batch-1.0-SNAPSHOT/launch.cmd", "convertJob", "schedule.timestamp(long)=" + new Date().getTime());
     }
 
 }
