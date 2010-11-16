@@ -77,7 +77,13 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
 
     private void saveLocalFileStsByName(String name) {
         String[] args = Platform.getApplicationArgs();
-        String processUser = args != null && args.length > 0 ? args[0] : null;
+        String processUser = null;
+        for (String arg : args) {
+            String[] keyValue = arg.split("=", 2);
+            if ("userId".equalsIgnoreCase(keyValue[0])) {
+                processUser = keyValue[1];
+            }
+        }
         LocalFileSts fileSts = new LocalFileSts();
         fileSts.setName(name);
         fileSts.setProcessUser(processUser);
