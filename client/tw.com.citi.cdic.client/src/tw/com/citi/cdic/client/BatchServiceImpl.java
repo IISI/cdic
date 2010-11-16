@@ -22,13 +22,28 @@ public class BatchServiceImpl implements BatchService {
 
     private String password;
 
-    private void callRemote(String cmd) throws Exception {
+    public BatchServiceImpl() {
+        this.hostname = "bath";
+        this.username = "Administrator";
+        this.password = "p@ssw0rd";
+    }
+
+    private void callRemote(String cmd, String... args) throws Exception {
         URL resourceUrl = Platform.getBundle("tw.com.citi.cdic.client").getResource("PsExec.exe");
         if (resourceUrl != null) {
             try {
                 URL fileUrl = FileLocator.toFileURL(resourceUrl);
                 File file = new File(fileUrl.toURI());
-                Runtime.getRuntime().exec(file.getAbsolutePath() + " /accepteula \\\\" + hostname + " -u " + username + " -p " + password + " -d \"" + cmd + "\"");
+                StringBuilder sb = new StringBuilder();
+                sb.append(file.getAbsolutePath());
+                sb.append(" /accepteula \\\\").append(hostname);
+                sb.append(" -u ").append(username);
+                sb.append(" -p ").append(password);
+                sb.append(" -d \"").append(cmd).append("\"");
+                for (String arg : args) {
+                    sb.append(" \"").append(arg).append("\"");
+                }
+                Runtime.getRuntime().exec(sb.toString());
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 throw e;
@@ -38,12 +53,12 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public void init() throws Exception {
-        callRemote("C:/Documents and Settings/Administrator/My Documents/batch.cmd");
+        callRemote("C:/Documents and Settings/Administrator/My Documents/batch-1.0-SNAPSHOT/launch.cmd", "copyViewJob");
     }
 
     @Override
     public void launch() throws Exception {
-        callRemote("C:/Documents and Settings/Administrator/My Documents/batch.cmd");
+        callRemote("C:/Documents and Settings/Administrator/My Documents/batch-1.0-SNAPSHOT/launch.cmd", "convertJob");
     }
 
 }

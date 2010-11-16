@@ -42,9 +42,10 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
 
     private Object getInitInfo() {
         TableFlow tableFlow = new TableFlow();
-        tableFlow.setInitUserId("test");
-        tableFlow.setInitDateTime(new Date());
-        tableFlow.setInitStatus("2");
+        List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object());
+        if (tableFlowList != null && tableFlowList.size() > 0) {
+            tableFlow = tableFlowList.get(0);
+        }
         
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("yyyy/MM/dd HH:mm");
@@ -71,8 +72,11 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
         tableFlow.setStarter(null);
         tableFlow.setInitUserId(null);
         String[] args = Platform.getApplicationArgs();
-        if (args != null && args.length > 0) {
-            tableFlow.setInitUserId(args[0]);
+        for (String arg : args) {
+            String[] keyValue = arg.split("=", 2);
+            if ("userId".equalsIgnoreCase(keyValue[0])) {
+                tableFlow.setInitUserId(keyValue[1]);
+            }
         }
         tableFlow.setInitDateTime(new Date());
         tableFlow.setInitStatus("1");
