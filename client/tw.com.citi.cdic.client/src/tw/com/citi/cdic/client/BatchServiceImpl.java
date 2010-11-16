@@ -30,7 +30,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     private void callRemote(String cmd, String... args) throws Exception {
-        URL resourceUrl = Platform.getBundle("tw.com.citi.cdic.client").getResource("PsExec.exe");
+        URL resourceUrl = Platform.getBundle("tw.com.citi.cdic.client.resources").getResource("PsExec.exe");
         if (resourceUrl != null) {
             try {
                 URL fileUrl = FileLocator.toFileURL(resourceUrl);
