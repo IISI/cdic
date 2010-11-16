@@ -17,6 +17,7 @@ import tw.com.citi.cdic.client.model.CDICFileSts;
 import tw.com.citi.cdic.client.model.HostFileSts;
 import tw.com.citi.cdic.client.model.LocalFileSts;
 import tw.com.citi.cdic.client.model.TableFlow;
+import tw.com.citi.cdic.utils.Messages;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,58 +32,58 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
 
     @Override
     public Object execute(PageParameters params) throws Exception {
-        String actionName = params.getString("actionName");
-        if ("getInitInfo".equals(actionName)) {
+        String actionName = params.getString("actionName"); //$NON-NLS-1$
+        if ("getInitInfo".equals(actionName)) { //$NON-NLS-1$
             return getInitInfo();
-        } else if ("init".equals(actionName)) {
+        } else if ("init".equals(actionName)) { //$NON-NLS-1$
             return init(params);
         }
-        throw new IllegalArgumentException("Cannot find actionName: " + actionName);
+        throw new IllegalArgumentException("Cannot find actionName: " + actionName); //$NON-NLS-1$
     }
 
     private Object getInitInfo() {
         TableFlow tableFlow = new TableFlow();
-        List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object());
+        List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object()); //$NON-NLS-1$
         if (tableFlowList != null && tableFlowList.size() > 0) {
             tableFlow = tableFlowList.get(0);
         }
         
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("yyyy/MM/dd HH:mm");
+        gsonBuilder.setDateFormat("yyyy/MM/dd HH:mm"); //$NON-NLS-1$
         Gson gson = gsonBuilder.create();
         return gson.toJson(tableFlow, TableFlow.class);
     }
 
     private Object init(PageParameters params) throws Exception {
-        JSONObject actionParam = new JSONObject(params.getString("actionParam"));
-        logger.debug("base date = {}", actionParam.getString("baseDate"));
+        JSONObject actionParam = new JSONObject(params.getString("actionParam")); //$NON-NLS-1$
+        logger.debug("base date = {}", actionParam.getString("baseDate")); //$NON-NLS-1$ //$NON-NLS-2$
 
         TableFlow tableFlow = new TableFlow();
-        List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object());
+        List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object()); //$NON-NLS-1$
         if (tableFlowList != null && tableFlowList.size() > 0) {
             tableFlow = tableFlowList.get(0);
-            if ("1".equals(tableFlow.getInitStatus())) {
-                throw new IllegalStateException("啟動作業正在執行中，請稍後再試。");
+            if ("1".equals(tableFlow.getInitStatus())) { //$NON-NLS-1$
+                throw new IllegalStateException(Messages.SUC002Handler_InitStateError);
             }
         }
         
         tableFlow.setCDICFileStatus(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        tableFlow.setCustDate(sdf.parse(actionParam.getString("baseDate")));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); //$NON-NLS-1$
+        tableFlow.setCustDate(sdf.parse(actionParam.getString("baseDate"))); //$NON-NLS-1$
         tableFlow.setStarter(null);
         tableFlow.setInitUserId(null);
         String[] args = Platform.getApplicationArgs();
         for (String arg : args) {
-            String[] keyValue = arg.split("=", 2);
-            if ("userId".equalsIgnoreCase(keyValue[0])) {
+            String[] keyValue = arg.split("=", 2); //$NON-NLS-1$
+            if ("userId".equalsIgnoreCase(keyValue[0])) { //$NON-NLS-1$
                 tableFlow.setInitUserId(keyValue[1]);
             }
         }
         tableFlow.setInitDateTime(new Date());
-        tableFlow.setInitStatus("1");
+        tableFlow.setInitStatus("1"); //$NON-NLS-1$
 
         CDICFileSts fileSts = new CDICFileSts();
-        fileSts.setStatus("0");
+        fileSts.setStatus("0"); //$NON-NLS-1$
         fileSts.setConfirmer(null);
         fileSts.setConfirmDateTime(null);
 
@@ -97,9 +98,9 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
         localFileSts.setStatus(null);
 
         getDao().update(
-                new String[] { "SUC002_DEL_TABLEFLOW", "SUC002_INS_TABLEFLOW",
-                        "SUC002_UPD_CDICFILESTS", "SUC002_UPD_HOSTFILESTS",
-                        "SUC002_UPD_LOCALFILESTS" },
+                new String[] { "SUC002_DEL_TABLEFLOW", "SUC002_INS_TABLEFLOW", //$NON-NLS-1$ //$NON-NLS-2$
+                        "SUC002_UPD_CDICFILESTS", "SUC002_UPD_HOSTFILESTS", //$NON-NLS-1$ //$NON-NLS-2$
+                        "SUC002_UPD_LOCALFILESTS" }, //$NON-NLS-1$
                 new Object[] { new Object(), tableFlow, fileSts, hostFileSts,
                         localFileSts });
         
@@ -107,7 +108,7 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
         batchService.init();
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("yyyy/MM/dd HH:mm");
+        gsonBuilder.setDateFormat("yyyy/MM/dd HH:mm"); //$NON-NLS-1$
         Gson gson = gsonBuilder.create();
         return gson.toJson(tableFlow, TableFlow.class);
     }
