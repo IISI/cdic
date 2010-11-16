@@ -5,7 +5,7 @@
     <bean id="cdicF21IFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF21I.txt"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF21I.txt"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -44,7 +44,7 @@
     <bean id="cdicF21RFileReader" parent="cdicF02IFileReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF21R.txt"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF21R.txt"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -77,7 +77,7 @@
     <bean id="a73FileWriter" class="tw.com.citi.cdic.batch.item.file.A73FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/A73.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A73.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -96,7 +96,7 @@
     <bean id="b73FileWriter" parent="a73FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/B73.txt"></constructor-arg>
+                <constructor-arg value="z:/process/B73.txt"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -105,7 +105,7 @@
     <bean id="c73FileWriter" parent="a73FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/C73.txt"></constructor-arg>
+                <constructor-arg value="z:/process/C73.txt"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -120,7 +120,7 @@
     <bean id="a73SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A73SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/A73Sample.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A73Sample.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -139,7 +139,7 @@
     <bean id="b73SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.B73SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/B73Sample.txt"></constructor-arg>
+                <constructor-arg value="z:/process/B73Sample.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -158,7 +158,7 @@
     <bean id="c73SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.C73SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/C73Sample.txt"></constructor-arg>
+                <constructor-arg value="z:/process/C73Sample.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">

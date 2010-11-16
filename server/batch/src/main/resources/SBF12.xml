@@ -5,7 +5,7 @@
     <bean id="cdicF12FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF12.txt"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF12.txt"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -45,7 +45,7 @@
     <bean id="a41SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/A41.csv"></constructor-arg>
+                <constructor-arg value="z:/process/A41.csv"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">

@@ -6,7 +6,7 @@
     <bean id="cdicF02IFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF02I.txt"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF02I.txt"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -50,7 +50,7 @@
     <bean id="cdicF02RFileReader" parent="cdicF02IFileReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF02R.zip"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF02R.zip"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -70,7 +70,7 @@
     <bean id="c21FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/C21.txt"></constructor-arg>
+                <constructor-arg value="z:/process/C21.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -101,7 +101,7 @@
     <bean id="a31FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="Z:/out/A31.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A31.txt"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -148,7 +148,7 @@
     <bean id="b31FileReader" parent="a31FileReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="Z:/out/B31.txt"></constructor-arg>
+                <constructor-arg value="z:/process/B31.txt"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -179,7 +179,7 @@
     <bean id="a21FileWriter" parent="c21FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/A21.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A21.txt"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -197,7 +197,7 @@
     <bean id="b21FileWriter" parent="c21FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/B21.txt"></constructor-arg>
+                <constructor-arg value="z:/process/B21.txt"></constructor-arg>
             </bean>
         </property>
     </bean>

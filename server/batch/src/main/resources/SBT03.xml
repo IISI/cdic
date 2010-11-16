@@ -5,7 +5,7 @@
     <bean id="cdicT03GFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICT03G.txt"></constructor-arg>
+                <constructor-arg value="z:/process/CDICT03G.txt"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -30,7 +30,7 @@
     <bean id="t03FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/T03.txt"></constructor-arg>
+                <constructor-arg value="z:/process/T03.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -49,7 +49,7 @@
     <bean id="t12FileWriter" parent="t03FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/T12.txt"></constructor-arg>
+                <constructor-arg value="z:/process/T12.txt"></constructor-arg>
             </bean>
         </property>
     </bean>

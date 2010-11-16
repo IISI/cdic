@@ -34,8 +34,36 @@
         <property name="stepName" value="F08"></property>
     </bean>
 
+    <bean id="f10Decider" parent="skipDecider">
+        <property name="stepName" value="F10"></property>
+    </bean>
+
+    <bean id="f11Decider" parent="skipDecider">
+        <property name="stepName" value="F11"></property>
+    </bean>
+
+    <bean id="f12Decider" parent="skipDecider">
+        <property name="stepName" value="F12"></property>
+    </bean>
+
     <bean id="f18Decider" parent="skipDecider">
         <property name="stepName" value="F18"></property>
+    </bean>
+
+    <bean id="f21Decider" parent="skipDecider">
+        <property name="stepName" value="F21"></property>
+    </bean>
+
+    <bean id="f23Decider" parent="skipDecider">
+        <property name="stepName" value="F23"></property>
+    </bean>
+
+    <bean id="f24Decider" parent="skipDecider">
+        <property name="stepName" value="F24"></property>
+    </bean>
+
+    <bean id="f25Decider" parent="skipDecider">
+        <property name="stepName" value="F25"></property>
     </bean>
 
     <bean id="t02Decider" parent="skipDecider">
