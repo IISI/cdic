@@ -45,7 +45,13 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
         Gson gson = new Gson();
         String[] names = gson.fromJson(actionParam.get("data").toString(), String[].class);
         String[] args = Platform.getApplicationArgs();
-        String processUser = args != null && args.length > 0 ? args[0] : null;
+        String processUser = null;
+        for (String arg : args) {
+            String[] keyValue = arg.split("=", 2);
+            if ("userId".equalsIgnoreCase(keyValue[0])) {
+                processUser = keyValue[1];
+            }
+        }
         for (String name : names) {
             HostFileSts fileSts = new HostFileSts();
             FileObject file = FileUtil.getHostFileByName(name);

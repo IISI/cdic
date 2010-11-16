@@ -52,6 +52,7 @@
                     "dataType": "json",
                     "data": payload,
                     "success": function(data){
+						infoGrid.clearGridData();
                         infoGrid.addGridData(data);
                     },
                     "error": function(xhr, status, error){
