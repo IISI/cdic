@@ -5,7 +5,7 @@
     <bean id="cdicF11FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF11.csv"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF11.csv"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -43,7 +43,7 @@
     <bean id="a35FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/A35.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A35.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -62,7 +62,7 @@
     <bean id="a35SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A35SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/A35.csv"></constructor-arg>
+                <constructor-arg value="z:/process/A35.csv"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">

@@ -6,7 +6,7 @@
     <bean id="cdicF07HFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF07H.txt"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF07H.txt"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -51,7 +51,7 @@
     <bean id="a26FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/A26.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A26.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -73,7 +73,7 @@
     <bean id="b26FileWriter" parent="a26FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/B26.txt"></constructor-arg>
+                <constructor-arg value="z:/process/B26.txt"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -85,7 +85,7 @@
     <bean id="c26FileWriter" parent="a26FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/C26.txt"></constructor-arg>
+                <constructor-arg value="z:/process/C26.txt"></constructor-arg>
             </bean>
         </property>
     </bean>

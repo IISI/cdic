@@ -27,7 +27,7 @@
     <bean id="a11FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/A11.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A11.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">

@@ -13,7 +13,7 @@
     <bean id="a61FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/A61.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A61.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -31,7 +31,7 @@
     <bean id="a61SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/A61Sample.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A61Sample.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -53,7 +53,7 @@
     <bean id="f02SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/F02Sample.txt"></constructor-arg>
+                <constructor-arg value="z:/process/F02Sample.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -79,7 +79,7 @@
     <bean id="f03SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/F03Sample.txt"></constructor-arg>
+                <constructor-arg value="z:/process/F03Sample.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -105,7 +105,7 @@
     <bean id="f04SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/F04Sample.txt"></constructor-arg>
+                <constructor-arg value="z:/process/F04Sample.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
@@ -131,7 +131,7 @@
     <bean id="f05SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/F05Sample.txt"></constructor-arg>
+                <constructor-arg value="z:/process/F05Sample.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">

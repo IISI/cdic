@@ -5,7 +5,7 @@
     <bean id="cdicT20FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICT20.csv"></constructor-arg>
+                <constructor-arg value="z:/process/CDICT20.csv"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -29,7 +29,7 @@
     <bean id="t20FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/T20.txt"></constructor-arg>
+                <constructor-arg value="z:/process/T20.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">

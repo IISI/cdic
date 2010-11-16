@@ -73,7 +73,7 @@
     <bean id="a23FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/A23.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A23.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">

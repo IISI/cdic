@@ -4,7 +4,7 @@
     <bean id="fmbcdwn4FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/FMBCDWN4.txt"></constructor-arg>
+                <constructor-arg value="z:/process/FMBCDWN4.txt"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -49,7 +49,7 @@
     <bean id="t02FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/T02.txt"></constructor-arg>
+                <constructor-arg value="z:/process/T02.txt"></constructor-arg>
             </bean>
         </property>
         <property name="lineAggregator">
