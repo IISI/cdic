@@ -9,6 +9,7 @@
                 <constructor-arg value="z:/process/CDICF02I.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -32,7 +33,7 @@
                     </bean>
                 </property>
                 <property name="lineTokenizer">
-                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
                         <property name="columns" value="1,4,8,38,44,50,58,62,73,76,79,87,90,106,122,137,152,153,154,170,178,193,194,195,210,225"></property>
                         <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,balance,stopPayAmount,cardAmount,gsAccountCode,jointCode,rateType,intRate,intPayable,overdrawStatus,taxCode,grossInt,grossTax,lastTxDate"></property>
                     </bean>
@@ -73,8 +74,9 @@
                 <constructor-arg value="z:/process/C21.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s%4s%30s%6s%6s%8s%4s%11s%3s%3s%tY%\u003ctm%\u003ctd%3s%16.2f%16.2f%15.2f%15.2f%1s%1s%16s%8.5f%15.2f%1s%1s%15.2f%15.2f%tY%\u003ctm%\u003ctd"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
@@ -104,6 +106,7 @@
                 <constructor-arg value="z:/process/A31.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -127,7 +130,7 @@
                     </bean>
                 </property>
                 <property name="lineTokenizer">
-                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
                         <property name="columns" value="1,4,8,38,41,52,55,61"></property>
                         <property name="names" value="unit,branchNo,srNo,currencyCode,customerId,customerIdNo,locateRate,memo"></property>
                     </bean>

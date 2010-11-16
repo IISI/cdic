@@ -30,8 +30,9 @@
                 <constructor-arg value="z:/process/A11.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s%4s%11s%3s%11s%60s%8s%11s%60s%4s%6s%8s%80s%80s%17s%17s%40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">

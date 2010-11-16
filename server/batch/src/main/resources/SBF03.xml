@@ -9,6 +9,7 @@
                 <constructor-arg value="z:/process/CDICF03.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -32,7 +33,7 @@
                     </bean>
                 </property>
                 <property name="lineTokenizer">
-                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
                         <property name="columns" value="1,4,8,38,50,58,62,73,76,79,95,98,113,128,136,144,160,163,164,165,173,174,175,205,213,221,222,223,242,250,265,281,296,297,312,320,321,336,351"></property>
                         <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,vilaoteAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
                     </bean>
@@ -77,8 +78,9 @@
                 <constructor-arg value="z:/process/C22.txt"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s%4s%30s%12s%8s%4s%11s%3s%3s%16s%3s%15.2f%15.2f%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%16s%3s%1s%1s%8.5f%1s%1s%30s%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%1s%1s%19s%8s%15.2f%16.2f%15.2f%1s%15.2f%tY%\u003ctm%\u003ctd%1s%15.2f%15.2f%tY%\u003ctm%\u003ctd"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
