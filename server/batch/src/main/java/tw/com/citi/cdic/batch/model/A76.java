@@ -13,6 +13,7 @@ public class A76 {
     private String unit;
     private String branchNo;
     private String srNo;
+    private String apNo;
     private String custId;
     private String type;
     private String startNo;
@@ -135,5 +136,13 @@ public class A76 {
 
     public Date getReserveDate() {
         return reserveDate;
+    }
+
+    public void setApNo(String apNo) {
+        this.apNo = apNo;
+    }
+
+    public String getApNo() {
+        return apNo;
     }
 }
