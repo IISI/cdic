@@ -2,8 +2,10 @@ package tw.com.citi.cdic.batch.dao.jdbc;
 
 import java.util.List;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
 
+import tw.com.citi.cdic.batch.A21Mapper;
 import tw.com.citi.cdic.batch.dao.A21Dao;
 import tw.com.citi.cdic.batch.model.A21;
 
@@ -15,28 +17,26 @@ public class A21DaoImpl extends SimpleJdbcDaoSupport implements A21Dao {
 
     @Override
     public A21 findBySrNo(String srNo, String tableName) {
-        // TODO Auto-generated method stub
-        return null;
+        List<A21> results = super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE PBSRNO = ?", new A21Mapper(), srNo);
+        return DataAccessUtils.singleResult(results);
     }
 
     @Override
     public A21 findByCustomerIdAndSrNo(String customerId, String srNo,
             String tableName) {
-        // TODO Auto-generated method stub
-        return null;
+        List<A21> results = super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE PBCUSTID = ? and PBSRNO = ?", new A21Mapper(), customerId, srNo);
+        return DataAccessUtils.singleResult(results);
     }
 
     @Override
     public List<A21> findByCustomerIdAndJointCode(String customerId,
             String jointCode, String tableName) {
-        // TODO Auto-generated method stub
-        return null;
+        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE PBCUSTID = ? AND PBJOINTCODE = ? AND PBACTBAL > 0", new A21Mapper(), customerId, jointCode);
     }
 
     @Override
     public List<A21> findByCustomerId(String customerId, String tableName) {
-        // TODO Auto-generated method stub
-        return null;
+        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE PBCUSTID = ? AND PBACTBAL > 0", new A21Mapper(), customerId);
     }
 
 }

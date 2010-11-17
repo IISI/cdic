@@ -11,10 +11,10 @@ import tw.com.citi.cdic.batch.model.A23;
 public interface A23Dao {
 
     /**
-     * @param srno
+     * @param srNo
      * @return 找不到時回傳 null。
      */
-    A23 findBySrNo(String srno);
+    A23 findBySrNo(String srNo);
 
     /**
      * @param customerId

@@ -31,11 +31,11 @@ public interface A22Dao {
      * 根據 customerId, jointCode 為條件，找出 amount > 0 的資料。
      * 
      * @param customerId
-     * @param JointCode
+     * @param jointCode
      * @param tableName
      * @return
      */
-    List<A22> findByCustomerIdAndJointCode(String customerId, String JointCode, String tableName);
+    List<A22> findByCustomerIdAndJointCode(String customerId, String jointCode, String tableName);
 
     /**
      * 根據 customerId 為條件，找出 jointCode = 0，而且 charCode 的前四碼等於 WNCD or WBCD or UBCD or UNCD，而且 amount > 0 的資料。
