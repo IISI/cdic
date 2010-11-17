@@ -27,7 +27,7 @@ public class SBF21A73Processor implements ItemProcessor<A73, SBF21Output> {
         long processCount = stepContext.getLong("PROCESS_COUNT", 0);
         processCount++;
         stepContext.putLong("PROCESS_COUNT", processCount);
-        if (processCount % writeSampleFrequency == 0) {
+        if (processCount % writeSampleFrequency == 1) {
             out.setWriteSample(true);
         } else {
             out.setWriteSample(false);
