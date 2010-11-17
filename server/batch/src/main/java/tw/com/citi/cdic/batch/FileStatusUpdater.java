@@ -37,8 +37,10 @@ public class FileStatusUpdater {
                 ExitStatus status = stepResults.get(stepName);
                 if (status == null) {
                     stepResults.put(stepName, stepExecution.getExitStatus());
+                    logger.debug("record step status, step name = {}, status = {}", stepName, stepExecution.getExitStatus().getExitCode());
                 } else {
                     stepResults.put(stepName, stepExecution.getExitStatus().and(status));
+                    logger.debug("record step status, step name = {}, status = {}", stepName, stepExecution.getExitStatus().and(status).getExitCode());
                 }
             }
         }
@@ -46,12 +48,13 @@ public class FileStatusUpdater {
         for (Map.Entry<String, ExitStatus> entry : stepResults.entrySet()) {
             FileStep fileStep = FileStep.valueOf(entry.getKey());
             CDICFileStatus fileStatus = this.CDICFileStatusDao.findByFileNo(fileStep);
-            if (ExitStatus.COMPLETED == entry.getValue()) {
+            if (ExitStatus.COMPLETED.compareTo(entry.getValue()) == 0) {
                 fileStatus.setStatus("2");
             } else {
                 fileStatus.setStatus("5");
             }
             this.CDICFileStatusDao.update(fileStatus);
+            logger.debug("update step status, step name = {}, status = {}", entry.getKey(), entry.getValue().getExitCode());
         }
     }
 
