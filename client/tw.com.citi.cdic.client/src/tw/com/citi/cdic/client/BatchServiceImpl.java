@@ -3,6 +3,7 @@ package tw.com.citi.cdic.client;
 import java.io.File;
 import java.net.URL;
 import java.util.Date;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
@@ -23,10 +24,20 @@ public class BatchServiceImpl implements BatchService {
 
     private String password;
 
+    private String progpath;
+
     public BatchServiceImpl() {
-        this.hostname = "bath";
-        this.username = "Administrator";
-        this.password = "p@ssw0rd";
+        Properties config = new Properties();
+        try {
+            URL url = Platform.getBundle("tw.com.citi.cdic.client.resources").getResource("batchService.properties");
+            config.load(url.openStream());
+            this.hostname = config.getProperty("hostname");
+            this.username = config.getProperty("username");
+            this.password = config.getProperty("password");
+            this.progpath = config.getProperty("progpath");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void callRemote(String cmd, String... args) throws Exception {
@@ -56,12 +67,12 @@ public class BatchServiceImpl implements BatchService {
 
     @Override
     public void init() throws Exception {
-        callRemote("C:/Documents and Settings/Administrator/My Documents/batch-1.0-SNAPSHOT/launch.cmd", "copyViewJob", "schedule.timestamp(long)=" + new Date().getTime());
+        callRemote(progpath + "/launch.cmd", "copyViewJob", "schedule.timestamp(long)=" + new Date().getTime());
     }
 
     @Override
     public void launch() throws Exception {
-        callRemote("C:/Documents and Settings/Administrator/My Documents/batch-1.0-SNAPSHOT/launch.cmd", "convertJob", "schedule.timestamp(long)=" + new Date().getTime());
+        callRemote(progpath + "/launch.cmd", "convertJob", "schedule.timestamp(long)=" + new Date().getTime());
     }
 
 }
