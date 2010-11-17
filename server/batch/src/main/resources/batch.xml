@@ -538,6 +538,13 @@
                 </step>
             </flow>
         </split>
+        <listeners>
+            <listener>
+                <beans:bean class="tw.com.citi.cdic.batch.FileStatusUpdater">
+                    <beans:property name="CDICFileStatusDao" ref="CDICFileStatusDao"></beans:property>
+                </beans:bean>
+            </listener>
+        </listeners>
     </job>
 
 </beans:beans>
