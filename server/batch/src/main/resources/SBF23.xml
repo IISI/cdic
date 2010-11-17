@@ -50,12 +50,18 @@
         </property>
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="'%s,'%s,'%tY%&lt;tm%&lt;td,'%s,'%tY%&lt;tm%&lt;td,'%tY%&lt;tm%&lt;td,'%s,'%s,'%s,'%s,%s,'%s,'%s,'%s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="unit,branchNo,date,srNo,dueDate,defferDate,payBank,billType,billNo,currencyCode,billAmt,billDrawerAcctNo,billDepAcctNo,billStatus"></property>
                     </bean>
                 </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,託收日期,託收序號,票據到期日,延期提示日,付款銀行,票據種類,票據號碼,幣別,票據金額,發票人帳號,委託人之存款帳號,票據處理狀況碼"></property>
             </bean>
         </property>
     </bean>

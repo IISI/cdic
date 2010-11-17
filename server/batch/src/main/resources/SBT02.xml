@@ -18,8 +18,8 @@
                 </property>
                 <property name="lineTokenizer">
                     <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
-                        <property name="columns" value="1,15,25,65,70"></property>
-                        <property name="names" value="recType,filler,acct,description,IBCode"></property>
+                        <property name="columns" value="1,2,16,26,66,71"></property>
+                        <property name="names" value="recType,filler,acct,description,IBCode,filler2"></property>
                     </bean>
                 </property>
             </bean>
@@ -56,7 +56,7 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%10s%5s%60s"></property>
+                <property name="format" value="%-10s%-5s%-60s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="acct,IBCode,description"></property>

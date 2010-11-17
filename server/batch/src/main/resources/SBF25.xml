@@ -50,7 +50,7 @@
         </property>
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="'%s,'%s,'%s,'%tY%&lt;tm%&lt;td,'%s,%s,%s%s,%s%s,'%s,%s,%s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
