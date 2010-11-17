@@ -51,7 +51,7 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%3s,%4s,%30s,%12s,%tY%\u003ctm%\u003ctd,%1s,%7s,%3s,%15.2f,%tY%\u003ctm%\u003ctd,%60s"></property>
+                <property name="format" value="'%s,'%s,'%s,'%s,'%tY%&lt;tm%&lt;td,'%s,'%s,'%s,%s,'%tY%&lt;tm%&lt;td,'%s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="unit,branchNo,srNo,apNo,applyDate,applyKind,billNo,currencyCode,billAmt,billDate,accName"></property>

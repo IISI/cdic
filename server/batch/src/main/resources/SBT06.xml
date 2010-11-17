@@ -41,7 +41,7 @@
             <bean class="tw.com.citi.cdic.batch.item.file.transform.T06RecursiveCollectionLineAggregator">
                 <property name="delegate">
                     <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                        <property name="format" value="%16s%40s"></property>
+                        <property name="format" value="%-16s%-40s"></property>
                         <property name="fieldExtractor">
                             <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                                 <property name="names" value="code,description"></property>
