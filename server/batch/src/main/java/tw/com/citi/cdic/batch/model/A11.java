@@ -1,36 +1,38 @@
 package tw.com.citi.cdic.batch.model;
 
+import java.util.Date;
+
 /**
  * @author Chih-Liang Chang
  * @since 2010/9/29
  */
 public class A11 {
 
-    private String unit = "021";
+    private String unit;
 
-    private String branchNo = "0000";
+    private String branchNo;
 
     private String id;
 
-    private String idNo = "";
+    private String idNo;
 
     private String headId;
 
     private String CName;
 
-    private String birthDate;
+    private Date birthDate;
 
     private String ceoCode;
 
     private String ceoName;
 
-    private String statusCode = "0000";
+    private String statusCode;
 
     private String businessCode;
 
-    private String createDate;
+    private Date createDate;
 
-    private String originalAddress = "";
+    private String originalAddress;
 
     private String address;
 
@@ -88,11 +90,11 @@ public class A11 {
         CName = cName;
     }
 
-    public String getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -128,11 +130,11 @@ public class A11 {
         this.businessCode = businessCode;
     }
 
-    public String getCreateDate() {
+    public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(String createDate) {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 

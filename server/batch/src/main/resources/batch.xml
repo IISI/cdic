@@ -135,7 +135,7 @@
                 <step id="f01">
                     <description>把 bus view 的資料 import 至 A11 file</description>
                     <tasklet>
-                        <chunk reader="busDbReader" writer="a11FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="busDbReader" processor="f01Processor" writer="a11FileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
