@@ -6,7 +6,7 @@
     <bean id="cdicF03FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICF03.txt"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF03"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -75,7 +75,7 @@
     <bean id="c22FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/C22.txt"></constructor-arg>
+                <constructor-arg value="z:/process/C22"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -135,7 +135,7 @@
     <bean id="a22FileWriter" parent="c22FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A22.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A22"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -153,7 +153,7 @@
     <bean id="b22FileWriter" parent="c22FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/B22.txt"></constructor-arg>
+                <constructor-arg value="z:/process/B22"></constructor-arg>
             </bean>
         </property>
     </bean>

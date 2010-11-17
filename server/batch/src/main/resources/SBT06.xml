@@ -4,7 +4,7 @@
     <bean id="cdicT06FileReader" parent="cdicT04FileReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICT06.csv"></constructor-arg>
+                <constructor-arg value="z:/process/CDICT06"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -33,13 +33,14 @@
     <bean id="t06FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/T06.txt"></constructor-arg>
+                <constructor-arg value="z:/process/T06"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.file.transform.T06RecursiveCollectionLineAggregator">
                 <property name="delegate">
-                    <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                         <property name="format" value="%16s%40s"></property>
                         <property name="fieldExtractor">
                             <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">

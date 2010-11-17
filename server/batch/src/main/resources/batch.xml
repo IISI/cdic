@@ -183,8 +183,8 @@
                     <description>把 host file CDICF10 的資料複製至 A34 file</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="z:/process/CDICF10.txt"></beans:property>
-                            <beans:property name="targetDir" value="z:/process/A34.txt"></beans:property>
+                            <beans:property name="sourceDir" value="z:/process/CDICF10"></beans:property>
+                            <beans:property name="targetDir" value="z:/process/A34"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -216,8 +216,8 @@
                     <description>把 host file CDICF12 的資料複製至 A41 file</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="z:/process/CDICF12.txt"></beans:property>
-                            <beans:property name="targetDir" value="z:/process/A41.txt"></beans:property>
+                            <beans:property name="sourceDir" value="z:/process/CDICF12"></beans:property>
+                            <beans:property name="targetDir" value="z:/process/A41"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -282,8 +282,8 @@
                     <description>把 host file CDICF23 的資料複製至 A75 file</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="z:/process/CDICF23.txt"></beans:property>
-                            <beans:property name="targetDir" value="z:/process/A75.txt"></beans:property>
+                            <beans:property name="sourceDir" value="z:/process/CDICF23"></beans:property>
+                            <beans:property name="targetDir" value="z:/process/A75"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -303,8 +303,8 @@
                     <description>把 host file CDICF24 的資料複製至 A76 file</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="z:/process/CDICF24.txt"></beans:property>
-                            <beans:property name="targetDir" value="z:/process/A76.txt"></beans:property>
+                            <beans:property name="sourceDir" value="z:/process/CDICF24"></beans:property>
+                            <beans:property name="targetDir" value="z:/process/A76"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -324,8 +324,8 @@
                     <description>把 host file CDICF25 的資料複製至 A77 file</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="z:/process/CDICF25.txt"></beans:property>
-                            <beans:property name="targetDir" value="z:/process/A77.txt"></beans:property>
+                            <beans:property name="sourceDir" value="z:/process/CDICF25"></beans:property>
+                            <beans:property name="targetDir" value="z:/process/A77"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -459,8 +459,8 @@
                     <description>把 host file CDICT11 的資料複製至 T11 file</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="z:/process/CDICT11.txt"></beans:property>
-                            <beans:property name="targetDir" value="z:/process/T11.txt"></beans:property>
+                            <beans:property name="sourceDir" value="z:/process/CDICT11"></beans:property>
+                            <beans:property name="targetDir" value="z:/process/T11"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>

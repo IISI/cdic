@@ -27,7 +27,7 @@
     <bean id="a24FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A24.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A24"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>

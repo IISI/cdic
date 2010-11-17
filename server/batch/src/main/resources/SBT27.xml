@@ -4,7 +4,7 @@
     <bean id="cdicT27FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICT27.txt"></constructor-arg>
+                <constructor-arg value="z:/process/CDICT27"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -29,7 +29,7 @@
     <bean id="t27FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/T27.txt"></constructor-arg>
+                <constructor-arg value="z:/process/T27"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>

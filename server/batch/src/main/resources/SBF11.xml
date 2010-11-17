@@ -5,7 +5,7 @@
     <bean id="cdicF11FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICF11.csv"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF11"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -43,11 +43,12 @@
     <bean id="a35FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A35.txt"></constructor-arg>
+                <constructor-arg value="z:/process/A35"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s%19s%50s%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%3s%18.2f%1s%1s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
@@ -62,11 +63,12 @@
     <bean id="a35SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A35SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A35.csv"></constructor-arg>
+                <constructor-arg value="z:/process/A35_sample.csv"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s,%19s,%50s,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%3s,%18.2f,%1s,%1s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">

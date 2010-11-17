@@ -5,9 +5,10 @@
     <bean id="cdicF12FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICF12.txt"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF12"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -31,7 +32,7 @@
                     </bean>
                 </property>
                 <property name="lineTokenizer">
-                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
                         <property name="columns" value="1,4,8,38,54,66,67,75,77,88,90,106,114,122,130,133,148,163,179,180,188,196,197,200,208,216,218,226,256,271,272,287,302,317,332,333,341,349"></property>
                         <property name="names"
                             value="unit,branchNo,srNo,srSubNo,apNo,cola,charCode,status,custId,govCode,replyNo,firstLoanDate,loanBeginDate,dueDate,currencyCode,amt,currentBalance,rateType,rateAdjustSign,rateAdjust,currentRate,intKind,intCycle,lastInt,nextInt,payIntType,patStart,payAcctNo,intReceivable,overCode,oweInt,penalty,oweLawFee,tempAmt,evlRank,overdueDate,writeOffDate,writeOffAmt"></property>
@@ -45,11 +46,12 @@
     <bean id="a41SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A41.csv"></constructor-arg>
+                <constructor-arg value="z:/process/A41_sample.csv"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format"
                     value="%3s,%4s,%8s,%16s,%12s,%1s,%8s,%2s,%11s,%2s,%16s,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%3s,%15.2f,%15.2f,%16s,%1s%8.5f,%8.5f,%1s,%3s,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%2s,%tY%\u003ctm%\u003ctd,%30s,%15.2f,%1s,%15.2f,%15.2f,%15.2f,%15.2f,%1s,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%15.2f"></property>
                 <property name="fieldExtractor">

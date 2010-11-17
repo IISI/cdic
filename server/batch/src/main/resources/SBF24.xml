@@ -5,9 +5,10 @@
     <bean id="cdicF24FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICF24.txt"></constructor-arg>
+                <constructor-arg value="z:/process/CDICF24"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -31,9 +32,9 @@
                     </bean>
                 </property>
                 <property name="lineTokenizer">
-                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
                         <property name="columns" value="1,4,8,38,50,61,62,69,76,79,94,102,105,107,115"></property>
-                        <property name="names" value="unit,branchNo,srNo,custId,type,startNo,endNo,currencyCode,amt,dueDate,code,dishonoredReason,entryDate,reserveDate"></property>
+                        <property name="names" value="unit,branchNo,srNo,apNo,custId,type,startNo,endNo,currencyCode,amt,dueDate,code,dishonoredReason,entryDate,reserveDate"></property>
                     </bean>
                 </property>
             </bean>
@@ -44,16 +45,23 @@
     <bean id="a76SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A76.csv"></constructor-arg>
+                <constructor-arg value="z:/process/A76_sample.csv"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,'%tY%&lt;tm%&lt;td,'%s,'%s,'%tY%&lt;tm%&lt;td,'%tY%&lt;tm%&lt;td"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,srNo,custId,type,startNo,endNo,currencyCode,amt,dueDate,code,dishonoredReason,entryDate,reserveDate"></property>
+                        <property name="names" value="unit,branchNo,srNo,apNo,custId,type,startNo,endNo,currencyCode,amt,dueDate,code,dishonoredReason,entryDate,reserveDate"></property>
                     </bean>
                 </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科目代碼,會計子目代碼,客戶識別碼,票據種類,票據號碼起號,票據號碼止號,幣別,票據金額,票據到期日,票據事故碼,退票理由,事故日期,提存備付款日期"></property>
             </bean>
         </property>
     </bean>

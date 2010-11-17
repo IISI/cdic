@@ -5,7 +5,7 @@
     <bean id="cdicT18FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICT18.csv"></constructor-arg>
+                <constructor-arg value="z:/process/CDICT18"></constructor-arg>
             </bean>
         </property>
         <property name="strict" value="false"></property>
@@ -29,11 +29,12 @@
     <bean id="t18FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/T18.txt"></constructor-arg>
+                <constructor-arg value="z:/process/T18"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%2s%40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
