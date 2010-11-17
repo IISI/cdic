@@ -12,6 +12,7 @@ public class Messages extends NLS {
     public static String STATUS_5;
     public static String STATUS_6;
     public static String SUC002Handler_InitStateError;
+    public static String SUC005Handler_InitFirst;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

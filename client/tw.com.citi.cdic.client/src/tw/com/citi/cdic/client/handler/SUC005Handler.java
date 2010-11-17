@@ -22,6 +22,7 @@ import tw.com.citi.cdic.client.model.FileDepend;
 import tw.com.citi.cdic.client.model.HostFileSts;
 import tw.com.citi.cdic.client.model.LocalFileSts;
 import tw.com.citi.cdic.client.model.TableFlow;
+import tw.com.citi.cdic.utils.Messages;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -180,10 +181,10 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
         if (tableFlowList != null && tableFlowList.size() > 0) {
             String status = tableFlowList.get(0).getInitStatus();
             if ("1".equals(status)) {
-                throw new IllegalStateException("啟動作業正在執行中，請稍後再試。");
+                throw new IllegalStateException(Messages.SUC002Handler_InitStateError);
             }
         } else {
-            throw new IllegalStateException("請先執行啟動作業，待其執行完畢後，再進行批次產檔作業。");
+            throw new IllegalStateException(Messages.SUC005Handler_InitFirst);
         }
         List<String> readyFiles = getReadyFiles();
         List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
