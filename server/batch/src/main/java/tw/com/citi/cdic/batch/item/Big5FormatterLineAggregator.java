@@ -6,6 +6,8 @@ import java.util.Locale;
 import org.springframework.batch.item.file.transform.FormatterLineAggregator;
 import org.springframework.util.Assert;
 
+import tw.com.citi.cdic.batch.utils.Formatter;
+
 public class Big5FormatterLineAggregator<T> extends FormatterLineAggregator<T> {
 
     private String format;
