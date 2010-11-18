@@ -16,8 +16,9 @@ public class A74 {
     private String type;
     private String period;
     private double largeMax;
-    private Date effectiveDate;
+    private String effectiveDate;
     private double rate;
+    private boolean writeSample;
 
     public void setUnit(String unit) {
         this.unit = unit;
@@ -75,11 +76,11 @@ public class A74 {
         return largeMax;
     }
 
-    public void setEffectiveDate(Date effectiveDate) {
+    public void setEffectiveDate(String effectiveDate) {
         this.effectiveDate = effectiveDate;
     }
 
-    public Date getEffectiveDate() {
+    public String getEffectiveDate() {
         return effectiveDate;
     }
 
@@ -89,5 +90,13 @@ public class A74 {
 
     public double getRate() {
         return rate;
+    }
+
+    public void setWriteSample(boolean writeSample) {
+        this.writeSample = writeSample;
+    }
+
+    public boolean isWriteSample() {
+        return writeSample;
     }
 }

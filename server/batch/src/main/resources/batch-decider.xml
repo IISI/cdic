@@ -78,6 +78,10 @@
         <property name="stepName" value="T04"></property>
     </bean>
 
+    <bean id="t06Decider" parent="skipDecider">
+        <property name="stepName" value="T06"></property>
+    </bean>
+
     <bean id="t08Decider" parent="skipDecider">
         <property name="stepName" value="T08"></property>
     </bean>

@@ -9,7 +9,7 @@
         </property>
     </bean>
 
-    <bean id="t06DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+    <bean id="t06DbWriter" class="tw.com.citi.cdic.batch.item.T06JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql" value="INSERT INTO T06(CODE, DESCRIPTION) VALUES(:code, :description)"></property>
         <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
@@ -38,15 +38,11 @@
         </property>
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="tw.com.citi.cdic.batch.item.file.transform.T06RecursiveCollectionLineAggregator">
-                <property name="delegate">
-                    <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                        <property name="format" value="%-16s%-40s"></property>
-                        <property name="fieldExtractor">
-                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                                <property name="names" value="code,description"></property>
-                            </bean>
-                        </property>
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="%-16s%-40s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="code,description"></property>
                     </bean>
                 </property>
             </bean>
