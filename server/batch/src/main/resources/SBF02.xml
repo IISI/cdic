@@ -143,7 +143,7 @@
             <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
                 <property name="selectClause" value="SELECT *"></property>
                 <property name="fromClause" value="FROM A21"></property>
-                <property name="sortKey" value="PBCUSTID, PBSRNO"></property>
+                <property name="sortKey" value="PBSRNO"></property>
             </bean>
         </property>
         <property name="rowMapper">
@@ -164,7 +164,7 @@
             <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
                 <property name="selectClause" value="SELECT *"></property>
                 <property name="fromClause" value="FROM B21"></property>
-                <property name="sortKey" value="PBCUSTID, PBSRNO"></property>
+                <property name="sortKey" value="PBSRNO"></property>
             </bean>
         </property>
     </bean>
