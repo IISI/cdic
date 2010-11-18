@@ -80,7 +80,7 @@
                 <property name="format" value="%3s%4s%30s%6s%6s%8s%4s%11s%3s%3s%tY%\u003ctm%\u003ctd%3s%16.2f%16.2f%15.2f%15.2f%1s%1s%16s%8.5f%15.2f%1s%1s%15.2f%15.2f%tY%\u003ctm%\u003ctd"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,balance,stopPayment,cardAmount,gsAccountCode,jointCode,rateType,intRate,intPayable,overdrawStatus,taxCode,grossInt,grossTax,lastTxDate"></property>
+                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,balance,stopPayAmount,cardAmount,gsAccountCode,jointCode,rateType,intRate,intPayable,overdrawStatus,taxCode,grossInt,grossTax,lastTxDate"></property>
                     </bean>
                 </property>
             </bean>
