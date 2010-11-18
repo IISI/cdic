@@ -20,7 +20,7 @@
                 </property>
                 <property name="lineTokenizer">
                     <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
-                        <property name="names" value="number,GRB,branchNo,account"></property>
+                        <property name="names" value="GRB,account"></property>
                     </bean>
                 </property>
             </bean>
