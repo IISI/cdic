@@ -25,7 +25,7 @@ public class A21Mapper implements RowMapper<A21> {
         a21.setCustomerId(rs.getString("PBCUSTID"));
         a21.setCustomerIdNo(rs.getString("CUSTIDNO"));
         a21.setCustomerType(rs.getString("PBCUSTTYPE"));
-        a21.setOpenDate(rs.getDate("PBOPENDATE"));
+        a21.setOpenDate(rs.getString("PBOPENDATE"));
         a21.setCurrencyCode(rs.getString("PBCURCODE"));
         a21.setAccountBalance(rs.getDouble("PBACTBAL"));
         a21.setBalance(rs.getDouble("PBBAL"));
@@ -40,7 +40,7 @@ public class A21Mapper implements RowMapper<A21> {
         a21.setTaxCode(rs.getString("PBTAXCODE"));
         a21.setGrossInt(rs.getDouble("PBGROSSINT"));
         a21.setGrossTax(rs.getDouble("PBGROSSTAX"));
-        a21.setLastTxDate(rs.getDate("PBLASTTXDATE"));
+        a21.setLastTxDate(rs.getString("PBLASTTXDATE"));
         return a21;
     }
 

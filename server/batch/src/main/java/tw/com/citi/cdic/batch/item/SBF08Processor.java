@@ -27,12 +27,18 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
 
     @Override
     public A31 process(JointAcclist item) throws Exception {
-        A21 a21 = a21Dao.findByCustomerIdAndSrNo(item.getGRB(), item.getAccount(), "A21");
+        // 如果 account 的第一碼是'_'的話，就把它拿掉
+        String account = item.getAccount();
+        if (account.startsWith("_")) {
+            account = account.replaceFirst("_", "");
+        }
+        
+        A21 a21 = a21Dao.findByCustomerIdAndSrNo(item.getGRB(), account, "A21");
         if (a21 != null) {
             if (type == 1) {
                 A31 a31 = new A31();
                 a31.setUnit("021");
-                a31.setSrNo(item.getAccount());
+                a31.setSrNo(account);
                 a31.setLocateRate(100.00);
                 a31.setBranchNo(a21.getBranchNo());
                 a31.setCurrencyCode(a21.getCurrencyCode());
@@ -43,12 +49,12 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
             }
         }
         
-        A21 b21 = a21Dao.findByCustomerIdAndSrNo(item.getGRB(), item.getAccount(), "B21");
+        A21 b21 = a21Dao.findByCustomerIdAndSrNo(item.getGRB(), account, "B21");
         if (b21 != null) {
             if (type == 2) {
                 A31 b31 = new A31();
                 b31.setUnit("021");
-                b31.setSrNo(item.getAccount());
+                b31.setSrNo(account);
                 b31.setLocateRate(100.00);
                 b31.setBranchNo(b21.getBranchNo());
                 b31.setCurrencyCode(b21.getCurrencyCode());
@@ -59,12 +65,12 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
             }
         }
         
-        A22 a22 = a22Dao.findByCustomerIdAndSrNo(item.getGRB(), item.getAccount(), "A22");
+        A22 a22 = a22Dao.findByCustomerIdAndSrNo(item.getGRB(), account, "A22");
         if (a22 != null) {
             if (type == 1) {
                 A31 a31 = new A31();
                 a31.setUnit("021");
-                a31.setSrNo(item.getAccount());
+                a31.setSrNo(account);
                 a31.setLocateRate(100.00);
                 a31.setBranchNo(a22.getBranchNo());
                 a31.setCurrencyCode(a22.getCurrencyCode());
@@ -75,12 +81,12 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
             }
         }
         
-        A22 b22 = a22Dao.findByCustomerIdAndSrNo(item.getGRB(), item.getAccount(), "B22");
+        A22 b22 = a22Dao.findByCustomerIdAndSrNo(item.getGRB(), account, "B22");
         if (b22 != null) {
             if (type == 2) {
                 A31 b31 = new A31();
                 b31.setUnit("021");
-                b31.setSrNo(item.getAccount());
+                b31.setSrNo(account);
                 b31.setLocateRate(100.00);
                 b31.setBranchNo(b22.getBranchNo());
                 b31.setCurrencyCode(b22.getCurrencyCode());
@@ -91,12 +97,12 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
             }
         }
         
-        A23 a23 = a23Dao.findByCustomerIdAndSrNo(item.getGRB(), item.getAccount());
+        A23 a23 = a23Dao.findByCustomerIdAndSrNo(item.getGRB(), account);
         if (a23 != null) {
             if (type == 1) {
                 A31 a31 = new A31();
                 a31.setUnit("021");
-                a31.setSrNo(item.getAccount());
+                a31.setSrNo(account);
                 a31.setLocateRate(100.00);
                 a31.setBranchNo(a23.getBranchNo());
                 a31.setCurrencyCode(a23.getCurrencyCode());
