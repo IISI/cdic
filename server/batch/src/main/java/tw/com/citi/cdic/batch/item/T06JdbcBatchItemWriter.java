@@ -8,9 +8,9 @@ public class T06JdbcBatchItemWriter<T> extends JdbcBatchItemWriter<T> {
 
     @Override
     public void write(final List<? extends T> items) throws Exception {
-        if(items != null) {
-            for(T item : items) {
-                super.write((List<? extends T>)item);
+        if (items != null && items.size() != 0) {
+            for (T item : items) {
+                super.write((List<? extends T>) item);
             }
         }
     }

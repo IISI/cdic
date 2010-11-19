@@ -34,6 +34,8 @@
 
     <beans:import resource="SBF21.xml" />
 
+    <beans:import resource="SBF22.xml" />
+
     <beans:import resource="SBF23.xml" />
 
     <beans:import resource="SBF24.xml" />
@@ -264,6 +266,45 @@
                     <description>把 host file CDICF21R 的資料寫入 A73 table, B73 file, C73 file</description>
                     <tasklet>
                         <chunk reader="cdicF21RFileReader" processor="f21Processor" writer="f21Writer1" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="f22Decision" decider="f22Decider">
+                    <next on="EXECUTE" to="f22db-init" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="f22db-init" next="f22i-a74db">
+                    <description>刪除 table A74 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM A74"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f22i-a74db" next="f22a-a74db">
+                    <description>CDIC22I 寫入 A74</description>
+                    <tasklet>
+                        <chunk reader="cdicF22IFileReader" writer="a74DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f22a-a74db" next="f22r-a74db">
+                    <description>CDIC22A 寫入 A74</description>
+                    <tasklet>
+                        <chunk reader="cdicF22AFileReader" writer="a74DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f22r-a74db" next="f22">
+                    <description>CDIC22R 寫入 A74</description>
+                    <tasklet>
+                        <chunk reader="cdicF22RFileReader" processor="f22dbProcessor" writer="a74ListDbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f22">
+                    <description>把 A74 db 資料寫至 A74 file</description>
+                    <tasklet>
+                        <chunk reader="a74DbReader" processor="f22Processor" writer="f22Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
