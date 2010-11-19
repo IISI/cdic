@@ -2,9 +2,7 @@ package platform.aquarius.embedserver.conf;
 
 import java.net.URL;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.eclipse.core.runtime.Platform;
 
 /**
@@ -28,14 +26,15 @@ public class DbInfo {
     public DbInfo() {
         try {
             URL url = Platform.getBundle("platform.aquarius.resources").getResource("security.ini");
-            Configuration config = new HierarchicalINIConfiguration(url);
+            HierarchicalINIConfiguration config = new HierarchicalINIConfiguration(url);
+
             String mode = config.getString("CONFIG.DEVELOPVERSION");
             secServerName = config.getString(mode + ".SECServerName");
             secDbName = config.getString(mode + ".SECDBName");
-            secPassword = config.getString(mode + ".SaDummy");
+            secPassword = PasswordUtil.decodePwd(config.getString(mode + ".SaDummy"));
             appServerName = config.getString(mode + ".APPServerName");
             appDbName = config.getString(mode + ".APPDBName");
-            appPassword = config.getString(mode + ".ApDummy");
+            appPassword = PasswordUtil.decodePwd(config.getString(mode + ".ApDummy"));
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }
