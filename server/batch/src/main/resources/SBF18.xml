@@ -47,6 +47,7 @@
         <property name="a22Dao" ref="a22Dao"></property>
         <property name="a23Dao" ref="a23Dao"></property>
         <property name="a24Dao" ref="a24Dao"></property>
+        <property name="CDICF20Dao" ref="CDICF20Dao"></property>
     </bean>
 
     <bean id="a61FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
