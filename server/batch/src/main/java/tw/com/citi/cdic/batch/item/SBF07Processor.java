@@ -28,8 +28,17 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
 
     private int type;
 
-    private A26 createA26(CDICF07H item) throws Exception {
+    private A26 prepareA26Instance(CDICF07H item) {
         A26 a26 = new A26();
+        a26.setUnit("021");
+        a26.setApNo(item.getGl());
+        a26.setPaySav(item.getAmount());
+        a26.setIntPayable(item.getEffectDate());
+        a26.setIntPayMemo(item.getDescription());
+        return a26;
+    }
+
+    private void createA26(CDICF07H item, A26 a26) throws Exception {
         if (item.getDescription().startsWith("DRC#")) {
             A23 a23 = a23Dao.findBySrNo(item.getDescription().substring(4, 14));
             if (a23 != null) {
@@ -74,11 +83,9 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setBranchNo("0000");
             }
         }
-        return a26;
     }
 
-    private A26 createB26(CDICF07H item) throws Exception {
-        A26 b26 = new A26();
+    private void createB26(CDICF07H item, A26 b26) throws Exception {
         if (StringUtils.isNumeric(item.getDescription().substring(0, 10))) {
             String srNo = item.getDescription().substring(0, 10);
             A21 b21 = a21Dao.findBySrNo(srNo, "B21");
@@ -103,11 +110,9 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
             b26.setCustomerId("");
             b26.setBranchNo("0000");
         }
-        return b26;
     }
 
-    private A26 createC26(CDICF07H item) throws Exception {
-        A26 c26 = new A26();
+    private void createC26(CDICF07H item, A26 c26) throws Exception {
         if (StringUtils.isNumeric(item.getDescription().substring(0, 10))) {
             String srNo = item.getDescription().substring(0, 10);
             A21 c21 = a21Dao.findBySrNo(srNo, "C21");
@@ -132,38 +137,44 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
             c26.setCustomerId("");
             c26.setBranchNo("0000");
         }
-        return c26;
     }
 
     @Override
     public A26 process(CDICF07H item) throws Exception {
+        A26 a26 = prepareA26Instance(item);
+        
         if ("8600".equals(item.getCompany())) {
             String numCode = item.getGl().substring(item.getGl().length() - 3, item.getGl().length());
             Configuration config = new HierarchicalINIConfiguration("currency_mappings.ini");
             String ccyCode = config.getString(numCode + ".code");
+            a26.setCurrencyCode(ccyCode);
             if ("TWD".equals(ccyCode)) {
                 // prepare data for a26
                 if (type == 1) {
-                    return createA26(item);
+                    createA26(item, a26);
                 } else {
                     return null;
                 }
             } else {
                 // prepare data for b26
                 if (type == 2) {
-                    return createB26(item);
+                    createB26(item, a26);
                 } else {
                     return null;
                 }
             }
-        } else {
+        } else if ("6900".equals(item.getCompany())) {
             // prepare data for c26
             if (type == 3) {
-                return createC26(item);
+                createC26(item, a26);
             } else {
                 return null;
             }
+        } else {
+            return null;
         }
+        
+        return a26;
     }
 
     public void setA21Dao(A21Dao a21Dao) {

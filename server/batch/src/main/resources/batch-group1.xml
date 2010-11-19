@@ -144,7 +144,7 @@
                 <step id="f05">
                     <description>讀取 LUS view 的資料，然後產生 A24 table 及 file。</description>
                     <tasklet>
-                        <chunk reader="lusDbReader" writer="a24Writer" commit-interval="500"></chunk>
+                        <chunk reader="lusDbReader" processor="f05Processor" writer="a24Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>

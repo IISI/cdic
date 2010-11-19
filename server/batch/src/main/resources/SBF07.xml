@@ -15,7 +15,7 @@
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
                     <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
-                        <property name="targetType" value="tw.com.citi.cdic.batch.model.A26"></property>
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.CDICF07H"></property>
                         <property name="customEditors">
                             <map>
                                 <entry key="java.util.Date">
@@ -34,7 +34,7 @@
                 </property>
                 <property name="lineTokenizer">
                     <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
-                        <property name="columns" value="1,11,21,25,50,69,77"></property>
+                        <property name="columns" value="1,11,21,25,50,70"></property>
                         <property name="names" value="gl,rc,company,description,amount,effectDate"></property>
                     </bean>
                 </property>
@@ -58,7 +58,7 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%3s%4s%12s%30s%11s%3s%7s%3s%15.2f%tY%\u003ctm%\u003ctd%60s"></property>
+                <property name="format" value="%3s%4s%12s%30s%11s%3s%7s%3s%15.2f%tY%&lt;tm%&lt;td%60s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="unit,branchNo,apNo,srNo,customerId,customerIdNo,checkNo,currencyCode,paySav,intPayable,intPayMemo"></property>
