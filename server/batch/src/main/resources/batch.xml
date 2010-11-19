@@ -224,13 +224,19 @@
             </flow>
             <flow>
                 <decision id="f18Decision" decider="f18Decider">
-                    <next on="EXECUTE" to="f18" />
+                    <next on="EXECUTE" to="f18-copy-currency" />
                     <end on="SKIP" />
                 </decision>
+                <step id="f18-copy-currency" next="f18">
+                    <description>Copy CDICF20 至 table</description>
+                    <tasklet>
+                        <chunk reader="cdicF20FileReader" writer="cdicF20DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
                 <step id="f18">
                     <description>Summarise BUS view 的資料，產生 A61</description>
                     <tasklet>
-                        <chunk reader="busDbReader" processor="SBF18Processor" writer="f18Writer" commit-interval="500"></chunk>
+                        <chunk reader="busDbReader2" processor="SBF18Processor" writer="f18Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
