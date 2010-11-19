@@ -5,20 +5,20 @@ import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 
-import tw.com.citi.cdic.batch.model.A35;
+import tw.com.citi.cdic.batch.model.A74;
 
 /**
  * @author Lancelot
  * @since 2010/10/25
  */
-public class SBF11Processor implements ItemProcessor<A35, A35> {
+public class SBF22Processor implements ItemProcessor<A74, A74> {
 
     private StepExecution stepExecution;
 
     private int writeSampleFrequency = 1000;
 
     @Override
-    public A35 process(A35 item) throws Exception {
+    public A74 process(A74 item) throws Exception {
         ExecutionContext stepContext = stepExecution.getExecutionContext();
         long processCount = stepContext.getLong("PROCESS_COUNT", 0);
         processCount++;

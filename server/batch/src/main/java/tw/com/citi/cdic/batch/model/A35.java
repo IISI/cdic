@@ -1,8 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
-
-
 /**
  * A35, B35, C35, CDICF11 Layout
  * 
@@ -13,12 +10,13 @@ public class A35 {
     private String unit;
     private String caseNo;
     private String caseName;
-    private Date dpisDate;
-    private Date dueDate;
+    private int dpisDate;
+    private int dueDate;
     private String currencyCode;
     private double cryAmt;
     private String classType;
     private String protect;
+    private boolean writeSample;
 
     public void setUnit(String unit) {
         this.unit = unit;
@@ -44,19 +42,19 @@ public class A35 {
         return caseName;
     }
 
-    public void setDpisDate(Date dpisDate) {
+    public void setDpisDate(int dpisDate) {
         this.dpisDate = dpisDate;
     }
 
-    public Date getDpisDate() {
+    public int getDpisDate() {
         return dpisDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(int dueDate) {
         this.dueDate = dueDate;
     }
 
-    public Date getDueDate() {
+    public int getDueDate() {
         return dueDate;
     }
 
@@ -90,5 +88,13 @@ public class A35 {
 
     public String getProtect() {
         return protect;
+    }
+
+    public void setWriteSample(boolean writeSample) {
+        this.writeSample = writeSample;
+    }
+
+    public boolean isWriteSample() {
+        return writeSample;
     }
 }

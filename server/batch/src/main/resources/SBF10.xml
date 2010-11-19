@@ -59,6 +59,11 @@
                 </property>
             </bean>
         </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科目代碼,會計子目代碼,申請日期,申請類別,票據號碼,幣別,票據金額,發票日期,受款人姓名"></property>
+            </bean>
+        </property>
     </bean>
 
     <bean id="f10SampleProcessor" class="tw.com.citi.cdic.batch.item.SBF10Processor" />

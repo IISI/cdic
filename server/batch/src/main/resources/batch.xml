@@ -359,10 +359,28 @@
             </flow>
             <flow>
                 <decision id="t03Decision" decider="t03Decider">
+                    <next on="EXECUTE" to="t03-t03" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="t03-t03" next="t03-t12">
+                    <description>把 CDICT03G 的資料 import 至 T03 file</description>
+                    <tasklet>
+                        <chunk reader="cdicT03GFileReader" processor="t03Processor" writer="t03FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="t03-t12">
+                    <description>把 CDICT03G 的資料 import 至 T12 file</description>
+                    <tasklet>
+                        <chunk reader="cdicT03GFileReader" processor="t12Processor" writer="t12FileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="t06Decision" decider="t06Decider">
                     <next on="EXECUTE" to="t06A-init" />
                     <end on="SKIP" />
                 </decision>
-                <step id="t06A-init" next="t06-table">
+                <step id="t06A-init" next="t06">
                     <description>刪除 table t06 的所有資料</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
@@ -371,34 +389,22 @@
                         </beans:bean>
                     </tasklet>
                 </step>
-                <step id="t06-table" next="t03-t03">
-                    <description>把 CDICT06 的資料 insert 至 T06 table</description>
+                <step id="t06" next="t06-t03">
+                    <description>把 CDICT06 的資料 import 至 T06 file</description>
                     <tasklet>
                         <chunk reader="cdicT06FileReader" processor="t06Processor" writer="t06DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="t03-t03" next="t03-t12">
-                    <description>把 CDICT03G 的資料 import 至 T03 file</description>
-                    <tasklet>
-                        <chunk reader="cdicT03GFileReader" processor="t03Processor" writer="t03FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="t03-t12" next="t06-file">
-                    <description>把 CDICT03G 的資料 import 至 T12 file</description>
-                    <tasklet>
-                        <chunk reader="cdicT03GFileReader" processor="t12Processor" writer="t12FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="t06-file" next="t03-t06">
-                    <description>把 T06 table 的資料 import 至 T06 file</description>
-                    <tasklet>
-                        <chunk reader="t06DbReader" writer="t06FileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="t03-t06">
+                <step id="t06-t03" next="t06-file">
                     <description>把 CDICT03G 的資料 import 至 T06 file</description>
                     <tasklet>
-                        <chunk reader="cdicT03GFileReader" processor="t03t06Processor" writer="t06FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicT03GFileReader" processor="t03t06Processor" writer="t06DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="t06-file">
+                    <description>把 CDICT03G 的資料 import 至 T06 file</description>
+                    <tasklet>
+                        <chunk reader="t06DbReader" writer="t06FileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
