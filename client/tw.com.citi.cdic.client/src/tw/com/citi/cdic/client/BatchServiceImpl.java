@@ -10,6 +10,8 @@ import org.eclipse.core.runtime.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import platform.aquarius.embedserver.conf.PasswordUtil;
+
 /**
  * @author Chih-Liang Chang
  * @since 2010/10/25
@@ -33,7 +35,7 @@ public class BatchServiceImpl implements BatchService {
             config.load(url.openStream());
             this.hostname = config.getProperty("hostname");
             this.username = config.getProperty("username");
-            this.password = config.getProperty("password");
+            this.password = PasswordUtil.decodePwd(config.getProperty("password"));
             this.progpath = config.getProperty("progpath");
         } catch (Exception e) {
             e.printStackTrace();

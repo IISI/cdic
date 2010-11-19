@@ -35,7 +35,7 @@ public class DbInfo {
             appServerName = config.getString(mode + ".APPServerName");
             appDbName = config.getString(mode + ".APPDBName");
             appPassword = PasswordUtil.decodePwd(config.getString(mode + ".ApDummy"));
-        } catch (ConfigurationException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
