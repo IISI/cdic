@@ -5,7 +5,7 @@
     <bean id="cdicT03GFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICT03G"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICT03G"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -31,7 +31,7 @@
     <bean id="t03FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/T03"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/T03"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -51,7 +51,7 @@
     <bean id="t12FileWriter" parent="t03FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/T12"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/T12"></constructor-arg>
             </bean>
         </property>
     </bean>

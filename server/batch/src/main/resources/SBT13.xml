@@ -5,7 +5,7 @@
     <bean id="cdicT13FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICT13"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICT13"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -30,7 +30,7 @@
     <bean id="t13FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/T13"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/T13"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>

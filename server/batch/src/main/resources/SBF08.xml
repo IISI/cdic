@@ -6,7 +6,7 @@
     <bean id="jointAcclistFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/JointAcclist"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/JointAcclist"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -37,7 +37,7 @@
     <bean id="a31FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A31"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A31"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -60,7 +60,7 @@
     <bean id="b31FileWriter" parent="a31FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/B31"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/B31"></constructor-arg>
             </bean>
         </property>
     </bean>

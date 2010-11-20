@@ -6,7 +6,7 @@
     <bean id="cdicF20FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICF20"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF20"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -53,7 +53,7 @@
     <bean id="a61FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A61"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A61"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -72,7 +72,7 @@
     <bean id="a61SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A61_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A61_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -95,7 +95,7 @@
     <bean id="f02SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/F02_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F02_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -122,7 +122,7 @@
     <bean id="f03SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/F03_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F03_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -149,7 +149,7 @@
     <bean id="f04SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/F04_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F04_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -176,7 +176,7 @@
     <bean id="f05SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/F05_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F05_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
