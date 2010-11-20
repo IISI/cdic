@@ -20,6 +20,7 @@ import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemConfigBuilder;
 import org.eclipse.core.runtime.Platform;
 
+import platform.aquarius.embedserver.conf.PasswordUtil;
 import tw.com.citi.cdic.client.vfs.OSGiFileSystemManager;
 
 public class FileUtil {
@@ -62,9 +63,9 @@ public class FileUtil {
         }
     }
 
-    private static String getPassword(String propertyKey) {
+    private static String getPassword(String propertyKey) throws Exception {
         // TODO 如果有其他處理
-        return config.getProperty(propertyKey);
+        return PasswordUtil.decodePwd(config.getProperty(propertyKey));
     }
 
     public static FileObject getHostFileByName(String fileName) throws FileSystemException {

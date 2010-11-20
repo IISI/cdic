@@ -1,7 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
-
 /**
  * A74, CDICF22I, CDICF22R, CDICF22L Layout
  * 
@@ -73,7 +71,7 @@ public class A74 {
     }
 
     public double getLargeMax() {
-        return largeMax;
+        return largeMax / 1000000;
     }
 
     public void setEffectiveDate(String effectiveDate) {

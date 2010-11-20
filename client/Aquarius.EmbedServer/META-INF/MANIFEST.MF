@@ -108,6 +108,7 @@ Export-Package: net.sf.jasperreports.ant,
  net.sf.jasperreports.view,
  net.sf.jasperreports.view.save,
  platform.aquarius.embedserver,
+ platform.aquarius.embedserver.conf,
  platform.aquarius.embedserver.jdbc,
  platform.aquarius.embedserver.pages
 Import-Package: platform.aquarius.def

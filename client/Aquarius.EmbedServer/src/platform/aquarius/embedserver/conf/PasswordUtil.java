@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.configuration.ConfigurationException;
 
 public class PasswordUtil {
-    public static String decodePwd(String cipher) throws ConfigurationException {
+    public static String decodePwd(String cipher) throws Exception {
         StringBuffer plain = new StringBuffer();
         if (cipher == null || "".equals(cipher.trim())) {
             throw new ConfigurationException("Parameter missing.");
