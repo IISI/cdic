@@ -20,6 +20,7 @@ import tw.com.citi.cdic.batch.model.A24;
 import tw.com.citi.cdic.batch.model.A61;
 import tw.com.citi.cdic.batch.model.CDICF20;
 import tw.com.citi.cdic.batch.model.SBF18Output;
+import tw.com.citi.cdic.batch.utils.MaskUtils;
 
 /**
  * @author Chih-Liang Chang
@@ -65,6 +66,10 @@ public class SBF18Processor implements ItemProcessor<A11, SBF18Output> {
         for (A24 a24 : a24s) {
             temp7 += a24.getBalance();
             temp8 += a24.getIntPayable();
+            
+            // 底下兩行程式碼，是為了寫 sample file 所做的處理
+            a24.setCustomerId(MaskUtils.mask(a24.getCustomerId(), 6));
+            a24.setCustomerName(MaskUtils.mask(a24.getCustomerName(), 2));
         }
         out.getA21List().addAll(a21s);
         out.getA22List().addAll(a22s);
