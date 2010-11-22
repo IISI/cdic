@@ -244,10 +244,10 @@
             </flow>
             <flow>
                 <decision id="f21Decision" decider="f21Decider">
-                    <next on="EXECUTE" to="a73db-init" />
+                    <next on="EXECUTE" to="f21-a73db-init" />
                     <end on="SKIP" />
                 </decision>
-                <step id="a73db-init" next="f21i-a73db">
+                <step id="f21-a73db-init" next="f21i-a73db">
                     <description>刪除 table A73 的所有資料</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
@@ -262,16 +262,16 @@
                         <chunk reader="cdicF21IFileReader" writer="a73DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="f21r" next="a73db-a73file">
+                <step id="f21r" next="f21-a73db-a73file">
                     <description>把 host file CDICF21R 的資料寫入 A73 table, B73 file, C73 file</description>
                     <tasklet>
                         <chunk reader="cdicF21RFileReader" processor="f21Processor" writer="f21Writer1" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="a73db-a73file">
-                    <description>把 host file CDICF21R 的資料寫入 A73 table, B73 file, C73 file</description>
+                <step id="f21-a73db-a73file">
+                    <description>把  A73 table 的資料寫入  A73 file, C73 file</description>
                     <tasklet>
-                        <chunk reader="cdicF21RFileReader" processor="f21Processor" writer="f21Writer1" commit-interval="500"></chunk>
+                        <chunk reader="a73DbReader" processor="f21a73Processor" writer="f21Writer2" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
