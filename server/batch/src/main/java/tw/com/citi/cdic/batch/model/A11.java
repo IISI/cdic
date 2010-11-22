@@ -42,6 +42,8 @@ public class A11 {
 
     private String email;
 
+    private transient boolean sample;
+
     public String getUnit() {
         return unit;
     }
@@ -176,6 +178,14 @@ public class A11 {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isSample() {
+        return sample;
+    }
+
+    public void setSample(boolean sample) {
+        this.sample = sample;
     }
 
 }
