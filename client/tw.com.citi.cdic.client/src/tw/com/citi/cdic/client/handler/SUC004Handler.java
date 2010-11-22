@@ -1,6 +1,7 @@
 package tw.com.citi.cdic.client.handler;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -58,17 +59,31 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
     }
 
     private void uploadFiles(List<FileItem> items) throws IOException {
+        InputStream is = null;
+        String name = null;
         for (Iterator<FileItem> iter = items.iterator(); iter.hasNext();) {
             FileItem item = iter.next();
             if (!item.isFormField()) {
-                FileUtil.uploadFile(item.getInputStream(), FolderType.PROCESS, item.getName());
+                is = item.getInputStream();
+            } else {
+                if ("name".equals(item.getFieldName())) {
+                    name = item.getString();
+                }
             }
         }
+        // TODO 檢核
+        FileUtil.uploadFile(is, FolderType.PROCESS, name);
     }
 
     private void saveLocalFileStsByName(String name) {
         String[] args = Platform.getApplicationArgs();
-        String processUser = args != null && args.length > 0 ? args[0] : null;
+        String processUser = null;
+        for (String arg : args) {
+            String[] keyValue = arg.split("=", 2);
+            if ("userId".equalsIgnoreCase(keyValue[0])) {
+                processUser = keyValue[1];
+            }
+        }
         LocalFileSts fileSts = new LocalFileSts();
         fileSts.setName(name);
         fileSts.setProcessUser(processUser);

@@ -5,9 +5,10 @@
     <bean id="cdicT03GFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICT03G.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICT03G"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -17,7 +18,7 @@
                     </bean>
                 </property>
                 <property name="lineTokenizer">
-                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
                         <property name="columns" value="1,4,9"></property>
                         <property name="names" value="systemId,productCode,description"></property>
                     </bean>
@@ -30,12 +31,13 @@
     <bean id="t03FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/T03.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/T03"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
-                <property name="format" value="%8s%40s"></property>
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="%-8s%-40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="code,description"></property>
@@ -49,12 +51,14 @@
     <bean id="t12FileWriter" parent="t03FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/T12.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/T12"></constructor-arg>
             </bean>
         </property>
     </bean>
 
-    <bean id="t03Processor" class="tw.com.citi.cdic.batch.item.SBT03T03Processor" />
+    <bean id="t03Processor" class="tw.com.citi.cdic.batch.item.SBT03T03Processor">
+        <property name="t06Dao" ref="t06Dao"></property>
+    </bean>
 
     <bean id="t12Processor" class="tw.com.citi.cdic.batch.item.SBT03T12Processor" />
 

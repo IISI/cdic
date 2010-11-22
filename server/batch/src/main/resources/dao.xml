@@ -23,4 +23,16 @@
         <property name="dataSource" ref="dataSource"></property>
     </bean>
 
+    <bean id="t06Dao" class="tw.com.citi.cdic.batch.dao.jdbc.T01DaoImpl">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <bean id="fmBCDWN4Dao" class="tw.com.citi.cdic.batch.dao.jdbc.FMBCDWN4DaoImpl">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <bean id="CDICF20Dao" class="tw.com.citi.cdic.batch.dao.jdbc.CDICF20DaoImpl">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
 </beans>

@@ -29,8 +29,8 @@ public class A22Mapper implements RowMapper<A22> {
         a22.setCurrencyCode(rs.getString("TDCURCODE"));
         a22.setAmount(rs.getDouble("TDAMT"));
         a22.setStopPayAmount(rs.getDouble("TDSTOPPAYAMT"));
-        a22.setBeginDate(rs.getDate("TDBGNDATE"));
-        a22.setDueDate(rs.getDate("TDDUEDATE"));
+        a22.setBeginDate(rs.getString("TDBGNDATE"));
+        a22.setDueDate(rs.getString("TDDUEDATE"));
         a22.setRateType(rs.getString("TDRATETYPE"));
         a22.setPeriod(rs.getString("TDPERIOD"));
         a22.setIntType(rs.getString("TDINTTYPE"));
@@ -39,22 +39,22 @@ public class A22Mapper implements RowMapper<A22> {
         a22.setIntPayCode(rs.getString("TDINTPAYCODE"));
         a22.setAutoPrim(rs.getString("TDAUTOPRIM"));
         a22.setAutoIntNo(rs.getString("TDAUTOINTNO"));
-        a22.setIssueDate(rs.getDate("TDISUEDATE"));
-        a22.setReIssueDate(rs.getDate("TDREISUEDATE"));
+        a22.setIssueDate(rs.getString("TDISUEDATE"));
+        a22.setReIssueDate(rs.getString("TDREISUEDATE"));
         a22.setGsAccountCode(rs.getString("TDGSACTCODE"));
         a22.setJointCode(rs.getString("TDJOINTCODE"));
         a22.setSdCase(rs.getString("TDSDCASE"));
-        a22.setIntEndDate(rs.getDate("TDINTEDATE"));
+        a22.setIntEndDate(rs.getString("TDINTEDATE"));
         a22.setIntPay(rs.getDouble("TDINTPAY"));
         a22.setIntPayable(rs.getDouble("TDINTPAYABLE"));
         a22.setViolateAmount(rs.getDouble("TDVIOLATEAMT"));
         a22.setPgKind(rs.getString("TDPGKIND"));
         a22.setPgAmount(rs.getDouble("TDPGAMT"));
-        a22.setPgSetDate(rs.getDate("TDPGSETDATE"));
+        a22.setPgSetDate(rs.getString("TDPGSETDATE"));
         a22.setTaxCode(rs.getString("TDTAXCODE"));
         a22.setGrossInt(rs.getDouble("TDGROSSINT"));
         a22.setGrossTax(rs.getDouble("TDGROSSTAX"));
-        a22.setLastTxDate(rs.getDate("TDLASTTXDATE"));
+        a22.setLastTxDate(rs.getString("TDLASTTXDATE"));
         return a22;
     }
 

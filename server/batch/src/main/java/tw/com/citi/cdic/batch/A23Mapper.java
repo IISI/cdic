@@ -25,13 +25,13 @@ public class A23Mapper implements RowMapper<A23> {
         a23.setCustomerId(rs.getString("CKCUSTID"));
         a23.setCustomerIdNo(rs.getString("CKCUSTIDNO"));
         a23.setCustomerType(rs.getString("CKCUSTTYPE"));
-        a23.setOpenDate(rs.getDate("CKOPENDATE"));
+        a23.setOpenDate(rs.getString("CKOPENDATE"));
         a23.setCurrencyCode(rs.getString("CKCURCODE"));
         a23.setAccountBalance(rs.getDouble("CKACTBAL"));
         a23.setStopPayAmount(rs.getDouble("CKSTOPPAYAMT"));
         a23.setJointCode(rs.getString("CKJOINTCODE"));
         a23.setOverdrawStatus(rs.getString("CKOVRSTATUS"));
-        a23.setLastTxDate(rs.getDate("CKLASTTXDATE"));
+        a23.setLastTxDate(rs.getString("CKLASTTXDATE"));
         return a23;
     }
 

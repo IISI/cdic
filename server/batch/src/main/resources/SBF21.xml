@@ -5,9 +5,10 @@
     <bean id="cdicF21IFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF21I.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF21I"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -31,7 +32,7 @@
                     </bean>
                 </property>
                 <property name="lineTokenizer">
-                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
                         <property name="columns" value="1,4,8,38,54,62,64,66,69,84"></property>
                         <property name="names" value="unit,branchNo,srNo,depositReceiptNo,txnDate,serNo,txnReason,currencyCode,holdAmt,memo"></property>
                     </bean>
@@ -44,7 +45,7 @@
     <bean id="cdicF21RFileReader" parent="cdicF02IFileReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF21R.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF21R"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -77,11 +78,12 @@
     <bean id="a73FileWriter" class="tw.com.citi.cdic.batch.item.file.A73FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/A73.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A73"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s%4s%30s%16s%tY%\u003ctm%\u003ctd%2s%2s%3s%15.2f%40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
@@ -96,7 +98,7 @@
     <bean id="b73FileWriter" parent="a73FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/B73.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/B73"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -105,7 +107,7 @@
     <bean id="c73FileWriter" parent="a73FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/C73.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/C73"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -120,11 +122,12 @@
     <bean id="a73SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A73SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/A73Sample.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A73_sample.csv"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s, %4s, %30s, %16s, %tY%\u003ctm%\u003ctd, %2s, %2s, %3s, %15.2f, %40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
@@ -139,11 +142,12 @@
     <bean id="b73SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.B73SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/B73Sample.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/B73_sample.csv"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s, %4s, %30s, %16s, %tY%\u003ctm%\u003ctd, %2s, %2s, %3s, %15.2f, %40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
@@ -158,11 +162,12 @@
     <bean id="c73SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.C73SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/C73Sample.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/C73_sample.csv"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s, %4s, %30s, %16s, %tY%\u003ctm%\u003ctd, %2s, %2s, %3s, %15.2f, %40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">

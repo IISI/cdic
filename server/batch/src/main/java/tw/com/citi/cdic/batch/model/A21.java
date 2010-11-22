@@ -1,7 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
-
 /**
  * A21, B21, C21 共用的 domain 物件。
  * 
@@ -28,7 +26,7 @@ public class A21 {
 
     private String customerType;
 
-    private Date openDate;
+    private String openDate;
 
     private String currencyCode;
 
@@ -58,7 +56,7 @@ public class A21 {
 
     private double grossTax;
 
-    private Date lastTxDate;
+    private String lastTxDate;
 
     public String getUnit() {
         return unit;
@@ -132,11 +130,11 @@ public class A21 {
         this.customerType = customerType;
     }
 
-    public Date getOpenDate() {
+    public String getOpenDate() {
         return openDate;
     }
 
-    public void setOpenDate(Date openDate) {
+    public void setOpenDate(String openDate) {
         this.openDate = openDate;
     }
 
@@ -252,11 +250,11 @@ public class A21 {
         this.grossTax = grossTax;
     }
 
-    public Date getLastTxDate() {
+    public String getLastTxDate() {
         return lastTxDate;
     }
 
-    public void setLastTxDate(Date lastTxDate) {
+    public void setLastTxDate(String lastTxDate) {
         this.lastTxDate = lastTxDate;
     }
 

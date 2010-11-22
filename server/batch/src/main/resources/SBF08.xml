@@ -6,9 +6,10 @@
     <bean id="jointAcclistFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/JointAcclist_Local"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/JointAcclist"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -19,7 +20,7 @@
                 </property>
                 <property name="lineTokenizer">
                     <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
-                        <property name="names" value="number,GRB,branchNo,account"></property>
+                        <property name="names" value="GRB,account"></property>
                     </bean>
                 </property>
             </bean>
@@ -36,11 +37,12 @@
     <bean id="a31FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/A31.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A31"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s%4s%30s%3s%11s%3s%6.2f%40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
@@ -58,7 +60,7 @@
     <bean id="b31FileWriter" parent="a31FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/B31.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/B31"></constructor-arg>
             </bean>
         </property>
     </bean>

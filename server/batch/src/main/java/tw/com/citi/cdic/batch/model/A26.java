@@ -26,7 +26,7 @@ public class A26 {
 
     private String currencyCode;
 
-    private String paySav;
+    private double paySav;
 
     private Date intPayable;
 
@@ -96,11 +96,11 @@ public class A26 {
         this.currencyCode = currencyCode;
     }
 
-    public String getPaySav() {
+    public double getPaySav() {
         return paySav;
     }
 
-    public void setPaySav(String paySav) {
+    public void setPaySav(double paySav) {
         this.paySav = paySav;
     }
 

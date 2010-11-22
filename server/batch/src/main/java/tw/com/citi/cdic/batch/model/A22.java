@@ -1,7 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
-
 /**
  * A22, B22, C22 共用的 domain 物件。
  * 
@@ -36,9 +34,9 @@ public class A22 {
 
     private double stopPayAmount;
 
-    private Date beginDate;
+    private String beginDate;
 
-    private Date dueDate;
+    private String dueDate;
 
     private String rateType;
 
@@ -56,9 +54,9 @@ public class A22 {
 
     private String autoIntNo;
 
-    private Date issueDate;
+    private String issueDate;
 
-    private Date reIssueDate;
+    private String reIssueDate;
 
     private String gsAccountCode;
 
@@ -66,7 +64,7 @@ public class A22 {
 
     private String sdCase;
 
-    private Date intEndDate;
+    private String intEndDate;
 
     private double intPay;
 
@@ -78,7 +76,7 @@ public class A22 {
 
     private double pgAmount;
 
-    private Date pgSetDate;
+    private String pgSetDate;
 
     private String taxCode;
 
@@ -86,7 +84,7 @@ public class A22 {
 
     private double grossTax;
 
-    private Date lastTxDate;
+    private String lastTxDate;
 
     public String getUnit() {
         return unit;
@@ -192,19 +190,19 @@ public class A22 {
         this.stopPayAmount = stopPayAmount;
     }
 
-    public Date getBeginDate() {
+    public String getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(Date beginDate) {
+    public void setBeginDate(String beginDate) {
         this.beginDate = beginDate;
     }
 
-    public Date getDueDate() {
+    public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -272,19 +270,19 @@ public class A22 {
         this.autoIntNo = autoIntNo;
     }
 
-    public Date getIssueDate() {
+    public String getIssueDate() {
         return issueDate;
     }
 
-    public void setIssueDate(Date issueDate) {
+    public void setIssueDate(String issueDate) {
         this.issueDate = issueDate;
     }
 
-    public Date getReIssueDate() {
+    public String getReIssueDate() {
         return reIssueDate;
     }
 
-    public void setReIssueDate(Date reIssueDate) {
+    public void setReIssueDate(String reIssueDate) {
         this.reIssueDate = reIssueDate;
     }
 
@@ -312,11 +310,11 @@ public class A22 {
         this.sdCase = sdCase;
     }
 
-    public Date getIntEndDate() {
+    public String getIntEndDate() {
         return intEndDate;
     }
 
-    public void setIntEndDate(Date intEndDate) {
+    public void setIntEndDate(String intEndDate) {
         this.intEndDate = intEndDate;
     }
 
@@ -360,11 +358,11 @@ public class A22 {
         this.pgAmount = pgAmount;
     }
 
-    public Date getPgSetDate() {
+    public String getPgSetDate() {
         return pgSetDate;
     }
 
-    public void setPgSetDate(Date pgSetDate) {
+    public void setPgSetDate(String pgSetDate) {
         this.pgSetDate = pgSetDate;
     }
 
@@ -392,11 +390,11 @@ public class A22 {
         this.grossTax = grossTax;
     }
 
-    public Date getLastTxDate() {
+    public String getLastTxDate() {
         return lastTxDate;
     }
 
-    public void setLastTxDate(Date lastTxDate) {
+    public void setLastTxDate(String lastTxDate) {
         this.lastTxDate = lastTxDate;
     }
 
