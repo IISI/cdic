@@ -6,7 +6,7 @@
     <bean id="cdicF04FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICF04"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF04"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -60,7 +60,7 @@
     <bean id="a23FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A23"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A23"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>

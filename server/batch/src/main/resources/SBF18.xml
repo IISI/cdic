@@ -3,17 +3,57 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+    <bean id="cdicF20FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF20"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="strict" value="false"></property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.CDICF20"></property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
+                        <property name="columns" value="1,4,8,11,19"></property>
+                        <property name="names" value="unit,branchNo,currencyCode,rateDate,transRate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="cdicF20DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO CDICF20(UNIT, BRANCH_NO, CURRENCY_CODE, RATE_DATE, TRANS_RATE) VALUES(:unit, :branchNo, :currencyCode, :rateDate, :transRate)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="busDbReader2" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="SELECT * FROM LOCAL_BUS ORDER BY NATNID_REGNNUMB, CUST_NUMB"></property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.BusMapper"></bean>
+        </property>
+    </bean>
+
     <bean id="SBF18Processor" class="tw.com.citi.cdic.batch.item.SBF18Processor">
         <property name="a21Dao" ref="a21Dao"></property>
         <property name="a22Dao" ref="a22Dao"></property>
         <property name="a23Dao" ref="a23Dao"></property>
         <property name="a24Dao" ref="a24Dao"></property>
+        <property name="CDICF20Dao" ref="CDICF20Dao"></property>
     </bean>
 
     <bean id="a61FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A61"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A61"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -32,7 +72,7 @@
     <bean id="a61SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A61_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A61_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -55,7 +95,7 @@
     <bean id="f02SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/F02_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F02_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -82,7 +122,7 @@
     <bean id="f03SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/F03_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F03_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -109,7 +149,7 @@
     <bean id="f04SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/F04_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F04_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -136,7 +176,7 @@
     <bean id="f05SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/F05_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F05_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>

@@ -5,7 +5,7 @@
     <bean id="cdicT04FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICT04"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICT04"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -30,7 +30,7 @@
     <bean id="t04FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/T04"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/T04"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>

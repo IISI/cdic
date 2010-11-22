@@ -4,7 +4,7 @@
     <bean id="fmbcdwn4FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/FMBCDWN4"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/FMBCDWN4"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -50,7 +50,7 @@
     <bean id="t02FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/T02"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/T02"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>

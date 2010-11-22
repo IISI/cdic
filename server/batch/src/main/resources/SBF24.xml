@@ -5,7 +5,7 @@
     <bean id="cdicF24FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICF24"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF24"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -45,7 +45,7 @@
     <bean id="a76SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A76_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A76_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>

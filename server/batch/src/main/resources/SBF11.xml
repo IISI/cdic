@@ -5,7 +5,7 @@
     <bean id="cdicF11FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/CDICF11"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF11"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -30,7 +30,7 @@
     <bean id="a35FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A35"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A35"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -50,7 +50,7 @@
     <bean id="a35SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A35SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/process/A35_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A35_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
