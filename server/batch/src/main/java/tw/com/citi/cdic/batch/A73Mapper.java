@@ -16,7 +16,7 @@ public class A73Mapper implements RowMapper<A73> {
         a73.setBranchNo(rs.getString("BRANCH_NO"));
         a73.setSrNo(rs.getString("SR_NO"));
         a73.setDepositReceiptNo(rs.getString("DEPOSIT_RECEIPT_NO"));
-        a73.setTxnDate(rs.getDate("TXN_DATE"));
+        a73.setTxnDate(rs.getString("TXN_DATE"));
         a73.setSerNo(rs.getString("SER_NO"));
         a73.setTxnReason(rs.getString("TXN_REASON"));
         a73.setCurrencyCode(rs.getString("CURRENCY_CODE"));

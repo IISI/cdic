@@ -42,7 +42,7 @@
     </bean>
 
     <!-- host file reader cdicf21r -->
-    <bean id="cdicF21RFileReader" parent="cdicF02IFileReader">
+    <bean id="cdicF21RFileReader" parent="cdicF21IFileReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="z:/process/CDICF21R"></constructor-arg>
@@ -55,6 +55,13 @@
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql"
             value="INSERT INTO A73(UNIT, BRANCH_NO, SR_NO, DEPOSIT_RECEIPT_NO, TXN_DATE, SER_NO, TXN_REASON, CURRENCY_CODE, HOLD_AMT, MEMO) VALUES(:unit, :branchNo, :srNo, :depositReceiptNo, :txnDate, :serNo, :txnReason, :currencyCode, :holdAmt, :memo)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="a73DbWriter1" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql"
+            value="INSERT INTO A73(UNIT, BRANCH_NO, SR_NO, DEPOSIT_RECEIPT_NO, TXN_DATE, SER_NO, TXN_REASON, CURRENCY_CODE, HOLD_AMT, MEMO) VALUES(:record.unit, :record.branchNo, :record.srNo, :record.depositReceiptNo, :record.txnDate, :record.serNo, :record.txnReason, :record.currencyCode, :record.holdAmt, :record.memo)"></property>
         <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 
@@ -84,10 +91,10 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%3s%4s%30s%16s%tY%\u003ctm%\u003ctd%2s%2s%3s%15.2f%40s"></property>
+                <property name="format" value="%-3s%-4s%-30s%-16s%-8s%-2s%-2s%-3s%15.2f%-40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,srNo,depositReceiptNo,txnDate,serNo,txnReason,currencyCode,holdAmt,memo"></property>
+                        <property name="names" value="record.unit,record.branchNo,record.srNo,record.depositReceiptNo,record.txnDate,record.serNo,record.txnReason,record.currencyCode,record.holdAmt,record.memo"></property>
                     </bean>
                 </property>
             </bean>
@@ -95,19 +102,41 @@
     </bean>
 
     <!-- cdic file writer B73 -->
-    <bean id="b73FileWriter" parent="a73FileWriter">
+    <bean id="b73FileWriter" class="tw.com.citi.cdic.batch.item.file.B73FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="z:/process/B73"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="%-3s%-4s%-30s%-16s%-8s%-2s%-2s%-3s%15.2f%-40s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="record.unit,record.branchNo,record.srNo,record.depositReceiptNo,record.txnDate,record.serNo,record.txnReason,record.currencyCode,record.holdAmt,record.memo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
     </bean>
 
     <!-- cdic file writer C73 -->
-    <bean id="c73FileWriter" parent="a73FileWriter">
+    <bean id="c73FileWriter" class="tw.com.citi.cdic.batch.item.file.C73FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="z:/process/C73"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="%-3s%-4s%-30s%-16s%-8s%-2s%-2s%-3s%15.2f%-40s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="record.unit,record.branchNo,record.srNo,record.depositReceiptNo,record.txnDate,record.serNo,record.txnReason,record.currencyCode,record.holdAmt,record.memo"></property>
+                    </bean>
+                </property>
             </bean>
         </property>
     </bean>
@@ -128,12 +157,17 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%3s, %4s, %30s, %16s, %tY%\u003ctm%\u003ctd, %2s, %2s, %3s, %15.2f, %40s"></property>
+                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,%15.2f,'%s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,srNo,depositReceiptNo,txnDate,serNo,txnReason,currencyCode,holdAmt,memo"></property>
+                        <property name="names" value="record.unit,record.branchNo,record.srNo,record.depositReceiptNo,record.txnDate,record.serNo,record.txnReason,record.currencyCode,record.holdAmt,record.memo"></property>
                     </bean>
                 </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,存單號碼,止付扣押日期,止付扣押序號,止付扣押原因,幣別,實際止付扣押金額,備註說明"></property>
             </bean>
         </property>
     </bean>
@@ -148,12 +182,17 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%3s, %4s, %30s, %16s, %tY%\u003ctm%\u003ctd, %2s, %2s, %3s, %15.2f, %40s"></property>
+                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,%15.2f,'%s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,srNo,depositReceiptNo,txnDate,serNo,txnReason,currencyCode,holdAmt,memo"></property>
+                        <property name="names" value="record.unit,record.branchNo,record.srNo,record.depositReceiptNo,record.txnDate,record.serNo,record.txnReason,record.currencyCode,record.holdAmt,record.memo"></property>
                     </bean>
                 </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,存單號碼,止付扣押日期,止付扣押序號,止付扣押原因,幣別,實際止付扣押金額,備註說明"></property>
             </bean>
         </property>
     </bean>
@@ -168,12 +207,17 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%3s, %4s, %30s, %16s, %tY%\u003ctm%\u003ctd, %2s, %2s, %3s, %15.2f, %40s"></property>
+                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,%15.2f,'%s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,srNo,depositReceiptNo,txnDate,serNo,txnReason,currencyCode,holdAmt,memo"></property>
+                        <property name="names" value="record.unit,record.branchNo,record.srNo,record.depositReceiptNo,record.txnDate,record.serNo,record.txnReason,record.currencyCode,record.holdAmt,record.memo"></property>
                     </bean>
                 </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,存單號碼,止付扣押日期,止付扣押序號,止付扣押原因,幣別,實際止付扣押金額,備註說明"></property>
             </bean>
         </property>
     </bean>
@@ -182,7 +226,7 @@
     <bean id="f21Writer1" class="org.springframework.batch.item.support.CompositeItemWriter">
         <property name="delegates">
             <list>
-                <ref bean="a73DbWriter" />
+                <ref bean="a73DbWriter1" />
                 <ref bean="b73FileWriter" />
                 <ref bean="b73SampleFileWriter" />
                 <ref bean="c73FileWriter" />
