@@ -92,10 +92,10 @@
         </property>
     </bean>
 
-    <bean id="f02SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
+    <bean id="a21SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F02_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A21.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -110,6 +110,7 @@
                         </property>
                     </bean>
                 </property>
+                <property name="type" value="1"></property>
             </bean>
         </property>
         <property name="headerCallback">
@@ -119,10 +120,66 @@
         </property>
     </bean>
 
-    <bean id="f03SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
+    <bean id="b21SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F03_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/B21.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.file.transform.A21RecursiveCollectionLineAggregator">
+                <property name="delegate">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                        <property name="fieldExtractor">
+                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                                <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,balance,stopPayAmount,cardAmount,gsAccountCode,jointCode,rateType,intRate,intPayable,overdrawStatus,taxCode,grossInt,grossTax,lastTxDate"></property>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+                <property name="type" value="2"></property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科子目代碼,存款性質別或產品類別,存款帳戶狀況碼,客戶識別碼,保留欄位,存戶性質或組織型態,開戶日期,幣別,帳戶餘額,存摺餘額,止付扣押總金額,儲值性圈存金額,綜存戶記號,聯名戶及統制帳戶註記,利率別,指定基準日之存款利率,應付存款利息,透支戶註記,稅率別,本年度未開扣繳憑單已付利息,本年度未開扣繳憑單已代扣稅額,最近交易日"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="c21SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/C21.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.file.transform.A21RecursiveCollectionLineAggregator">
+                <property name="delegate">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                        <property name="fieldExtractor">
+                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                                <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,balance,stopPayAmount,cardAmount,gsAccountCode,jointCode,rateType,intRate,intPayable,overdrawStatus,taxCode,grossInt,grossTax,lastTxDate"></property>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+                <property name="type" value="3"></property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科子目代碼,存款性質別或產品類別,存款帳戶狀況碼,客戶識別碼,保留欄位,存戶性質或組織型態,開戶日期,幣別,帳戶餘額,存摺餘額,止付扣押總金額,儲值性圈存金額,綜存戶記號,聯名戶及統制帳戶註記,利率別,指定基準日之存款利率,應付存款利息,透支戶註記,稅率別,本年度未開扣繳憑單已付利息,本年度未開扣繳憑單已代扣稅額,最近交易日"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a22SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A22.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -137,6 +194,7 @@
                         </property>
                     </bean>
                 </property>
+                <property name="type" value="1"></property>
             </bean>
         </property>
         <property name="headerCallback">
@@ -146,10 +204,66 @@
         </property>
     </bean>
 
-    <bean id="f04SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
+    <bean id="b22SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F04_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/B22.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.file.transform.A22RecursiveCollectionLineAggregator">
+                <property name="delegate">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                        <property name="fieldExtractor">
+                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                                <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,violateAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+                <property name="type" value="2"></property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科子目代碼,存款性質別或產品類別,存款帳戶狀況碼,客戶識別碼,保留欄位,存戶性質或組織型態,存單號碼,幣別,存單金額,止付扣押總金額,起息日,到期日,利率別,適用之利率期間,計息種類,記名註記,存單利率,付息方式,自動轉期代號,自動轉息帳號,開立存單日期,補發存單日期,綜存戶存單,聯名戶及統制帳戶註記,結構型商品代號,上次付息迄日,已付存款利息,應付存款利息/預付存款利息,違約金,存單設定種類,存單設定質權金額,設定日期,稅率別,本年度未開扣繳憑單已付利息,本年度未開扣繳憑單已代扣稅額,最近交易日"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="c22SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/C22.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.file.transform.A22RecursiveCollectionLineAggregator">
+                <property name="delegate">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                        <property name="fieldExtractor">
+                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                                <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,violateAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+                <property name="type" value="3"></property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科子目代碼,存款性質別或產品類別,存款帳戶狀況碼,客戶識別碼,保留欄位,存戶性質或組織型態,存單號碼,幣別,存單金額,止付扣押總金額,起息日,到期日,利率別,適用之利率期間,計息種類,記名註記,存單利率,付息方式,自動轉期代號,自動轉息帳號,開立存單日期,補發存單日期,綜存戶存單,聯名戶及統制帳戶註記,結構型商品代號,上次付息迄日,已付存款利息,應付存款利息/預付存款利息,違約金,存單設定種類,存單設定質權金額,設定日期,稅率別,本年度未開扣繳憑單已付利息,本年度未開扣繳憑單已代扣稅額,最近交易日"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a23SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A23.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -173,10 +287,10 @@
         </property>
     </bean>
 
-    <bean id="f05SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
+    <bean id="a24SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A61SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/F05_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A24.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -205,10 +319,14 @@
             <list>
                 <ref bean="a61FileWriter" />
                 <ref bean="a61SampleFileWriter" />
-                <ref bean="f02SampleFileWriter" />
-                <ref bean="f03SampleFileWriter" />
-                <ref bean="f04SampleFileWriter" />
-                <ref bean="f05SampleFileWriter" />
+                <ref bean="a21SampleFileWriter" />
+                <ref bean="b21SampleFileWriter" />
+                <ref bean="c21SampleFileWriter" />
+                <ref bean="a22SampleFileWriter" />
+                <ref bean="b22SampleFileWriter" />
+                <ref bean="c22SampleFileWriter" />
+                <ref bean="a23SampleFileWriter" />
+                <ref bean="a24SampleFileWriter" />
             </list>
         </property>
     </bean>

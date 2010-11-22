@@ -111,8 +111,8 @@ public class SBF18Processor implements ItemProcessor<A11, SBF18Output> {
             temp13 += b22.getAmount() * cdicF20.getTransRate();
             temp14 += b22.getIntPayable() * cdicF20.getTransRate();
         }
-        out.getA21List().addAll(a21s);
-        out.getA22List().addAll(a22s);
+        out.getB21List().addAll(a21s);
+        out.getB22List().addAll(a22s);
         
         // 5. Summary 外幣聯名戶金額
         a21s = a21Dao.findByCustomerIdAndJointCode(item.getId(), "1", "B21");
@@ -127,8 +127,8 @@ public class SBF18Processor implements ItemProcessor<A11, SBF18Output> {
             temp17 += b22.getAmount() * cdicF20.getTransRate();
             temp18 += b22.getIntPayable() * cdicF20.getTransRate();
         }
-        out.getA21List().addAll(a21s);
-        out.getA22List().addAll(a22s);
+        out.getB21List().addAll(a21s);
+        out.getB22List().addAll(a22s);
         
         // 6. Summary 外幣非要保金額
         a22s = a22Dao.findByCustomerIdAndJointCodeAndCharCodeOrSdCaseAndAmount(item.getId(), "B22");
@@ -137,7 +137,7 @@ public class SBF18Processor implements ItemProcessor<A11, SBF18Output> {
             temp15 += b22.getAmount() * cdicF20.getTransRate();
             temp16 += b22.getIntPayable() * cdicF20.getTransRate();
         }
-        out.getA22List().addAll(a22s);
+        out.getB22List().addAll(a22s);
         
         // 7. Summary OBU要保金額
         a21s = a21Dao.findByCustomerId(item.getId(), "C21");
@@ -151,8 +151,8 @@ public class SBF18Processor implements ItemProcessor<A11, SBF18Output> {
             temp19 += c22.getAmount();
             temp20 += c22.getIntPayable();
         }
-        out.getA21List().addAll(a21s);
-        out.getA22List().addAll(a22s);
+        out.getC21List().addAll(a21s);
+        out.getC22List().addAll(a22s);
         
         A61 a61 = new A61();
         a61.setUnit("021");
