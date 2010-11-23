@@ -70,6 +70,8 @@
 
     <job-repository />
 
+    <beans:bean id="asyncTaskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor"></beans:bean>
+
     <beans:bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
         <beans:property name="jobRepository" ref="jobRepository"></beans:property>
     </beans:bean>
@@ -77,7 +79,7 @@
     <beans:bean id="itemSqlParameterSourceProvider" class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"></beans:bean>
 
     <job id="copyViewJob">
-        <split id="copyView" next="updateTableFlowInitStatus">
+        <split id="copyView" next="updateTableFlowInitStatus" task-executor="asyncTaskExecutor">
             <flow>
                 <step id="deleteLocalBus" next="copyBusView">
                     <tasklet>
@@ -128,7 +130,7 @@
     </job>
 
     <job id="convertJob">
-        <split id="importFiles">
+        <split id="importFiles" task-executor="asyncTaskExecutor">
             <flow>
                 <decision id="f01Decision" decider="f01Decider">
                     <next on="EXECUTE" to="f01" />
