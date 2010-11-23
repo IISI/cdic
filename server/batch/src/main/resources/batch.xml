@@ -56,6 +56,8 @@
 
     <beans:import resource="SBT10.xml" />
 
+    <beans:import resource="SBT11.xml" />
+
     <beans:import resource="SBT13.xml" />
 
     <beans:import resource="SBT14.xml" />
@@ -509,12 +511,9 @@
                     <end on="SKIP" />
                 </decision>
                 <step id="t11">
-                    <description>把 host file CDICT11 的資料複製至 T11 file</description>
+                    <description>把 local file CDICT11 資料寫至 T11 file</description>
                     <tasklet>
-                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICT11"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/T11"></beans:property>
-                        </beans:bean>
+                        <chunk reader="cdicT11FileReader" writer="t11FileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
