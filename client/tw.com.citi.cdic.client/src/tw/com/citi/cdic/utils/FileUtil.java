@@ -46,6 +46,7 @@ public class FileUtil {
     private static FileSystemOptions opts;
     private static final int BUFF_SIZE = 100000;
     private static final byte[] buffer = new byte[BUFF_SIZE];
+    private static boolean init = false;
 
     static {
         config = new Properties();
@@ -58,13 +59,13 @@ public class FileUtil {
             DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(opts, auth);
             fsManager = new OSGiFileSystemManager();
             ((OSGiFileSystemManager) fsManager).init();
+            init = true;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private static String getPassword(String propertyKey) throws Exception {
-        // TODO 如果有其他處理
         return PasswordUtil.decodePwd(config.getProperty(propertyKey));
     }
 
@@ -77,7 +78,7 @@ public class FileUtil {
     }
 
     public static void copyFile(FileObject source, FileObject target, String prefix, String suffix,
-            String[] sorceFileNames) throws Exception {
+            String[] sorceFileNames) throws FileSystemException {
         List<FileObject> files = new ArrayList<FileObject>();
         if (sorceFileNames == null || sorceFileNames.length == 0) {
             // 全部複製
@@ -133,12 +134,13 @@ public class FileUtil {
         }
     }
 
-    public static void copyFile(FileObject source, FileObject target, String[] sorceFileNames) throws Exception {
+    public static void copyFile(FileObject source, FileObject target, String[] sorceFileNames)
+            throws FileSystemException {
         copyFile(source, target, null, null, sorceFileNames);
     }
 
     public static void copyFile(FolderType sourceFolder, String localPath, String prefix, String suffix,
-            String[] sorceFileNames) throws Exception {
+            String[] sorceFileNames) throws FileSystemException {
         if (sourceFolder == null) {
             throw new IllegalArgumentException("input source folder is invalid.");
         }
@@ -151,12 +153,13 @@ public class FileUtil {
         copyFile(source, target, prefix, suffix, sorceFileNames);
     }
 
-    public static void copyFile(FolderType sourceFolder, String localPath, String[] sorceFileNames) throws Exception {
+    public static void copyFile(FolderType sourceFolder, String localPath, String[] sorceFileNames)
+            throws FileSystemException {
         copyFile(sourceFolder, localPath, null, null, sorceFileNames);
     }
 
     public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String prefix, String suffix,
-            String[] sorceFileNames) throws Exception {
+            String[] sorceFileNames) throws FileSystemException {
         if (sourceFolder == null) {
             throw new IllegalArgumentException("input source folder is invalid.");
         }
@@ -171,7 +174,7 @@ public class FileUtil {
     }
 
     public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String[] sorceFileNames)
-            throws Exception {
+            throws FileSystemException {
         copyFile(sourceFolder, targetFolder, null, null, sorceFileNames);
     }
 
@@ -221,5 +224,13 @@ public class FileUtil {
                         + config.getProperty(target.getKey() + ".path"), opts);
         FileObject file = fsManager.resolveFile(folder, fileName);
         file.createFile();
+    }
+
+    public static void setInit(boolean init) {
+        FileUtil.init = init;
+    }
+
+    public static boolean isInit() {
+        return init;
     }
 }

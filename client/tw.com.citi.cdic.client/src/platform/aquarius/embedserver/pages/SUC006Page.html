@@ -196,7 +196,12 @@
                 var msgDialog = $("<div></div>").dialog({
                     "title": "ERROR",
                     "autoOpen": false,
-                    "modal": true
+                    "modal": true,
+                    "buttons": {
+                        "關閉": function(){
+                            $(this).dialog("close");
+                        }
+                    }
                 });
                 
             });

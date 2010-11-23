@@ -31,18 +31,18 @@
                         editable: true,
                         edittype: 'checkbox',
                         sortable: false,
-						width: 40,
+                        width: 40,
                         align: 'center'
                     }, {
                         colHeader: 'Status',
                         name: 'status',
                         sortable: false,
-						width: 70,
+                        width: 70,
                         align: 'center'
                     }, {
                         colHeader: 'FileName',
                         name: 'name',
-						width: 70,
+                        width: 70,
                         sortable: false
                     }, {
                         colHeader: 'Host-datetime',
@@ -54,7 +54,7 @@
                         name: 'size',
                         sortable: false,
                         align: 'right',
-						width: 80,
+                        width: 80,
                         formatter: 'integer',
                         formatoptions: {
                             thousandsSeparator: ','
@@ -64,7 +64,7 @@
                         name: 'record',
                         sortable: false,
                         align: 'right',
-						width: 80,
+                        width: 80,
                         formatter: 'integer',
                         formatoptions: {
                             thousandsSeparator: ','
@@ -77,7 +77,7 @@
                     }, {
                         colHeader: 'Process-user',
                         name: 'processUser',
-						width: 80,
+                        width: 80,
                         sortable: false
                     }]
                 });
@@ -114,7 +114,15 @@
                 }
                 
                 loadInitInfo();
-                
+                var uploadMsg = $("#wait").dialog({
+                    bgiframe: false,
+                    autoOpen: false,
+                    modal: true,
+                    closeOnEscape: false,
+                    open: function(event, ui){
+                        $(".ui-dialog-titlebar-close").hide();
+                    }
+                });
                 $("#confirm").click(function(){
                     var data = new Array();
                     var ids = hostFileList.getDataIDs();
@@ -128,15 +136,7 @@
                     payload.actionParam = JSON.stringify({
                         "data": data
                     });
-                    var uploadMsg = $("#wait").dialog({
-                        bgiframe: false,
-						autoOpen : false,
-                        modal: true,
-                        closeOnEscape: false,
-                        open: function(event, ui){
-                            $(".ui-dialog-titlebar-close").hide();
-                        }
-                    }).html("檔案複製中，請耐心等候...").dialog('open');
+                    uploadMsg.html("檔案複製中，請耐心等候...").dialog('open');
                     $.ajax({
                         "url": __ajaxHandler,
                         "type": "post",
@@ -162,7 +162,13 @@
                 var msgDialog = $("<div></div>").dialog({
                     "title": "ERROR",
                     "autoOpen": false,
-                    "modal": true
+                    "modal": true,
+                    "buttons": {
+                        "關閉": function(){
+                            $(this).dialog("close");
+                            uploadMsg.dialog('close');
+                        }
+                    }
                 });
                 
             });

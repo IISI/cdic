@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.wicket.PageParameters;
 import org.eclipse.core.runtime.Platform;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +35,7 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
     final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public Object execute(PageParameters params) throws Exception {
+    public Object execute(PageParameters params) {
         String actionName = params.getString("actionName");
         if ("getInitInfo".equals(actionName)) {
             return getInitInfo();
@@ -45,10 +47,16 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
         throw new IllegalArgumentException("Cannot find actionName: " + actionName);
     }
 
-    private Object confirm(PageParameters params) throws Exception {
-        JSONObject actionParam = new JSONObject(params.getString("actionParam"));
-        Gson gson = new Gson();
-        String[] fileNos = gson.fromJson(actionParam.get("data").toString(), String[].class);
+    private Object confirm(PageParameters params) {
+        String[] fileNos;
+        try {
+            JSONObject actionParam = new JSONObject(params.getString("actionParam"));
+            Gson gson = new Gson();
+            fileNos = gson.fromJson(actionParam.get("data").toString(), String[].class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+        }
         Date now = new Date();
         for (String fileNo : fileNos) {
             CDICFileSts fileSts = new CDICFileSts();
@@ -69,10 +77,17 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
         return "";
     }
 
-    private Object downloadSample(PageParameters params) throws Exception {
-        JSONObject actionParam = new JSONObject(params.getString("actionParam"));
-        String savePath = actionParam.getString("savePath");
-        String fileNo = actionParam.getString("fileNo");
+    private Object downloadSample(PageParameters params) {
+        String savePath;
+        String fileNo;
+        try {
+            JSONObject actionParam = new JSONObject(params.getString("actionParam"));
+            savePath = actionParam.getString("savePath");
+            fileNo = actionParam.getString("fileNo");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+        }
         // 根據 fileNo 取得 subFile
         Map<String, Object> queryParams = new HashMap<String, Object>();
         queryParams.put("fileNo", fileNo);
@@ -90,13 +105,19 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
             }
             if (files != null && files.size() > 0) {
                 String[] temp = new String[files.size()];
-                FileUtil.copyFile(FolderType.PROCESS, savePath, files.toArray(temp));
+                try {
+                    FileUtil.copyFile(FolderType.PROCESS, savePath, files.toArray(temp));
+                } catch (FileSystemException e) {
+                    e.printStackTrace();
+                    throw new SecurityException(Messages.bind(Messages.Download_Sample_File_Error,
+                            new Object[] { fileNo }));
+                }
             }
         }
         return "";
     }
 
-    private Object getInitInfo() throws Exception {
+    private Object getInitInfo() {
         List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
         if (cdicFileList != null && cdicFileList.size() > 0) {
             JsonArray result = new JsonArray();
