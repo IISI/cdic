@@ -54,7 +54,7 @@ public class SBF21Processor implements ItemProcessor<A73, SBF21Output> {
         out.setType(SBF21Output.TYPE.B73);
         out.setRecord(item);
         b73Count++;
-        if (b73Count % writeSampleFrequency == 0) {
+        if (b73Count % writeSampleFrequency == 1) {
             out.setWriteSample(true);
         } else {
             out.setWriteSample(false);
@@ -67,7 +67,7 @@ public class SBF21Processor implements ItemProcessor<A73, SBF21Output> {
         out.setType(SBF21Output.TYPE.C73);
         out.setRecord(item);
         c73Count++;
-        if (c73Count % writeSampleFrequency == 0) {
+        if (c73Count % writeSampleFrequency == 1) {
             out.setWriteSample(true);
         } else {
             out.setWriteSample(false);

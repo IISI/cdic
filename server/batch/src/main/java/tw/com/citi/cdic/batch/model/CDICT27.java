@@ -4,7 +4,7 @@ package tw.com.citi.cdic.batch.model;
  * @author Lancelot
  * @since 2010/10/7
  */
-public class CDICT27H {
+public class CDICT27 {
     private String sourceIndicator;
     private String transactionCode;
     private String description1;

@@ -56,9 +56,14 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
             fileSts.setStatus("3");
             fileSts.setConfirmDateTime(now);
             String[] args = Platform.getApplicationArgs();
-            if (args != null && args.length > 0) {
-                fileSts.setConfirmer(args[0]);
+            String processUser = null;
+            for (String arg : args) {
+                String[] keyValue = arg.split("=", 2);
+                if ("userId".equalsIgnoreCase(keyValue[0])) {
+                    processUser = keyValue[1];
+                }
             }
+            fileSts.setConfirmer(processUser);
             getDao().update("SUC006_UPD_CDICFILESTS_BY_FILENO", fileSts);
         }
         return "";
@@ -79,7 +84,7 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
                 String subFiles = cdicFile.getSubFile();
                 StringTokenizer st = new StringTokenizer(subFiles, " ");
                 while (st.hasMoreElements()) {
-                    String file = st.nextToken();
+                    String file = st.nextToken() + "_sample.csv";
                     files.add(file);
                 }
             }
@@ -99,7 +104,8 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
                 ConfirmDto dto = new ConfirmDto();
                 dto.setConfirmer(cdicFile.getConfirmer());
                 StringBuffer fileSet = new StringBuffer();
-                fileSet = fileSet.append(cdicFile.getFileNo()).append("(").append(cdicFile.getSubFile()).append(")");
+                fileSet = fileSet.append(cdicFile.getFileNo()).append("(")
+                        .append(cdicFile.getSubFile() != null ? cdicFile.getSubFile().trim() : "").append(")");
                 dto.setFileSet(fileSet.toString());
                 dto.setGroup(cdicFile.getFileGroup());
                 dto.setFileNo(cdicFile.getFileNo());

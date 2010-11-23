@@ -31,7 +31,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.h2;bundle-version="1.2.139",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  com.springsource.net.sf.cglib;bundle-version="2.2.0",
- com.springsource.org.apache.commons.logging;bundle-version="1.1.1"
+ com.springsource.org.apache.commons.logging;bundle-version="1.1.1",
+ org.apache.commons.configuration;bundle-version="1.6.0",
+ org.apache.commons.lang;bundle-version="2.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  libs/c3p0-0.9.1.2.jar,
@@ -106,6 +108,7 @@ Export-Package: net.sf.jasperreports.ant,
  net.sf.jasperreports.view,
  net.sf.jasperreports.view.save,
  platform.aquarius.embedserver,
+ platform.aquarius.embedserver.conf,
  platform.aquarius.embedserver.jdbc,
  platform.aquarius.embedserver.pages
 Import-Package: platform.aquarius.def

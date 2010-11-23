@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import platform.aquarius.embedserver.AquariusAjaxDaoHandler;
+import tw.com.citi.cdic.client.BatchService;
+import tw.com.citi.cdic.client.BatchServiceImpl;
 import tw.com.citi.cdic.client.dto.BatchDto;
 import tw.com.citi.cdic.client.dto.BatchDto.BatchType;
 import tw.com.citi.cdic.client.dto.DepInfoDto;
@@ -19,6 +21,8 @@ import tw.com.citi.cdic.client.model.CDICFileSts;
 import tw.com.citi.cdic.client.model.FileDepend;
 import tw.com.citi.cdic.client.model.HostFileSts;
 import tw.com.citi.cdic.client.model.LocalFileSts;
+import tw.com.citi.cdic.client.model.TableFlow;
+import tw.com.citi.cdic.utils.Messages;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -75,7 +79,8 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
             }
         }
         if (batches.size() > 0) {
-            // TODO trigger batch
+            BatchService batchService = new BatchServiceImpl();
+            batchService.launch();
         }
         return "";
     }
@@ -172,6 +177,15 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
     }
 
     private Object getInitInfo() throws Exception {
+        List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object());
+        if (tableFlowList != null && tableFlowList.size() > 0) {
+            String status = tableFlowList.get(0).getInitStatus();
+            if ("1".equals(status)) {
+                throw new IllegalStateException(Messages.SUC002Handler_InitStateError);
+            }
+        } else {
+            throw new IllegalStateException(Messages.SUC005Handler_InitFirst);
+        }
         List<String> readyFiles = getReadyFiles();
         List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
         if (cdicFileList != null && cdicFileList.size() > 0) {
@@ -185,10 +199,10 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                 boolean hasGroup = false;
                 String group = cdicFile.getFileGroup();
                 if (group != null && !"".equals(group.trim())) {
-                    batchId = group;
+                    batchId = group + "_";
                     hasGroup = true;
-                    if (batchMap.get("group") == null) {
-                        batchMap.put(group, generateGroupBatchDto(group));
+                    if (batchMap.get(batchId) == null) {
+                        batchMap.put(batchId, generateGroupBatchDto(group));
                     }
                 }
                 batchName = cdicFile.getFileNo();
@@ -213,11 +227,36 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                 if (sources != null && sources.size() > 0) {
                     for (FileDepend depend : sources) {
                         String temp = depend.getDepType().trim() + depend.getDependency().trim();
+                        // 若 depType 為 CDIC，則再撈出其 dependency
+                        // if
+                        // (DepType.CDIC.toString().equals(depend.getDepType().trim()))
+                        // {
+                        // FileDepend param = new FileDepend();
+                        // param.setName(depend.getDependency());
+                        // List<FileDepend> subSources =
+                        // getDao().query("SUC005_QRY_FILEDEPEND_BY_NAME",
+                        // FileDepend.class, param);
+                        // boolean ready = true;
+                        // for (FileDepend subDepend : subSources) {
+                        // String subTemp = subDepend.getDepType().trim() +
+                        // subDepend.getDependency().trim();
+                        // if (!readyFiles.contains(subTemp)) {
+                        // ready = false;
+                        // break;
+                        // }
+                        // }
+                        // if (ready) {
+                        // sourceReady.append(depend.getDependency().trim()).append(" ");
+                        // } else {
+                        // sourceNotReady.append(depend.getDependency().trim()).append(" ");
+                        // }
+                        // } else {
                         if (readyFiles.contains(temp)) {
                             sourceReady.append(depend.getDependency().trim()).append(" ");
                         } else {
                             sourceNotReady.append(depend.getDependency().trim()).append(" ");
                         }
+                        // }
                     }
                 }
                 dto.setSourceReady(sourceReady.toString());
@@ -229,9 +268,9 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                 }
                 // 有未準備好的來源，將 group 的 allowExecution 設為 false
                 if (sourceNotReady.length() != 0 && hasGroup) {
-                    BatchDto groupDto = batchMap.get(group);
+                    BatchDto groupDto = batchMap.get(group + "_");
                     groupDto.setAllowExecution(false);
-                    batchMap.put(group, groupDto);
+                    batchMap.put(group + "_", groupDto);
                 }
                 dto.setStatus(cdicFile.getStatus());
                 batchMap.put(batchId, dto);

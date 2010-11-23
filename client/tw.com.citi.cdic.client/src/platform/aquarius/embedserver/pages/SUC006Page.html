@@ -50,19 +50,26 @@
                     colModel: [{
                         colHeader: 'Group',
                         name: 'group',
-                        sortable: false
+                        sortable: false,
+                        align: 'center',
+                        width: 50
                     }, {
                         colHeader: 'FileName',
                         name: 'fileSet',
-                        sortable: false
+                        sortable: false,
+                        width: 100
                     }, {
                         colHeader: 'Status',
                         name: 'status',
-                        sortable: false
+                        sortable: false,
+                        align: 'center',
+                        width: 100
                     }, {
                         colHeader: '下載',
                         name: 'downloadSample',
-                        sortable: false
+                        sortable: false,
+                        align: 'center',
+                        width: 100
                     }, {
                         colHeader: '確認',
                         name: 'confirm',
@@ -72,7 +79,9 @@
                         },
                         editable: true,
                         edittype: 'checkbox',
-                        sortable: false
+                        sortable: false,
+                        align: 'center',
+                        width: 50
                     }, {
                         colHeader: '最後確認者',
                         name: 'confirmer',
@@ -91,7 +100,7 @@
                     }
                 });
                 $(window).bind('resize', function(){
-                    batchStatusList.setGridWidth($(window).width() - 5);
+                    batchStatusList.setGridWidth($(window).width() - 10);
                 });
                 
                 function enableConfirmButton(){

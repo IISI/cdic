@@ -12,6 +12,7 @@ public class FMBCDWN4 {
     private String acct;
     private String description;
     private String IBCode;
+    private String filler2;
 
     public void setAcct(String acct) {
         this.acct = acct;
@@ -51,5 +52,13 @@ public class FMBCDWN4 {
 
     public String getFiller() {
         return filler;
+    }
+
+    public void setFiller2(String filler2) {
+        this.filler2 = filler2;
+    }
+
+    public String getFiller2() {
+        return filler2;
     }
 }

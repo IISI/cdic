@@ -6,33 +6,20 @@
     <bean id="cdicF03FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF03.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF03"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
                     <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
                         <property name="targetType" value="tw.com.citi.cdic.batch.model.A22"></property>
-                        <property name="customEditors">
-                            <map>
-                                <entry key="java.util.Date">
-                                    <bean class="org.springframework.beans.propertyeditors.CustomDateEditor">
-                                        <constructor-arg>
-                                            <bean class="java.text.SimpleDateFormat">
-                                                <constructor-arg value="yyyyMMdd"></constructor-arg>
-                                            </bean>
-                                        </constructor-arg>
-                                        <constructor-arg value="true"></constructor-arg>
-                                    </bean>
-                                </entry>
-                            </map>
-                        </property>
                     </bean>
                 </property>
                 <property name="lineTokenizer">
-                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
                         <property name="columns" value="1,4,8,38,50,58,62,73,76,79,95,98,113,128,136,144,160,163,164,165,173,174,175,205,213,221,222,223,242,250,265,281,296,297,312,320,321,336,351"></property>
                         <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,vilaoteAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
                     </bean>
@@ -74,12 +61,13 @@
     <bean id="c22FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/C22.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/C22"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
-                <property name="format" value="%3s%4s%30s%12s%8s%4s%11s%3s%3s%16s%3s%15.2f%15.2f%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%16s%3s%1s%1s%8.5f%1s%1s%30s%tY%\u003ctm%\u003ctd%tY%\u003ctm%\u003ctd%1s%1s%19s%8s%15.2f%16.2f%15.2f%1s%15.2f%tY%\u003ctm%\u003ctd%1s%15.2f%15.2f%tY%\u003ctm%\u003ctd"></property>
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="%3s%4s%30s%12s%8s%4s%11s%3s%3s%16s%3s%15.2f%15.2f%8s%8s%16s%3s%1s%1s%8.5f%1s%1s%30s%8s%8s%1s%1s%19s%8s%15.2f%16.2f%15.2f%1s%15.2f%8s%1s%15.2f%15.2f%8s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,violateAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
@@ -122,7 +110,7 @@
             <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
                 <property name="selectClause" value="SELECT *"></property>
                 <property name="fromClause" value="FROM A22"></property>
-                <property name="sortKey" value="TDCUSTID, TDSRNO"></property>
+                <property name="sortKey" value="TDSRNO"></property>
             </bean>
         </property>
         <property name="rowMapper">
@@ -133,7 +121,7 @@
     <bean id="a22FileWriter" parent="c22FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/A22.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A22"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -143,7 +131,7 @@
             <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
                 <property name="selectClause" value="SELECT *"></property>
                 <property name="fromClause" value="FROM B22"></property>
-                <property name="sortKey" value="TDCUSTID, TDSRNO"></property>
+                <property name="sortKey" value="TDSRNO"></property>
             </bean>
         </property>
     </bean>
@@ -151,7 +139,7 @@
     <bean id="b22FileWriter" parent="c22FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/B22.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/B22"></constructor-arg>
             </bean>
         </property>
     </bean>

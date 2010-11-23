@@ -14,8 +14,10 @@ public class LocalFileSts {
 
     private String processUser;
 
+    private int columnCount;
+
     private String status;
-    
+
     private boolean exist;
 
     public String getName() {
@@ -56,6 +58,14 @@ public class LocalFileSts {
 
     public boolean isExist() {
         return exist;
+    }
+
+    public void setColumnCount(int columnCount) {
+        this.columnCount = columnCount;
+    }
+
+    public int getColumnCount() {
+        return columnCount;
     }
 
 }

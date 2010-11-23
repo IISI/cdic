@@ -1,7 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
-
 /**
  * @author Chih-Liang Chang
  * @since 2010/10/7
@@ -26,7 +24,7 @@ public class A23 {
 
     private String customerType;
 
-    private Date openDate;
+    private String openDate;
 
     private String currencyCode;
 
@@ -38,7 +36,7 @@ public class A23 {
 
     private String overdrawStatus;
 
-    private Date lastTxDate;
+    private String lastTxDate;
 
     public String getUnit() {
         return unit;
@@ -112,11 +110,11 @@ public class A23 {
         this.customerType = customerType;
     }
 
-    public Date getOpenDate() {
+    public String getOpenDate() {
         return openDate;
     }
 
-    public void setOpenDate(Date openDate) {
+    public void setOpenDate(String openDate) {
         this.openDate = openDate;
     }
 
@@ -160,11 +158,11 @@ public class A23 {
         this.overdrawStatus = overdrawStatus;
     }
 
-    public Date getLastTxDate() {
+    public String getLastTxDate() {
         return lastTxDate;
     }
 
-    public void setLastTxDate(Date lastTxDate) {
+    public void setLastTxDate(String lastTxDate) {
         this.lastTxDate = lastTxDate;
     }
 

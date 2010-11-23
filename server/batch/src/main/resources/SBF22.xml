@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- host file reader -->
+    <bean id="cdicF22RFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF22R"></constructor-arg>
+            </bean>
+        </property>
+        <property name="linesToSkip" value="1"></property>
+        <property name="encoding" value="big5"></property>
+        <property name="strict" value="false"></property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.CDICF22R"></property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
+                        <property name="columns" value="1,2,6,10,13,14,17,20,22,52,66,69,71,73,79,85,98,100,106,112,125,127,133,139,162,164,170,176,189,191,197,203,216,218,224,230,243,245,251,257,270,272,278,284,297,299,305,311,324,326,332,338,351,353,356,357"></property>
+                        <property name="names"
+                            value="recType,busCode,prodCode,ccyCode,tenorUnit,tenorLen,custType,paySch,prodDesc,timestamp,minAmtDep,minAmtDepFraction,noOfTier,tierRate0,tierRateFraction0,tierMinAmt0,tierMinAmtFraction0,tierRate1,tierRateFraction1,tierMinAmt1,tierMinAmtFraction1,tierRate2,tierRateFraction2,tierMinAmt2,tierMinAmtFraction2,tierRate3,tierRateFraction3,tierMinAmt3,tierMinAmtFraction3,tierRate4,tierRateFraction4,tierMinAmt4,tierMinAmtFraction4,tierRate5,tierRateFraction5,tierMinAmt5,tierMinAmtFraction5,tierRate6,tierRateFraction6,tierMinAmt6,tierMinAmtFraction6,tierRate7,tierRateFraction7,tierMinAmt7,tierMinAmtFraction7,tierRate8,tierRateFraction8,tierMinAmt8,tierMinAmtFraction8,tierRate9,tierRateFraction9,tierMinAmt9,tierMinAmtFraction9,numCcyCode,rateType,filler"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="cdicF22IFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF22I"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="strict" value="false"></property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.A74"></property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
+                        <property name="columns" value="1,4,8,11,27,28,31,38,46"></property>
+                        <property name="names" value="unit,branchNo,currencyCode,rateType,type,period,largeMax,effectiveDate,rate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="cdicF22AFileReader" parent="cdicF22IFileReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF22A"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- db writer -->
+    <bean id="a74DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO A74(UNIT, BRNO, CURCODE, RATETYPE, RTYPE, PERIOD, LARGEMAX, EFFDATE, RATE) VALUES(:unit,:branchNo,:currencyCode,:rateType,:type,:period,:largeMax,:effectiveDate,:rate)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="a74ListDbWriter" class="tw.com.citi.cdic.batch.item.T06JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO A74(UNIT, BRNO, CURCODE, RATETYPE, RTYPE, PERIOD, LARGEMAX, EFFDATE, RATE) VALUES(:unit,:branchNo,:currencyCode,:rateType,:type,:period,:largeMax,:effectiveDate,:rate)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <!-- db reader -->
+    <bean id="a74DbReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="pageSize" value="500"></property>
+        <property name="queryProvider">
+            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
+                <property name="selectClause" value="SELECT *"></property>
+                <property name="fromClause" value="FROM A74"></property>
+                <property name="sortKey" value="UNIT"></property>
+            </bean>
+        </property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.A74Mapper"></bean>
+        </property>
+    </bean>
+
+    <!-- cdic file writer -->
+    <bean id="a74FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A74"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="%-3s%-4s%-3s%-16s%-1s%-3s%-7s%-8s%8.5f"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,currencyCode,rateType,type,period,largeMax,effectiveDate,rate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- sample file writer -->
+    <bean id="a74SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A74SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A74_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,%s,'%s,%s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,currencyCode,rateType,type,period,largeMax,effectiveDate,rate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,幣別,利率別,計息種類,期間,大額存款額度(下限),利率生效日,利率"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- file writer -->
+    <bean id="f22Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a74FileWriter" />
+                <ref bean="a74SampleFileWriter" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- 22R to db processor -->
+    <bean id="f22dbProcessor" class="tw.com.citi.cdic.batch.item.SBF22DBProcessor" />
+
+    <!-- db to writer processor -->
+    <bean id="f22Processor" class="tw.com.citi.cdic.batch.item.SBF22Processor" />
+
+</beans>

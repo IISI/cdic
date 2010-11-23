@@ -4,11 +4,13 @@ import java.io.IOException;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+
+import tw.com.citi.cdic.batch.utils.HierarchicalINIConfiguration;
+import tw.com.citi.cdic.batch.utils.PasswordUtil;
 
 /**
  * @author Chih-Liang Chang
@@ -40,7 +42,7 @@ public class DbInfo {
         dbName = config.getString(mode + ".DBName");
         parameters = config.getString(mode + ".Parameters", "");
         username = config.getString(mode + ".Username");
-        password = config.getString(mode + ".Password");
+        password = PasswordUtil.decodePwd(config.getString(mode + ".Password"));
     }
 
     public String getServerName() {

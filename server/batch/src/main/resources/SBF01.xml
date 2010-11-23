@@ -10,35 +10,64 @@
             <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
                 <property name="selectClause" value="SELECT *"></property>
                 <property name="fromClause" value="FROM BUS"></property>
-                <property name="whereClause" value="WHERE CUSTTEL1 = :tel1"></property>
-                <property name="sortKey" value="CUSTHEADID"></property>
+                <property name="sortKey" value="CUST_NUMB"></property>
             </bean>
         </property>
-        <property name="parameterValues">
-            <map>
-                <entry key="tel1" value="12345678"></entry>
-            </map>
-        </property>
         <property name="rowMapper">
-            <bean class="tw.com.citi.cdic.batch.BusA11Mapper"></bean>
+            <bean class="tw.com.citi.cdic.batch.BusMapper"></bean>
         </property>
     </bean>
+
+    <bean id="f01Processor" class="tw.com.citi.cdic.batch.item.SBF01Processor"></bean>
 
     <bean id="a11FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/A11.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A11"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
-                <property name="format" value="%3s%4s%11s%3s%11s%60s%8s%11s%60s%4s%6s%8s%80s%80s%17s%17s%40s"></property>
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="%3s%4s%11s%3s%11s%60s%tY%\u003ctm%\u003ctd%11s%60s%4s%6s%tY%\u003ctm%\u003ctd%80s%80s%17s%17s%40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="unit,branchNo,id,idNo,headId,CName,birthDate,ceoCode,ceoName,statusCode,businessCode,createDate,originalAddress,address,tel1,tel2,email"></property>
                     </bean>
                 </property>
             </bean>
+        </property>
+    </bean>
+
+    <bean id="a11SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A11SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A11.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,id,idNo,headId,CName,birthDate,ceoCode,ceoName,statusCode,businessCode,createDate,originalAddress,address,tel1,tel2,email"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,客戶識別碼,CUSTIDNO,客戶national ID,戶名,出生日期/設立日期,負責人或代表人身份證統一編號,CUSTCEONAME,客戶狀態碼,行業別,建檔或開戶日期,客戶戶藉地址,客戶通訊地址,電話1,電話2,客戶電子郵件信箱"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a11Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a11FileWriter" />
+                <ref bean="a11SampleFileWriter" />
+            </list>
         </property>
     </bean>
 

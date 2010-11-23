@@ -23,7 +23,7 @@ public class SBF12Processor implements ItemProcessor<A41, A41> {
         long processCount = stepContext.getLong("PROCESS_COUNT", 0);
         processCount++;
         stepContext.putLong("PROCESS_COUNT", processCount);
-        if (processCount % writeSampleFrequency == 0) {
+        if (processCount % writeSampleFrequency == 1) {
             return item;
         } else {
             return null;

@@ -9,14 +9,16 @@
         <property name="queryProvider">
             <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
                 <property name="selectClause" value="SELECT *"></property>
-                <property name="fromClause" value="FROM LUS"></property>
-                <property name="sortKey" value="CUSTID"></property>
+                <property name="fromClause" value="FROM LOCAL_LUS"></property>
+                <property name="sortKey" value="ACCT_NO"></property>
             </bean>
         </property>
         <property name="rowMapper">
-            <bean class="tw.com.citi.cdic.batch.LusA24Mapper"></bean>
+            <bean class="tw.com.citi.cdic.batch.LusMapper"></bean>
         </property>
     </bean>
+
+    <bean id="f05Processor" class="tw.com.citi.cdic.batch.item.SBF05Processor"></bean>
 
     <bean id="a24DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
@@ -27,11 +29,12 @@
     <bean id="a24FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/A24.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A24"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%3s%4s%30s%30s%12s%8s%11s%3s%60s%6s%3s%3s%15.2f%16s%8.5f%15.2f%1s%15.2f%15.2f%80s%80s%16s%16s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">

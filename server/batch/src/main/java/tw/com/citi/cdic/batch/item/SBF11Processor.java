@@ -6,32 +6,29 @@ import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 
 import tw.com.citi.cdic.batch.model.A35;
-import tw.com.citi.cdic.batch.model.SBF11Output;
 
 /**
  * @author Lancelot
  * @since 2010/10/25
  */
-public class SBF11Processor implements ItemProcessor<A35, SBF11Output> {
+public class SBF11Processor implements ItemProcessor<A35, A35> {
 
     private StepExecution stepExecution;
 
     private int writeSampleFrequency = 1000;
 
     @Override
-    public SBF11Output process(A35 item) throws Exception {
-        SBF11Output out = new SBF11Output();
-        out.setA35(item);
+    public A35 process(A35 item) throws Exception {
         ExecutionContext stepContext = stepExecution.getExecutionContext();
         long processCount = stepContext.getLong("PROCESS_COUNT", 0);
         processCount++;
         stepContext.putLong("PROCESS_COUNT", processCount);
-        if (processCount % writeSampleFrequency == 0) {
-            out.setWriteSample(true);
+        if (processCount % writeSampleFrequency == 1) {
+            item.setWriteSample(true);
         } else {
-            out.setWriteSample(false);
+            item.setWriteSample(false);
         }
-        return out;
+        return item;
     }
 
     @BeforeStep

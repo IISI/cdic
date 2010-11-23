@@ -45,13 +45,18 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
         Gson gson = new Gson();
         String[] names = gson.fromJson(actionParam.get("data").toString(), String[].class);
         String[] args = Platform.getApplicationArgs();
-        String processUser = args != null && args.length > 0 ? args[0] : null;
-        Date copyDateTime = new Date();
+        String processUser = null;
+        for (String arg : args) {
+            String[] keyValue = arg.split("=", 2);
+            if ("userId".equalsIgnoreCase(keyValue[0])) {
+                processUser = keyValue[1];
+            }
+        }
         for (String name : names) {
             HostFileSts fileSts = new HostFileSts();
             FileObject file = FileUtil.getHostFileByName(name);
             fileSts.setHostDateTime(new Date(file.getContent().getLastModifiedTime()));
-            fileSts.setCopyDateTime(copyDateTime);
+            fileSts.setCopyDateTime(new Date());
             fileSts.setProcessUser(processUser);
             fileSts.setStatus("1");
             fileSts.setName(name);
@@ -73,7 +78,8 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
                     hostFile.setCopyDateTimeFmt(hostFile.getCopyDateTime() == null ? null : sdf.format(hostFile
                             .getCopyDateTime()));
                     hostFile.setSize((int) file.getContent().getSize());
-                    hostFile.setRecord(hostFile.getSize() / hostFile.getRecLen());
+                    // +2 為 0x0D 0x0A 換行字元
+                    hostFile.setRecord(hostFile.getSize() / (hostFile.getRecLen() + 2));
                 } catch (Exception e) {
                     hostFile.setStatus(Messages.STATUS_6);
                 }

@@ -16,6 +16,8 @@ public class A22RecursiveCollectionLineAggregator implements
 
     private LineAggregator<A22> delegate = new PassThroughLineAggregator<A22>();
 
+    private int type;
+
     public void setDelegate(LineAggregator<A22> delegate) {
         this.delegate = delegate;
     }
@@ -24,7 +26,17 @@ public class A22RecursiveCollectionLineAggregator implements
     public String aggregate(SBF18Output item) {
         RecursiveCollectionLineAggregator<A22> aggregator = new RecursiveCollectionLineAggregator<A22>();
         aggregator.setDelegate(delegate);
-        return aggregator.aggregate(item.getA22List());
+        if (type == 1) {
+            return aggregator.aggregate(item.getA22List());
+        } else if (type == 2) {
+            return aggregator.aggregate(item.getB22List());
+        } else {
+            return aggregator.aggregate(item.getC22List());
+        }
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
 }

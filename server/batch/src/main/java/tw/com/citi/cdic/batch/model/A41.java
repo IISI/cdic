@@ -1,7 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
-
 /**
  * A41, CDICF12 Layout
  * 
@@ -20,9 +18,9 @@ public class A41 {
     private String custId;
     private String govCode;
     private String replyNo;
-    private Date firstLoanDate;
-    private Date loanBeginDate;
-    private Date dueDate;
+    private String firstLoanDate;
+    private String loanBeginDate;
+    private String dueDate;
     private String currencyCode;
     private double amt;
     private double currentBalance;
@@ -44,8 +42,8 @@ public class A41 {
     private double oweLawFee;
     private double tempAmt;
     private String evlRank;
-    private Date overdueDate;
-    private Date writeOffDate;
+    private String overdueDate;
+    private String writeOffDate;
     private double writeOffAmt;
 
     public String getUnit() {
@@ -136,27 +134,27 @@ public class A41 {
         this.replyNo = replyNo;
     }
 
-    public Date getFirstLoanDate() {
+    public String getFirstLoanDate() {
         return firstLoanDate;
     }
 
-    public void setFirstLoanDate(Date firstLoanDate) {
+    public void setFirstLoanDate(String firstLoanDate) {
         this.firstLoanDate = firstLoanDate;
     }
 
-    public Date getLoanBeginDate() {
+    public String getLoanBeginDate() {
         return loanBeginDate;
     }
 
-    public void setLoanBeginDate(Date loanBeginDate) {
+    public void setLoanBeginDate(String loanBeginDate) {
         this.loanBeginDate = loanBeginDate;
     }
 
-    public Date getDueDate() {
+    public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -320,19 +318,19 @@ public class A41 {
         this.evlRank = evlRank;
     }
 
-    public Date getOverdueDate() {
+    public String getOverdueDate() {
         return overdueDate;
     }
 
-    public void setOverdueDate(Date overdueDate) {
+    public void setOverdueDate(String overdueDate) {
         this.overdueDate = overdueDate;
     }
 
-    public Date getWriteOffDate() {
+    public String getWriteOffDate() {
         return writeOffDate;
     }
 
-    public void setWriteOffDate(Date writeOffDate) {
+    public void setWriteOffDate(String writeOffDate) {
         this.writeOffDate = writeOffDate;
     }
 

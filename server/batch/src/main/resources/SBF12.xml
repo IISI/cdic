@@ -5,33 +5,20 @@
     <bean id="cdicF12FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/input/CDICF12.txt"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF12"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
                 <property name="fieldSetMapper">
                     <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
                         <property name="targetType" value="tw.com.citi.cdic.batch.model.A41"></property>
-                        <property name="customEditors">
-                            <map>
-                                <entry key="java.util.Date">
-                                    <bean class="org.springframework.beans.propertyeditors.CustomDateEditor">
-                                        <constructor-arg>
-                                            <bean class="java.text.SimpleDateFormat">
-                                                <constructor-arg value="yyyyMMdd"></constructor-arg>
-                                            </bean>
-                                        </constructor-arg>
-                                        <constructor-arg value="true"></constructor-arg>
-                                    </bean>
-                                </entry>
-                            </map>
-                        </property>
                     </bean>
                 </property>
                 <property name="lineTokenizer">
-                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
                         <property name="columns" value="1,4,8,38,54,66,67,75,77,88,90,106,114,122,130,133,148,163,179,180,188,196,197,200,208,216,218,226,256,271,272,287,302,317,332,333,341,349"></property>
                         <property name="names"
                             value="unit,branchNo,srNo,srSubNo,apNo,cola,charCode,status,custId,govCode,replyNo,firstLoanDate,loanBeginDate,dueDate,currencyCode,amt,currentBalance,rateType,rateAdjustSign,rateAdjust,currentRate,intKind,intCycle,lastInt,nextInt,payIntType,patStart,payAcctNo,intReceivable,overCode,oweInt,penalty,oweLawFee,tempAmt,evlRank,overdueDate,writeOffDate,writeOffAmt"></property>
@@ -45,19 +32,26 @@
     <bean id="a41SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="z:/out/A41.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A41_sample.csv"></constructor-arg>
             </bean>
         </property>
+        <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format"
-                    value="%3s,%4s,%8s,%16s,%12s,%1s,%8s,%2s,%11s,%2s,%16s,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%3s,%15.2f,%15.2f,%16s,%1s%8.5f,%8.5f,%1s,%3s,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%2s,%tY%\u003ctm%\u003ctd,%30s,%15.2f,%1s,%15.2f,%15.2f,%15.2f,%15.2f,%1s,%tY%\u003ctm%\u003ctd,%tY%\u003ctm%\u003ctd,%15.2f"></property>
+                    value="'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,'%s,%s%s,%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,%s,%s,%s,%s,'%s,'%s,'%s,%s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names"
                             value="unit,branchNo,srNo,srSubNo,apNo,cola,charCode,status,custId,govCode,replyNo,firstLoanDate,loanBeginDate,dueDate,currencyCode,amt,currentBalance,rateType,rateAdjustSign,rateAdjust,currentRate,intKind,intCycle,lastInt,nextInt,payIntType,patStart,payAcctNo,intReceivable,overCode,oweInt,penalty,oweLawFee,tempAmt,evlRank,overdueDate,writeOffDate,writeOffAmt"></property>
                     </bean>
                 </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line"
+                    value="總機構代號,分支機構代號,放款帳號,放款貸放序號,會計科目代碼,放款擔保註記,放款性質別或產品類別,放款帳戶狀況碼,客戶識別碼,政府專案補助貸款分類,批覆書號,初貸日,本次貸放起日／應收帳款承購日,本次貸放迄日／應收帳款到期日,幣別,初貸金額／應收帳款承購金額,放款餘額／應收帳款餘額,利率別,利率加減碼,指定基準日之授信計息利率,繳息方式,繳息週期,上次繳息迄日,下次繳息日,還本方式,本金開始攤還日／下次還本日,本息自動繳款轉帳帳號,應收利息,逾期期限,延滯息,違約金,費用,暫收款,評估分類,轉催收日期,轉呆帳日期,轉呆帳金額"></property>
             </bean>
         </property>
     </bean>

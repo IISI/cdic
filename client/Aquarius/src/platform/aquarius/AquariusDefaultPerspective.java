@@ -17,5 +17,8 @@ public class AquariusDefaultPerspective implements IPerspectiveFactory {
 
         layout.addView(TreeView.ID, IPageLayout.LEFT, 0.25f, editorArea);
         // layout.addView(BrowserView.ID, IPageLayout.RIGHT, 0.75f, editorArea);
+        
+        // Add by Chih-Liang Chang
+        layout.getViewLayout(TreeView.ID).setCloseable(false);
     }
 }

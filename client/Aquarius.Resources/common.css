@@ -67,8 +67,8 @@ a.fg-button:active,a.fg-button:focus{border: 1px solid #a45b13;margin:2px 4px 0p
 .ui-widget .doc-tb{font-size: 0.8em;}
 .ui-dialog-content{font-size: 0.7em;}
 .doc-tb{border:2px solid #CBD8AC;width:100%;margin:0px 0 3px 0;}
-.doc-tb .doc-tb-th,.doc-tb .doc-tb-td{padding: 3px;border: 1px solid gray;}
-.doc-tb .doc-tb-th {width: 15%;background:#F9F5EA;font-weight: bolder;color:#383838;letter-spacing:3px; }
+.doc-tb .doc-tb-th,.doc-tb .doc-tb-td{padding: 3px;border: 1px solid gray;font-size: 0.8em;}
+.doc-tb .doc-tb-th {width: 20%;background:#F9F5EA;font-weight: bolder;color:#383838;letter-spacing:3px; }
 .doc-tb .doc-tb-td{background: #FFF;}
 
 .doc-dialog{margin: 3px 0px 0px 0px; cursor: default}
