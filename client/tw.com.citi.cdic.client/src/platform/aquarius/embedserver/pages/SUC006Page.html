@@ -18,6 +18,9 @@
             var sample = function(row){
                 var fileNo = batchStatusList.getCell(row, 'fileNo');
                 var path = callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.SelectFilePathHandler");
+                if(path == null || path == '') {
+                    return;
+                }
                 var payload = {};
                 payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
                 payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC006Handler";
