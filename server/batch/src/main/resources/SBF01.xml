@@ -55,6 +55,11 @@
                 </property>
             </bean>
         </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,客戶識別碼,CUSTIDNO,客戶national ID,戶名,出生日期/設立日期,負責人或代表人身份證統一編號,CUSTCEONAME,客戶狀態碼,行業別,建檔或開戶日期,客戶戶藉地址,客戶通訊地址,電話1,電話2,客戶電子郵件信箱"></property>
+            </bean>
+        </property>
     </bean>
 
     <bean id="a11Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
