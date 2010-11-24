@@ -28,6 +28,13 @@
         </property>
     </bean>
 
+    <bean id="a41DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql"
+            value="INSERT INTO A41(UNIT,BRANCH_NO,SR_NO,SR_SUB_NO,AP_NO,COLA,CHAR_CODE,STATUS,CUST_ID,GOV_CODE,REPLY_NO,FIRST_LOAN_DATE,LOAN_BEGIN_DATE,DUE_DATE,CURRENCY_CODE,AMT,CURRENT_BALANCE,RATE_TYPE,RATE_ADJUST_SIGN,RATE_ADJUST,CURRENT_RATE,INT_KIND,INT_CYCLE,LAST_INT,NEXT_INT,PAY_INT_TYPE,PAT_START,PAY_ACCT_NO,INT_RECEIVABLE,OVER_CODE,OWE_INT,PENALTY,OWE_LAW_FEE,TEMP_AMT,EVL_RANK,OVERDUE_DATE,WRITEOFF_DATE,WRITEOFF_AMT) VALUES(:unit,:branchNo,:srNo,:srSubNo,:apNo,:cola,:charCode,:status,:custId,:govCode,:replyNo,:firstLoanDate,:loanBeginDate,:dueDate,:currencyCode,:amt,:currentBalance,:rateType,:rateAdjustSign,:rateAdjust,:currentRate,:intKind,:intCycle,:lastInt,:nextInt,:payIntType,:patStart,:payAcctNo,:intReceivable,:overCode,:oweInt,:penalty,:oweLawFee,:tempAmt,:evlRank,:overdueDate,:writeOffDate,:writeOffAmt)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
     <!-- sample file writer -->
     <bean id="a41SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
@@ -38,8 +45,7 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format"
-                    value="'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,'%s,%s%s,%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,%s,%s,%s,%s,'%s,'%s,'%s,%s"></property>
+                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,'%s,%s%s,%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,%s,%s,%s,%s,'%s,'%s,'%s,%s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names"
