@@ -56,6 +56,8 @@
 
     <beans:import resource="SBT10.xml" />
 
+    <beans:import resource="SBT11.xml" />
+
     <beans:import resource="SBT13.xml" />
 
     <beans:import resource="SBT14.xml" />
@@ -183,13 +185,28 @@
                         <chunk reader="cdicF10FileReader" processor="f10SampleProcessor" writer="a34SampleFileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="f10-copy">
+                <step id="f10-copy" next="f10db-init">
                     <description>把 host file CDICF10 的資料複製至 A34 file</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF10"></beans:property>
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A34"></beans:property>
                         </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f10db-init" next="f10-a34db">
+                    <description>刪除 table A34 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM A34"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f10-a34db">
+                    <description>CDICF10 寫入 A34</description>
+                    <tasklet>
+                        <chunk reader="cdicF10FileReader" writer="a34DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
@@ -216,13 +233,28 @@
                         <chunk reader="cdicF12FileReader" processor="f12SampleProcessor" writer="a41SampleFileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="f12-copy">
+                <step id="f12-copy" next="f12db-init">
                     <description>把 host file CDICF12 的資料複製至 A41 file</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF12"></beans:property>
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A41"></beans:property>
                         </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f12db-init" next="f12-a41db">
+                    <description>刪除 table A41 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM A41"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f12-a41db">
+                    <description>CDICF12 寫入 A41</description>
+                    <tasklet>
+                        <chunk reader="cdicF12FileReader" writer="a41DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
@@ -348,13 +380,28 @@
                         <chunk reader="cdicF24FileReader" processor="f24SampleProcessor" writer="a76SampleFileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="f24-copy">
+                <step id="f24-copy" next="f24db-init">
                     <description>把 host file CDICF24 的資料複製至 A76 file</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF24"></beans:property>
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A76"></beans:property>
                         </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f24db-init" next="f24-a76db">
+                    <description>刪除 table A76 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM A76"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f24-a76db">
+                    <description>CDICF24 寫入 A76</description>
+                    <tasklet>
+                        <chunk reader="cdicF24FileReader" writer="a76DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
@@ -511,12 +558,9 @@
                     <end on="SKIP" />
                 </decision>
                 <step id="t11">
-                    <description>把 host file CDICT11 的資料複製至 T11 file</description>
+                    <description>把 local file CDICT11 資料寫至 T11 file</description>
                     <tasklet>
-                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICT11"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/T11"></beans:property>
-                        </beans:bean>
+                        <chunk reader="cdicT11FileReader" writer="t11FileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- local file reader -->
+    <bean id="cdicT11FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICT11"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="strict" value="false"></property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.T01"></property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <property name="names" value="code,description"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- cdic file writer -->
+    <bean id="t11FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/T11"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="%-3s%-40s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="code,description"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+</beans>
