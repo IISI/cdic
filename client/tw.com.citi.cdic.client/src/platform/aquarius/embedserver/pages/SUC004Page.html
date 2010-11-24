@@ -77,6 +77,9 @@
             var download = function(row){
                 var fileName = localFileList.getCell(row, 'name');
                 var path = callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.SelectFilePathHandler");
+				if(path == null || path == '') {
+					return;
+				}
                 var payload = {};
                 payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
                 payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC004Handler";
@@ -103,7 +106,12 @@
             var msgDialog = $("<div></div>").dialog({
                 "title": "ERROR",
                 "autoOpen": false,
-                "modal": true
+                "modal": true,
+                "buttons": {
+                    "關閉": function(){
+                        $(this).dialog("close");
+                    }
+                }
             });
             
             var updateGridData = function(data){

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.wicket.PageParameters;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
     final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public Object execute(PageParameters params) throws Exception {
+    public Object execute(PageParameters params) {
         String actionName = params.getString("actionName");
         if ("getInitInfo".equals(actionName)) {
             return getInitInfo();
@@ -49,10 +50,16 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
         throw new IllegalArgumentException("Cannot find actionName: " + actionName);
     }
 
-    private Object start(PageParameters params) throws Exception {
-        JSONObject actionParam = new JSONObject(params.getString("actionParam"));
-        Gson gson = new Gson();
-        String[] names = gson.fromJson(actionParam.get("data").toString(), String[].class);
+    private Object start(PageParameters params) {
+        String[] names;
+        try {
+            JSONObject actionParam = new JSONObject(params.getString("actionParam"));
+            Gson gson = new Gson();
+            names = gson.fromJson(actionParam.get("data").toString(), String[].class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+        }
         List<String> batches = new ArrayList<String>();
         for (String name : names) {
             if (name.startsWith("Group")) {
@@ -80,7 +87,12 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
         }
         if (batches.size() > 0) {
             BatchService batchService = new BatchServiceImpl();
-            batchService.launch();
+            try {
+                batchService.launch();
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new UnsupportedOperationException(Messages.Start_Batch_Error);
+            }
         }
         return "";
     }
@@ -124,9 +136,15 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
         return files;
     }
 
-    private Object getFileInfo(PageParameters params) throws Exception {
-        JSONObject actionParam = new JSONObject(params.getString("actionParam"));
-        String fileNo = actionParam.getString("fileNo").trim();
+    private Object getFileInfo(PageParameters params) {
+        String fileNo;
+        try {
+            JSONObject actionParam = new JSONObject(params.getString("actionParam"));
+            fileNo = actionParam.getString("fileNo").trim();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+        }
         FileDepend parameters = new FileDepend();
         parameters.setName(fileNo);
         List<FileDepend> sources = getDao().query("SUC005_QRY_FILEDEPEND_BY_NAME", FileDepend.class, parameters);
@@ -176,7 +194,7 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
         }
     }
 
-    private Object getInitInfo() throws Exception {
+    private Object getInitInfo() {
         List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object());
         if (tableFlowList != null && tableFlowList.size() > 0) {
             String status = tableFlowList.get(0).getInitStatus();

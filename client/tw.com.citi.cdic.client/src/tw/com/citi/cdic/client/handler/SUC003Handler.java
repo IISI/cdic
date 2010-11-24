@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.wicket.PageParameters;
 import org.eclipse.core.runtime.Platform;
 import org.json.JSONObject;
@@ -30,20 +31,26 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
     final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public Object execute(PageParameters params) throws Exception {
+    public Object execute(PageParameters params) {
         String actionName = params.getString("actionName");
         if ("getInitInfo".equals(actionName)) {
             return getInitInfo();
         } else if ("confirm".equals(actionName)) {
             return confirm(params);
         }
-        throw new IllegalArgumentException("Cannot find actionName: " + actionName);
+        throw new IllegalArgumentException(Messages.bind(Messages.Handler_Action_Error, new Object[] { actionName }));
     }
 
-    private Object confirm(PageParameters params) throws Exception {
-        JSONObject actionParam = new JSONObject(params.getString("actionParam"));
-        Gson gson = new Gson();
-        String[] names = gson.fromJson(actionParam.get("data").toString(), String[].class);
+    private Object confirm(PageParameters params) {
+        String[] names;
+        try {
+            JSONObject actionParam = new JSONObject(params.getString("actionParam"));
+            Gson gson = new Gson();
+            names = gson.fromJson(actionParam.get("data").toString(), String[].class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+        }
         String[] args = Platform.getApplicationArgs();
         String processUser = null;
         for (String arg : args) {
@@ -53,20 +60,26 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
             }
         }
         for (String name : names) {
-            HostFileSts fileSts = new HostFileSts();
-            FileObject file = FileUtil.getHostFileByName(name);
-            fileSts.setHostDateTime(new Date(file.getContent().getLastModifiedTime()));
-            fileSts.setCopyDateTime(new Date());
-            fileSts.setProcessUser(processUser);
-            fileSts.setStatus("1");
-            fileSts.setName(name);
-            getDao().update("SUC003_UPD_HOSTFILESTS_BY_NAME", fileSts);
-            FileUtil.copyFile(FolderType.HOST, FolderType.PROCESS, new String[] { name });
+            try {
+                HostFileSts fileSts = new HostFileSts();
+                FileObject file = FileUtil.getHostFileByName(name);
+                fileSts.setHostDateTime(new Date(file.getContent().getLastModifiedTime()));
+                fileSts.setCopyDateTime(new Date());
+                fileSts.setProcessUser(processUser);
+                fileSts.setStatus("1");
+                fileSts.setName(name);
+                getDao().update("SUC003_UPD_HOSTFILESTS_BY_NAME", fileSts);
+                FileUtil.copyFile(FolderType.HOST, FolderType.PROCESS, new String[] { name });
+            } catch (FileSystemException e) {
+                e.printStackTrace();
+                // 前端只能接到 RuntimeException
+                throw new SecurityException(Messages.bind(Messages.Access_Host_File_Error, new Object[] { name }));
+            }
         }
         return "";
     }
 
-    private Object getInitInfo() throws Exception {
+    private Object getInitInfo() {
         List<HostFileSts> hostFileList = getDao().query("SUC003_QRY_HOSTFILESTS", HostFileSts.class, new Object());
         if (hostFileList != null && hostFileList.size() > 0) {
             JsonArray result = new JsonArray();

@@ -411,13 +411,13 @@
                     <next on="EXECUTE" to="t03-t03" />
                     <end on="SKIP" />
                 </decision>
-                <step id="t03-t03" next="t03-t12">
+                <step id="t03-t03" next="t12">
                     <description>把 CDICT03G 的資料 import 至 T03 file</description>
                     <tasklet>
                         <chunk reader="cdicT03GFileReader" processor="t03Processor" writer="t03FileWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="t03-t12">
+                <step id="t12">
                     <description>把 CDICT03G 的資料 import 至 T12 file</description>
                     <tasklet>
                         <chunk reader="cdicT03GFileReader" processor="t12Processor" writer="t12FileWriter" commit-interval="500"></chunk>

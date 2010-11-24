@@ -15,20 +15,6 @@
                 <property name="fieldSetMapper">
                     <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
                         <property name="targetType" value="tw.com.citi.cdic.batch.model.A75"></property>
-                        <property name="customEditors">
-                            <map>
-                                <entry key="java.util.Date">
-                                    <bean class="org.springframework.beans.propertyeditors.CustomDateEditor">
-                                        <constructor-arg>
-                                            <bean class="java.text.SimpleDateFormat">
-                                                <constructor-arg value="yyyyMMdd"></constructor-arg>
-                                            </bean>
-                                        </constructor-arg>
-                                        <constructor-arg value="true"></constructor-arg>
-                                    </bean>
-                                </entry>
-                            </map>
-                        </property>
                     </bean>
                 </property>
                 <property name="lineTokenizer">
@@ -51,7 +37,7 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="'%s,'%s,'%tY%&lt;tm%&lt;td,'%s,'%tY%&lt;tm%&lt;td,'%tY%&lt;tm%&lt;td,'%s,'%s,'%s,'%s,%s,'%s,'%s,'%s"></property>
+                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,'%s,'%s,'%s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="unit,branchNo,date,srNo,dueDate,defferDate,payBank,billType,billNo,currencyCode,billAmt,billDrawerAcctNo,billDepAcctNo,billStatus"></property>
