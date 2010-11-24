@@ -156,19 +156,19 @@
                 <step id="f07-a26" next="f07-b26">
                     <description>把 CDICF07H 的資料 import 至 A26 file</description>
                     <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="a26Processor" writer="a26FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicF07HFileReader" processor="a26Processor" writer="a26Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
                 <step id="f07-b26" next="f07-c26">
                     <description>把 CDICF07H 的資料 import 至 B26 file</description>
                     <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="b26Processor" writer="b26FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicF07HFileReader" processor="b26Processor" writer="b26Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
                 <step id="f07-c26">
                     <description>把 CDICF07H 的資料 import 至 C26 file</description>
                     <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
