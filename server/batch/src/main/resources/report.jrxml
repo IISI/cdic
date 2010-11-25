@@ -1,27 +1,366 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="15"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1"/>
+	<field name="file" class="java.lang.String"/>
+	<field name="branch" class="java.lang.String"/>
+	<field name="productCode" class="java.lang.String"/>
+	<field name="gl" class="java.lang.String"/>
+	<field name="balance" class="java.lang.Double"/>
+	<field name="interest" class="java.lang.Double"/>
+	<field name="fee" class="java.lang.Double"/>
+	<field name="totalBalance" class="java.lang.Double"/>
+	<variable name="SUM_BRANCH_BALANCE" class="java.lang.Double" resetType="Group" resetGroup="Branch" calculation="Sum">
+		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
+	</variable>
+	<variable name="SUM_BRANCH_INTEREST" class="java.lang.Double" resetType="Group" resetGroup="Branch" calculation="Sum">
+		<variableExpression><![CDATA[$F{interest}]]></variableExpression>
+	</variable>
+	<variable name="SUM_BRANCH_FEE" class="java.lang.Double" resetType="Group" resetGroup="Branch" calculation="Sum">
+		<variableExpression><![CDATA[$F{fee}]]></variableExpression>
+	</variable>
+	<variable name="SUM_BRANCH_TOTALBALANCE" class="java.lang.Double" resetType="Group" resetGroup="Branch" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalBalance}]]></variableExpression>
+	</variable>
+	<variable name="SUM_FILE_BALANCE" class="java.lang.Double" resetType="Group" resetGroup="File" calculation="Sum">
+		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
+	</variable>
+	<variable name="SUM_FILE_INTEREST" class="java.lang.Double" resetType="Group" resetGroup="File" calculation="Sum">
+		<variableExpression><![CDATA[$F{interest}]]></variableExpression>
+	</variable>
+	<variable name="SUM_FILE_FEE" class="java.lang.Double" resetType="Group" resetGroup="File" calculation="Sum">
+		<variableExpression><![CDATA[$F{fee}]]></variableExpression>
+	</variable>
+	<variable name="SUM_FILE_TOTALBALANCE" class="java.lang.Double" resetType="Group" resetGroup="File" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalBalance}]]></variableExpression>
+	</variable>
+	<variable name="SUM_REPORT_BALANCE" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
+	</variable>
+	<variable name="SUM_REPORT_INTEREST" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{interest}]]></variableExpression>
+	</variable>
+	<variable name="SUM_REPORT_FEE" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{fee}]]></variableExpression>
+	</variable>
+	<variable name="SUM_REPORT_TOTALBALANCE" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalBalance}]]></variableExpression>
+	</variable>
+	<group name="File">
+		<groupExpression><![CDATA[$F{file}]]></groupExpression>
+		<groupFooter>
+			<band height="20">
+				<staticText>
+					<reportElement x="40" y="0" width="100" height="20"/>
+					<box leftPadding="1" rightPadding="1"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[File Sub Total:]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="180" y="0" width="100" height="20"/>
+					<box leftPadding="1" rightPadding="1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_FILE_BALANCE}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="280" y="0" width="90" height="20"/>
+					<box leftPadding="1" rightPadding="1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_FILE_INTEREST}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="455" y="0" width="100" height="20"/>
+					<box leftPadding="1" rightPadding="1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_FILE_TOTALBALANCE}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="370" y="0" width="85" height="20"/>
+					<box leftPadding="1" rightPadding="1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_FILE_FEE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Branch">
+		<groupExpression><![CDATA[$F{branch}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<staticText>
+					<reportElement x="0" y="0" width="40" height="20"/>
+					<box leftPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[File]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="40" y="0" width="40" height="20"/>
+					<box leftPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Branch]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="80" y="0" width="40" height="20"/>
+					<box leftPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Product Code]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="120" y="0" width="60" height="20"/>
+					<box leftPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[GL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="180" y="0" width="100" height="20"/>
+					<box leftPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Balance]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="280" y="0" width="90" height="20"/>
+					<box leftPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Interest]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="370" y="0" width="85" height="20"/>
+					<box leftPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Fee]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="455" y="0" width="100" height="20"/>
+					<box leftPadding="1" rightPadding="1">
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Total Balance]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="180" y="0" width="100" height="20"/>
+					<box leftPadding="1" rightPadding="1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_BRANCH_BALANCE}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="280" y="0" width="90" height="20"/>
+					<box leftPadding="1" rightPadding="1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_BRANCH_INTEREST}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="40" y="0" width="100" height="20"/>
+					<box leftPadding="1" rightPadding="1"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Branch Sub Total:]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="455" y="0" width="100" height="20"/>
+					<box leftPadding="1" rightPadding="1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_BRANCH_TOTALBALANCE}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="370" y="0" width="85" height="20"/>
+					<box leftPadding="1" rightPadding="1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_BRANCH_FEE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch"/>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="177" y="29" width="200" height="20"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[CDIC Reconciliation Report *** GCG ***]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="59" width="28" height="20"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<textField pattern="yyyy/MM/dd">
+				<reportElement x="28" y="59" width="100" height="20"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{REPORT_PARAMETERS_MAP}.get( "baseDate" )]]></textFieldExpression>
+			</textField>
+		</band>
 	</title>
-	<pageHeader>
-		<band height="35" splitType="Stretch"/>
-	</pageHeader>
-	<columnHeader>
-		<band height="61" splitType="Stretch"/>
-	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch"/>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="40" height="20"/>
+				<box leftPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{file}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="0" width="40" height="20"/>
+				<box leftPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{branch}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="0" width="40" height="20"/>
+				<box leftPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{productCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="0" width="60" height="20"/>
+				<box leftPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{gl}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="180" y="0" width="100" height="20"/>
+				<box leftPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{balance}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="280" y="0" width="90" height="20"/>
+				<box leftPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{interest}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="370" y="0" width="85" height="20"/>
+				<box leftPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{fee}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="455" y="0" width="100" height="20"/>
+				<box leftPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{totalBalance}]]></textFieldExpression>
+			</textField>
+		</band>
 	</detail>
-	<columnFooter>
-		<band height="45" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="54" splitType="Stretch"/>
-	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="40" y="0" width="100" height="20"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="180" y="0" width="100" height="20"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_REPORT_BALANCE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="280" y="0" width="90" height="20"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_REPORT_INTEREST}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="455" y="0" width="100" height="20"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_REPORT_TOTALBALANCE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="370" y="0" width="85" height="20"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{SUM_REPORT_FEE}]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>

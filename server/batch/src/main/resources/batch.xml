@@ -644,7 +644,9 @@
         <step id="genReport">
             <tasklet>
                 <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.GenerateReportTasklet">
-                    <beans:property name="resource" value="file://D:/temp/aaa.pdf"></beans:property>
+                    <beans:property name="resource" value="file://#{systemProperties['FOLDER.PROCESS']}/report.pdf"></beans:property>
+                    <beans:property name="tableFlowDao" ref="tableFlowDao"></beans:property>
+                    <beans:property name="reportDao" ref="reportDao"></beans:property>
                 </beans:bean>
             </tasklet>
         </step>
