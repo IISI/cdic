@@ -1,7 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
-
 /**
  * A34, CDICF10 Layout
  * 
@@ -13,12 +11,12 @@ public class A34 {
     private String branchNo;
     private String srNo;
     private String apNo;
-    private Date applyDate;
+    private String applyDate;
     private String applyKind;
     private String billNo;
     private String currencyCode;
     private double billAmt;
-    private Date billDate;
+    private String billDate;
     private String accName;
 
     public String getUnit() {
@@ -53,11 +51,11 @@ public class A34 {
         this.apNo = apNo;
     }
 
-    public Date getApplyDate() {
+    public String getApplyDate() {
         return applyDate;
     }
 
-    public void setApplyDate(Date applyDate) {
+    public void setApplyDate(String applyDate) {
         this.applyDate = applyDate;
     }
 
@@ -93,11 +91,11 @@ public class A34 {
         this.billAmt = billAmt;
     }
 
-    public Date getBillDate() {
+    public String getBillDate() {
         return billDate;
     }
 
-    public void setBillDate(Date billDate) {
+    public void setBillDate(String billDate) {
         this.billDate = billDate;
     }
 

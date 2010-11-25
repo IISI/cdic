@@ -15,20 +15,6 @@
                 <property name="fieldSetMapper">
                     <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
                         <property name="targetType" value="tw.com.citi.cdic.batch.model.A76"></property>
-                        <property name="customEditors">
-                            <map>
-                                <entry key="java.util.Date">
-                                    <bean class="org.springframework.beans.propertyeditors.CustomDateEditor">
-                                        <constructor-arg>
-                                            <bean class="java.text.SimpleDateFormat">
-                                                <constructor-arg value="yyyyMMdd"></constructor-arg>
-                                            </bean>
-                                        </constructor-arg>
-                                        <constructor-arg value="true"></constructor-arg>
-                                    </bean>
-                                </entry>
-                            </map>
-                        </property>
                     </bean>
                 </property>
                 <property name="lineTokenizer">
@@ -41,6 +27,13 @@
         </property>
     </bean>
 
+    <bean id="a76DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql"
+            value="INSERT INTO A76(UNIT,BRANCH_NO,SR_NO,AP_NO,CUST_ID,A76_TYPE,START_NO,END_NO,CURRENCY_CODE,AMT,DUE_DATE,CODE,DISHONORED_REASON,ENTRY_DATE,RESERVE_DATE) VALUES(:unit,:branchNo,:srNo,:apNo,:custId,:type,:startNo,:endNo,:currencyCode,:amt,:dueDate,:code,:dishonoredReason,:entryDate,:reserveDate)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
     <!-- sample file writer -->
     <bean id="a76SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
@@ -51,7 +44,7 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,'%tY%&lt;tm%&lt;td,'%s,'%s,'%tY%&lt;tm%&lt;td,'%tY%&lt;tm%&lt;td"></property>
+                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,'%s,'%s,'%s,'%s,'%s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="unit,branchNo,srNo,apNo,custId,type,startNo,endNo,currencyCode,amt,dueDate,code,dishonoredReason,entryDate,reserveDate"></property>

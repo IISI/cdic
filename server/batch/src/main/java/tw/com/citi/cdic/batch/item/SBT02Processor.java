@@ -36,6 +36,7 @@ public class SBT02Processor implements ItemProcessor<FMBCDWN4, T02> {
                         t02.setAcct(item.getAcct());
                         t02.setIBCode(item.getIBCode());
                         t02.setDescription(item.getDescription());
+                        tempKeySet.add(acct + code);
                     }
                 }
             }

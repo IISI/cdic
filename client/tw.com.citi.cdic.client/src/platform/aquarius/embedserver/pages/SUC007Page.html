@@ -27,7 +27,7 @@
                         colHeader: 'Group',
                         name: 'group',
                         align: 'center',
-						width: 50
+                        width: 50
                     }, {
                         colHeader: 'FileName',
                         name: 'fileSet',
@@ -67,14 +67,22 @@
                 }
                 
                 loadInitInfo();
-                
+                var uploadMsg = $("#wait").dialog({
+                    bgiframe: false,
+                    autoOpen: false,
+                    modal: true,
+                    closeOnEscape: false,
+                    open: function(event, ui){
+                        $(".ui-dialog-titlebar-close").hide();
+                    }
+                });
                 var confirmDialog = $("#confirmDialog").dialog({
                     "autoOpen": false,
                     "modal": true,
                     "buttons": {
                         "確認 ": function(){
-							$(this).dialog("close");
-							var uploadMsg = CommonAPI.showMessage("檔案傳送中請耐心等候...");
+                            $(this).dialog("close");
+                            uploadMsg.html("檔案傳送中請耐心等候...").dialog('open');
                             var payload = {};
                             payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
                             payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC007Handler";
@@ -85,7 +93,7 @@
                                 "dataType": "json",
                                 "data": payload,
                                 "success": function(data){
-									uploadMsg.dialog('close');
+                                    uploadMsg.dialog('close');
                                     CommonAPI.showMessage("檔案傳送至 ICG 完畢。");
                                 },
                                 "error": function(xhr){
@@ -126,7 +134,13 @@
                 var msgDialog = $("<div></div>").dialog({
                     "title": "ERROR",
                     "autoOpen": false,
-                    "modal": true
+                    "modal": true,
+                    "buttons": {
+                        "關閉": function(){
+                            $(this).dialog("close");
+                            uploadMsg.dialog('close');
+                        }
+                    }
                 });
                 
             });

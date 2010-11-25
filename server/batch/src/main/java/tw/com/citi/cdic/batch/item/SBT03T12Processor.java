@@ -14,7 +14,7 @@ public class SBT03T12Processor implements ItemProcessor<CDICT03G, T01> {
     @Override
     public T01 process(CDICT03G item) throws Exception {
         T01 t12 = null;
-        if (item != null && ("AM ".equals(item.getSystemId()))) {
+        if (item != null && ("AM".equals(item.getSystemId().trim()))) {
             t12 = new T01();
             t12.setCode(item.getProductCode());
             t12.setDescription(item.getDescription());

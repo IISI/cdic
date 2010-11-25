@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
     final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public Object execute(PageParameters params) throws Exception {
+    public Object execute(PageParameters params) {
         String actionName = params.getString("actionName");
         if ("getInitInfo".equals(actionName)) {
             return getInitInfo();
@@ -39,7 +40,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
         throw new IllegalArgumentException("Cannot find actionName: " + actionName);
     }
 
-    private Object sendFile() throws Exception {
+    private Object sendFile() {
         // 取得基準日，用以產生新檔名
         String custDate = null;
         TableFlow tableFlow = new TableFlow();
@@ -61,10 +62,16 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                         while (st.hasMoreElements()) {
                             String file = st.nextToken();
                             if (file != null && !"".equals(file.trim())) {
-                                FileUtil.createFile(FolderType.PROCESS, file);
-                                // copy file to icg folder
-                                FileUtil.copyFile(FolderType.PROCESS, FolderType.ICG, "", "-" + custDate,
-                                        new String[] { file });
+                                try {
+                                    FileUtil.createFile(FolderType.PROCESS, file);
+                                    // copy file to icg folder
+                                    FileUtil.copyFile(FolderType.PROCESS, FolderType.ICG, "", "-" + custDate,
+                                            new String[] { file });
+                                } catch (FileSystemException e) {
+                                    e.printStackTrace();
+                                    throw new SecurityException(Messages.bind(Messages.COPY_CDIC_File_Error,
+                                            new Object[] { file }));
+                                }
                             }
                         }
                     }
@@ -76,7 +83,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
         }
     }
 
-    private Object getInitInfo() throws Exception {
+    private Object getInitInfo() {
         List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
         if (cdicFileList != null && cdicFileList.size() > 0) {
             JsonArray result = new JsonArray();

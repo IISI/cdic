@@ -52,7 +52,7 @@
                     "dataType": "json",
                     "data": payload,
                     "success": function(data){
-						infoGrid.clearGridData();
+                        infoGrid.clearGridData();
                         infoGrid.addGridData(data);
                     },
                     "error": function(xhr, status, error){
@@ -73,7 +73,7 @@
                         colHeader: 'File Name',
                         name: 'name',
                         sortable: false,
-						width: 50
+                        width: 50
                     }, {
                         colHeader: 'Source Type',
                         name: 'depType',
@@ -249,7 +249,12 @@
                 var msgDialog = $("<div></div>").dialog({
                     "title": "ERROR",
                     "autoOpen": false,
-                    "modal": true
+                    "modal": true,
+                    "buttons": {
+                        "關閉": function(){
+                            $(this).dialog("close");
+                        }
+                    }
                 });
                 
             });
