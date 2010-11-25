@@ -35,4 +35,12 @@
         <property name="dataSource" ref="dataSource"></property>
     </bean>
 
+    <bean id="tableFlowDao" class="tw.com.citi.cdic.batch.dao.jdbc.TableFlowDaoImpl">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <bean id="reportDao" class="tw.com.citi.cdic.batch.dao.jdbc.ReportDaoImpl">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
 </beans>

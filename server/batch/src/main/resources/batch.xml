@@ -132,7 +132,7 @@
     </job>
 
     <job id="convertJob">
-        <split id="importFiles" task-executor="asyncTaskExecutor">
+        <split id="importFiles" next="f99Decision" task-executor="asyncTaskExecutor">
             <flow>
                 <decision id="f01Decision" decider="f01Decider">
                     <next on="EXECUTE" to="f01" />
@@ -158,19 +158,19 @@
                 <step id="f07-a26" next="f07-b26">
                     <description>把 CDICF07H 的資料 import 至 A26 file</description>
                     <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="a26Processor" writer="a26FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicF07HFileReader" processor="a26Processor" writer="a26Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
                 <step id="f07-b26" next="f07-c26">
                     <description>把 CDICF07H 的資料 import 至 B26 file</description>
                     <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="b26Processor" writer="b26FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicF07HFileReader" processor="b26Processor" writer="b26Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
                 <step id="f07-c26">
                     <description>把 CDICF07H 的資料 import 至 C26 file</description>
                     <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>
@@ -637,6 +637,19 @@
                 </step>
             </flow>
         </split>
+        <decision id="f99Decision" decider="f99Decider">
+            <next on="EXECUTE" to="genReport" />
+            <end on="SKIP" />
+        </decision>
+        <step id="genReport">
+            <tasklet>
+                <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.GenerateReportTasklet">
+                    <beans:property name="resource" value="file://#{systemProperties['FOLDER.PROCESS']}/report.pdf"></beans:property>
+                    <beans:property name="tableFlowDao" ref="tableFlowDao"></beans:property>
+                    <beans:property name="reportDao" ref="reportDao"></beans:property>
+                </beans:bean>
+            </tasklet>
+        </step>
         <listeners>
             <listener>
                 <beans:bean class="tw.com.citi.cdic.batch.FileStatusUpdater">
