@@ -130,8 +130,8 @@
                     localFileList.setRowData(ids[i], {
                         download: be,
                         process: se + ce,
-                        uploadDateTime: data[i].uploadDateTime,
-                        processUser: data[i].processUser,
+                        uploadDateTime: exist == "true" ? data[i].uploadDateTime : "",
+                        processUser: exist == "true" ? data[i].processUser : "",
                         status: data[i].status == "1" ? "已確認" : exist == "true" ? "未確認" : "檔案不存在"
                     })
                 }
