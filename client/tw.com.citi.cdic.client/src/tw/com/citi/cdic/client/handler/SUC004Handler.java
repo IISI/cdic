@@ -145,7 +145,11 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
             JsonArray result = new JsonArray();
             for (LocalFileSts localFile : localFileList) {
                 try {
-                    localFile.setExist(FileUtil.exist(FolderType.PROCESS, localFile.getName()));
+                    boolean exist = FileUtil.exist(FolderType.PROCESS, localFile.getName());
+                    localFile.setExist(exist);
+                    if (!exist) {
+                        localFile.setStatus("0");
+                    }
                 } catch (FileSystemException e) {
                     e.printStackTrace();
                     throw new SecurityException(Messages.bind(Messages.Get_Local_File_Info_Error,
