@@ -37,7 +37,7 @@ public class SBF01Processor implements ItemProcessor<Bus, A11> {
         a11.setEmail("");
         
         processCount++;
-        if (processCount % writeSampleFrequency == 0) {
+        if (processCount % writeSampleFrequency == 1) {
             a11.setSample(true);
         }
         

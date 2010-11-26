@@ -184,7 +184,7 @@ public class SBF18Processor implements ItemProcessor<A11, SBF18Output> {
         long processCount = stepContext.getLong("PROCESS_COUNT", 0);
         processCount++;
         stepContext.putLong("PROCESS_COUNT", processCount);
-        if (processCount % writeSampleFrequency == 0) {
+        if (processCount % writeSampleFrequency == 1) {
             out.setWriteSample(true);
         }
         
