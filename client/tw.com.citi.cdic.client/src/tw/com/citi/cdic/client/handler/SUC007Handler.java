@@ -55,7 +55,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
             List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
             if (cdicFileList != null && cdicFileList.size() > 0) {
                 for (CDICFileSts cdicFile : cdicFileList) {
-                    // 狀態不是已完成的，在 process folder 產生一個空檔。
+                    // 狀態不是已完成的，在 process_out folder 產生一個空檔。
                     if (!"3".equals(cdicFile.getStatus())) {
                         String subFiles = cdicFile.getSubFile();
                         StringTokenizer st = new StringTokenizer(subFiles == null ? "" : subFiles.trim(), " ");
@@ -63,9 +63,9 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                             String file = st.nextToken();
                             if (file != null && !"".equals(file.trim())) {
                                 try {
-                                    FileUtil.createFile(FolderType.PROCESS, file);
+                                    FileUtil.createFile(FolderType.PROCESS_OUT, file);
                                     // copy file to icg folder
-                                    FileUtil.copyFile(FolderType.PROCESS, FolderType.ICG, "", "-" + custDate,
+                                    FileUtil.copyFile(FolderType.PROCESS_OUT, FolderType.ICG, "", "-" + custDate,
                                             new String[] { file });
                                 } catch (FileSystemException e) {
                                     e.printStackTrace();

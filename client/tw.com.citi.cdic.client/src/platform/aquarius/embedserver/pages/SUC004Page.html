@@ -118,9 +118,9 @@
             var updateGridData = function(data){
                 var ids = localFileList.getDataIDs();
                 for (var i = 0; i < ids.length; i++) {
-                    var exist = localFileList.getCell(ids[i], "exist");
+                    var exist = data[i].exist;
                     se = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='upload(" + ids[i] + ");'>上傳</a>";
-                    if (exist == "true") {
+                    if (exist) {
                         be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='download(" + ids[i] + ");'>下載</a>";
                         ce = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='confirm(" + ids[i] + ");'>確認</a>";
                     }
@@ -131,9 +131,9 @@
                     localFileList.setRowData(ids[i], {
                         download: be,
                         process: se + ce,
-                        uploadDateTime: exist == "true" ? data[i].uploadDateTime : "",
-                        processUser: exist == "true" ? data[i].processUser : "",
-                        status: data[i].status == "1" ? "已確認" : exist == "true" ? "未確認" : "檔案不存在"
+                        uploadDateTime: exist ? data[i].uploadDateTime : "",
+                        processUser: exist ? data[i].processUser : "",
+                        status: data[i].status == "1" ? "已確認" : exist ? "未確認" : "檔案不存在"
                     })
                 }
             };
@@ -164,7 +164,7 @@
             $(function(){
                 localFileList = $('#localFileList').iGrid({
                     datatype: "local",
-                    height: 400,
+                    height: $(window).height() - 100,
                     needPager: false,
                     sortname: 'name',
                     colModel: [{
