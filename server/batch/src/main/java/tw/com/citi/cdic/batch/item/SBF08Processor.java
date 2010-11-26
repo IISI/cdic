@@ -25,6 +25,10 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
 
     private int type;
 
+    private long processCount;
+
+    private int writeSampleFrequency = 1000;
+
     @Override
     public A31 process(JointAcclist item) throws Exception {
         // 如果 account 的第一碼是'_'的話，就把它拿掉
@@ -43,6 +47,12 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
                 a31.setBranchNo(a21.getBranchNo());
                 a31.setCurrencyCode(a21.getCurrencyCode());
                 a31.setCustomerId(a21.getCustomerId());
+                
+                processCount++;
+                if (processCount % writeSampleFrequency == 1) {
+                    a31.setSample(true);
+                }
+                
                 return a31;
             } else {
                 return null;
@@ -59,6 +69,12 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
                 b31.setBranchNo(b21.getBranchNo());
                 b31.setCurrencyCode(b21.getCurrencyCode());
                 b31.setCustomerId(b21.getCustomerId());
+                
+                processCount++;
+                if (processCount % writeSampleFrequency == 1) {
+                    b31.setSample(true);
+                }
+                
                 return b31;
             } else {
                 return null;
@@ -75,6 +91,12 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
                 a31.setBranchNo(a22.getBranchNo());
                 a31.setCurrencyCode(a22.getCurrencyCode());
                 a31.setCustomerId(a22.getCustomerId());
+                
+                processCount++;
+                if (processCount % writeSampleFrequency == 1) {
+                    a31.setSample(true);
+                }
+                
                 return a31;
             } else {
                 return null;
@@ -91,6 +113,12 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
                 b31.setBranchNo(b22.getBranchNo());
                 b31.setCurrencyCode(b22.getCurrencyCode());
                 b31.setCustomerId(b22.getCustomerId());
+                
+                processCount++;
+                if (processCount % writeSampleFrequency == 1) {
+                    b31.setSample(true);
+                }
+                
                 return b31;
             } else {
                 return null;
@@ -107,6 +135,12 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, A31> {
                 a31.setBranchNo(a23.getBranchNo());
                 a31.setCurrencyCode(a23.getCurrencyCode());
                 a31.setCustomerId(a23.getCustomerId());
+                
+                processCount++;
+                if (processCount % writeSampleFrequency == 1) {
+                    a31.setSample(true);
+                }
+                
                 return a31;
             } else {
                 return null;

@@ -24,6 +24,8 @@ public class A31 {
 
     private String memo;
 
+    private transient boolean sample;
+
     public String getUnit() {
         return unit;
     }
@@ -86,6 +88,14 @@ public class A31 {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public boolean isSample() {
+        return sample;
+    }
+
+    public void setSample(boolean sample) {
+        this.sample = sample;
     }
 
 }
