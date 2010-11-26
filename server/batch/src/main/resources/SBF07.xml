@@ -52,7 +52,7 @@
     <bean id="a26FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A26"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A26"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -90,7 +90,7 @@
     <bean id="b26FileWriter" parent="a26FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/B26"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B26"></constructor-arg>
             </bean>
         </property>
     </bean>
@@ -117,7 +117,7 @@
     <bean id="c26FileWriter" parent="a26FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/C26"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/C26"></constructor-arg>
             </bean>
         </property>
     </bean>
