@@ -52,6 +52,7 @@
             var upload = function(row){
                 var fileName = localFileList.getCell(row, 'name');
                 uploadDialog.find("#fileName").text(fileName);
+				uploadDialog.find("#file").val("");
                 uploadDialog.dialog("open");
             };
             

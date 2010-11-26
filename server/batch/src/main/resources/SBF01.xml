@@ -42,7 +42,7 @@
     <bean id="a11SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A11SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A11.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A11_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
