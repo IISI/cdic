@@ -194,7 +194,7 @@
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF10"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A34"></beans:property>
+                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A34"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -242,7 +242,7 @@
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF12"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A41"></beans:property>
+                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A41"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -278,7 +278,7 @@
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF14"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A43"></beans:property>
+                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A43"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -299,7 +299,7 @@
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF15"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A44"></beans:property>
+                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A44"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -419,7 +419,7 @@
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF23"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A75"></beans:property>
+                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A75"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -440,7 +440,7 @@
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF24"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A76"></beans:property>
+                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A76"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -476,7 +476,7 @@
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF25"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A77"></beans:property>
+                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A77"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>
@@ -699,7 +699,7 @@
         <step id="genReport">
             <tasklet>
                 <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.GenerateReportTasklet">
-                    <beans:property name="resource" value="file://#{systemProperties['FOLDER.PROCESS']}/report.pdf"></beans:property>
+                    <beans:property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/report.pdf"></beans:property>
                     <beans:property name="tableFlowDao" ref="tableFlowDao"></beans:property>
                     <beans:property name="reportDao" ref="reportDao"></beans:property>
                 </beans:bean>
