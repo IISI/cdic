@@ -18,7 +18,7 @@
             var sample = function(row){
                 var fileNo = batchStatusList.getCell(row, 'fileNo');
                 var path = callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.SelectFilePathHandler");
-                if(path == null || path == '') {
+                if (path == null || path == '') {
                     return;
                 }
                 var payload = {};
@@ -47,7 +47,7 @@
                 var confirmButton = $("#confirm").css('display', 'none');
                 batchStatusList = $('#batchStatusList').iGrid({
                     datatype: "local",
-                    height: 200,
+                    height: $(window).height() - 100,
                     needPager: false,
                     sortname: 'fileSet',
                     colModel: [{
@@ -140,11 +140,15 @@
                                 var checkBox = $("#" + ids[i]).find("td[aria-describedby$=confirm] :checkbox");
                                 checkBox.attr("disabled", true);
                                 var status = batchStatusList.getCell(ids[i], "status");
+                                var fileNo = batchStatusList.getCell(ids[i], "fileNo");
                                 if (status == "已確認" || status == "已完成") {
-                                    be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='sample(" + ids[i] + ");'>下載 Sample</a>";
-                                    batchStatusList.setRowData(ids[i], {
-                                        downloadSample: be
-                                    })
+                                    var buttonCaption = fileNo == "F99" ? "下載報表" : "下載 Sample";
+                                    if (fileNo.substr(0, 1) != "T") {
+                                        be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='sample(" + ids[i] + ");'>" + buttonCaption + "</a>";
+                                        batchStatusList.setRowData(ids[i], {
+                                            downloadSample: be
+                                        })
+                                    }
                                     if (status == "已完成") {
                                         checkBox.attr("disabled", false);
                                     }

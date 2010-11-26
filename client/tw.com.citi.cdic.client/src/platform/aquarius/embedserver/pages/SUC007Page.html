@@ -20,7 +20,7 @@
             $(function(){
                 var confirmList = $('#confirmList').iGrid({
                     datatype: "local",
-                    height: 200,
+                    height: $(window).height() - 100,
                     needPager: false,
                     sortname: 'fileSet',
                     colModel: [{

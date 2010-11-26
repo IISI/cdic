@@ -164,7 +164,7 @@
             $(function(){
                 localFileList = $('#localFileList').iGrid({
                     datatype: "local",
-                    height: 400,
+                    height: $(window).height() - 100,
                     needPager: false,
                     sortname: 'name',
                     colModel: [{
