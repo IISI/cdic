@@ -46,6 +46,14 @@
         <property name="stepName" value="F12"></property>
     </bean>
 
+    <bean id="f14Decider" parent="skipDecider">
+        <property name="stepName" value="F14"></property>
+    </bean>
+
+    <bean id="f15Decider" parent="skipDecider">
+        <property name="stepName" value="F15"></property>
+    </bean>
+
     <bean id="f18Decider" parent="skipDecider">
         <property name="stepName" value="F18"></property>
     </bean>
