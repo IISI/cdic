@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- host file reader -->
+    <bean id="cdicF14FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF14"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="strict" value="false"></property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.A43"></property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
+                        <property name="columns" value="1,4,8,38,54,84"></property>
+                        <property name="names" value="unit,brNo,srNo,srSubNo,dpSrNo,slipNo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- sample file writer -->
+    <bean id="a43SampleFileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A43_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,brNo,srNo,srSubNo,dpSrNo,slipNo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,質借之放款帳號／綜合存款之存款帳號,質借之放款貸放序號／綜合存款之存單號碼,存單之存款帳號／綜合存款之存款帳號,存單號碼／綜合存款之存單號碼"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f14SampleProcessor" class="tw.com.citi.cdic.batch.item.SBF14Processor" />
+
+</beans>

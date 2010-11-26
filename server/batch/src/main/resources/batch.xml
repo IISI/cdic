@@ -30,6 +30,10 @@
 
     <beans:import resource="SBF12.xml" />
 
+    <beans:import resource="SBF14.xml" />
+
+    <beans:import resource="SBF15.xml" />
+
     <beans:import resource="SBF18.xml" />
 
     <beans:import resource="SBF21.xml" />
@@ -253,6 +257,48 @@
                     <description>CDICF12 寫入 A41</description>
                     <tasklet>
                         <chunk reader="cdicF12FileReader" writer="a41DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="f14Decision" decider="f14Decider">
+                    <next on="EXECUTE" to="f14-sample" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="f14-sample" next="f14-copy">
+                    <description>產生 f14 sample file</description>
+                    <tasklet>
+                        <chunk reader="cdicF14FileReader" processor="f14SampleProcessor" writer="a43SampleFileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f14-copy">
+                    <description>把 host file CDICF14 的資料複製至 A43 file</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
+                            <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF14"></beans:property>
+                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A43"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+            </flow>
+            <flow>
+                <decision id="f15Decision" decider="f15Decider">
+                    <next on="EXECUTE" to="f15-sample" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="f15-sample" next="f15-copy">
+                    <description>產生 f15 sample file</description>
+                    <tasklet>
+                        <chunk reader="cdicF15FileReader" processor="f15SampleProcessor" writer="a44SampleFileWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f15-copy">
+                    <description>把 host file CDICF15 的資料複製至 A44 file</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
+                            <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF15"></beans:property>
+                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS']}/A44"></beans:property>
+                        </beans:bean>
                     </tasklet>
                 </step>
             </flow>
