@@ -26,7 +26,6 @@
             var sourceInfoDialog = $('#sourceInfoDialog').dialog({
                 "autoOpen": false,
                 "modal": true,
-                "width": 960,
                 "buttons": {
                     "離開": function(event, ui){
                         $(this).dialog("close");
@@ -60,7 +59,9 @@
                         msgDialog.html(resp.message).dialog("open");
                     }
                 });
-                sourceInfoDialog.dialog("open").trigger("dialogresizestop");
+                sourceInfoDialog.dialog({
+                    width: batchList.width()
+                }).dialog("open").trigger("dialogresizestop");
             };
             
             $(function(){
