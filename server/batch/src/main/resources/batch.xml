@@ -260,9 +260,18 @@
             </flow>
             <flow>
                 <decision id="f18Decision" decider="f18Decider">
-                    <next on="EXECUTE" to="f18-copy-currency" />
+                    <next on="EXECUTE" to="f18-delete-table" />
                     <end on="SKIP" />
                 </decision>
+                <step id="f18-delete-table" next="f18-copy-currency">
+                    <description></description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM CDICF20"></beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
                 <step id="f18-copy-currency" next="f18">
                     <description>Copy CDICF20 至 table</description>
                     <tasklet>
