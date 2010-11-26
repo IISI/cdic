@@ -18,7 +18,7 @@ public class A74Mapper implements RowMapper<A74> {
         a74.setRateType(rs.getString("RATETYPE"));
         a74.setType(rs.getString("RTYPE"));
         a74.setPeriod(rs.getString("PERIOD"));
-        a74.setLargeMax(rs.getDouble("LARGEMAX"));
+        a74.setLargeMax(rs.getInt("LARGEMAX"));
         a74.setEffectiveDate(rs.getString("EFFDATE"));
         a74.setRate(rs.getDouble("RATE"));
         return a74;

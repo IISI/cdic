@@ -13,10 +13,11 @@ public class A74 {
     private String rateType;
     private String type;
     private String period;
-    private double largeMax;
+    private int largeMax;
     private String effectiveDate;
     private double rate;
     private boolean writeSample;
+    private String key;
 
     public void setUnit(String unit) {
         this.unit = unit;
@@ -66,12 +67,12 @@ public class A74 {
         return period;
     }
 
-    public void setLargeMax(double largeMax) {
+    public void setLargeMax(int largeMax) {
         this.largeMax = largeMax;
     }
 
-    public double getLargeMax() {
-        return largeMax / 1000000;
+    public int getLargeMax() {
+        return largeMax;
     }
 
     public void setEffectiveDate(String effectiveDate) {
@@ -96,5 +97,14 @@ public class A74 {
 
     public boolean isWriteSample() {
         return writeSample;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        key = currencyCode + rateType + type + period + String.valueOf(largeMax) + effectiveDate;
+        return key;
     }
 }
