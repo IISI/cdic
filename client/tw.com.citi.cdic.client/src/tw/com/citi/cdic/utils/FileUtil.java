@@ -25,7 +25,7 @@ import tw.com.citi.cdic.client.vfs.OSGiFileSystemManager;
 
 public class FileUtil {
     public static enum FolderType {
-        HOST("host"), ICG("icg"), PROCESS("process");
+        HOST("host"), ICG("icg"), PROCESS("process"), PROCESS_OUT("processout");
         private String key;
 
         FolderType(String key) {

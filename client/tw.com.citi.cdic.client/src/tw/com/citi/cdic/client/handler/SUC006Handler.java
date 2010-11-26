@@ -106,7 +106,7 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
             if (files != null && files.size() > 0) {
                 String[] temp = new String[files.size()];
                 try {
-                    FileUtil.copyFile(FolderType.PROCESS, savePath, files.toArray(temp));
+                    FileUtil.copyFile(FolderType.PROCESS_OUT, savePath, files.toArray(temp));
                 } catch (FileSystemException e) {
                     e.printStackTrace();
                     throw new SecurityException(Messages.bind(Messages.Download_Sample_File_Error,
