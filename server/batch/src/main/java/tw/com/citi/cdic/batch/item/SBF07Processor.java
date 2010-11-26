@@ -28,6 +28,10 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
 
     private int type;
 
+    private long processCount;
+
+    private int writeSampleFrequency = 1000;
+
     private A26 prepareA26Instance(CDICF07H item) {
         A26 a26 = new A26();
         a26.setUnit("021");
@@ -172,6 +176,11 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
             }
         } else {
             return null;
+        }
+        
+        processCount++;
+        if (processCount % writeSampleFrequency == 1) {
+            a26.setSample(true);
         }
         
         return a26;

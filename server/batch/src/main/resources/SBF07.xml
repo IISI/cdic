@@ -68,6 +68,25 @@
         </property>
     </bean>
 
+    <bean id="a26SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A26SampleFileWriter">
+        <property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/A26_sample.csv"></property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,apNo,srNo,customerId,customerIdNo,checkNo,currencyCode,paySav,intPayable,intPayMemo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,會計科子目代碼,存款帳號,客戶識別碼,保留欄位,票據號碼,幣別,帳列金額,存款轉入其他應付款日期,轉入原因"></property>
+            </bean>
+        </property>
+    </bean>
+
     <bean id="a26DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql" value="INSERT INTO A26(OTUNIT, OTBRNO, OTAPNO, OTSRNO, OTCUSTID, OTCUSTIDNO, OTCHECKNO, OTCURCODE, OTPAYSAV, OTINTPAYABLE, OTINTPAYMEMO) VALUES(:unit, :branchNo, :apNo, :srNo, :customerId, :customerIdNo, :checkNo, :currencyCode, :paySav, :intPayable, :intPayMemo)"></property>
@@ -78,6 +97,7 @@
         <property name="delegates">
             <list>
                 <ref bean="a26FileWriter" />
+                <ref bean="a26SampleFileWriter" />
                 <ref bean="a26DbWriter" />
             </list>
         </property>
@@ -95,6 +115,10 @@
         </property>
     </bean>
 
+    <bean id="b26SampleFileWriter" parent="a26SampleFileWriter">
+        <property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/B26_sample.csv"></property>
+    </bean>
+
     <bean id="b26DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql" value="INSERT INTO B26(OTUNIT, OTBRNO, OTAPNO, OTSRNO, OTCUSTID, OTCUSTIDNO, OTCHECKNO, OTCURCODE, OTPAYSAV, OTINTPAYABLE, OTINTPAYMEMO) VALUES(:unit, :branchNo, :apNo, :srNo, :customerId, :customerIdNo, :checkNo, :currencyCode, :paySav, :intPayable, :intPayMemo)"></property>
@@ -105,6 +129,7 @@
         <property name="delegates">
             <list>
                 <ref bean="b26FileWriter" />
+                <ref bean="b26SampleFileWriter" />
                 <ref bean="b26DbWriter" />
             </list>
         </property>
@@ -122,6 +147,10 @@
         </property>
     </bean>
 
+    <bean id="c26SampleFileWriter" parent="a26SampleFileWriter">
+        <property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/C26_sample.csv"></property>
+    </bean>
+
     <bean id="c26DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql" value="INSERT INTO C26(OTUNIT, OTBRNO, OTAPNO, OTSRNO, OTCUSTID, OTCUSTIDNO, OTCHECKNO, OTCURCODE, OTPAYSAV, OTINTPAYABLE, OTINTPAYMEMO) VALUES(:unit, :branchNo, :apNo, :srNo, :customerId, :customerIdNo, :checkNo, :currencyCode, :paySav, :intPayable, :intPayMemo)"></property>
@@ -132,6 +161,7 @@
         <property name="delegates">
             <list>
                 <ref bean="c26FileWriter" />
+                <ref bean="c26SampleFileWriter" />
                 <ref bean="c26DbWriter" />
             </list>
         </property>
