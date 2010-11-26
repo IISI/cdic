@@ -37,7 +37,7 @@
     <bean id="a31FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A31"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A31"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -53,6 +53,34 @@
         </property>
     </bean>
 
+    <bean id="a31SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A31SampleFileWriter">
+        <property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/A31_sample.csv"></property>
+        <property name="encoding" value="big5"></property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,currencyCode,customerId,customerIdNo,locateRate,memo"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,幣別,客戶識別碼,保留欄位,客戶存款分配比率,備註"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a31Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a31FileWriter" />
+                <ref bean="a31SampleFileWriter" />
+            </list>
+        </property>
+    </bean>
+
     <bean id="b31Processor" parent="a31Processor">
         <property name="type" value="2"></property>
     </bean>
@@ -60,8 +88,21 @@
     <bean id="b31FileWriter" parent="a31FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/B31"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B31"></constructor-arg>
             </bean>
+        </property>
+    </bean>
+
+    <bean id="b31SampleFileWriter" parent="a31SampleFileWriter">
+        <property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/B31_sample.csv"></property>
+    </bean>
+
+    <bean id="b31Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="b31FileWriter" />
+                <ref bean="b31SampleFileWriter" />
+            </list>
         </property>
     </bean>
 

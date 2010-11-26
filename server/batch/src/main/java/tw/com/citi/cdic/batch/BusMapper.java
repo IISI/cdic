@@ -2,7 +2,6 @@ package tw.com.citi.cdic.batch;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,7 +28,7 @@ public class BusMapper implements RowMapper<Bus> {
             String birthday = rs.getString("BIRTHDAY");
             Date date = sdf.parse(birthday);
             bus.setBirthday(date);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             bus.setBirthday(null);
         }
         bus.setBranch(rs.getString("BRANCH"));
@@ -37,7 +36,7 @@ public class BusMapper implements RowMapper<Bus> {
             String establish = rs.getString("DATE_ESTB");
             Date date = sdf.parse(establish);
             bus.setDateEstb(date);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             bus.setDateEstb(null);
         }
         bus.setCustStat(rs.getString("CUST_STAT"));

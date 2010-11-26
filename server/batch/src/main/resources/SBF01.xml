@@ -9,7 +9,7 @@
         <property name="queryProvider">
             <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
                 <property name="selectClause" value="SELECT *"></property>
-                <property name="fromClause" value="FROM BUS"></property>
+                <property name="fromClause" value="FROM LOCAL_BUS"></property>
                 <property name="sortKey" value="CUST_NUMB"></property>
             </bean>
         </property>
@@ -23,7 +23,7 @@
     <bean id="a11FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A11"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A11"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -42,7 +42,7 @@
     <bean id="a11SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A11SampleFileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/A11_sample.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A11_sample.csv"></constructor-arg>
             </bean>
         </property>
         <property name="encoding" value="big5"></property>
@@ -53,6 +53,11 @@
                         <property name="names" value="unit,branchNo,id,idNo,headId,CName,birthDate,ceoCode,ceoName,statusCode,businessCode,createDate,originalAddress,address,tel1,tel2,email"></property>
                     </bean>
                 </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,客戶識別碼,CUSTIDNO,客戶national ID,戶名,出生日期/設立日期,負責人或代表人身份證統一編號,CUSTCEONAME,客戶狀態碼,行業別,建檔或開戶日期,客戶戶藉地址,客戶通訊地址,電話1,電話2,客戶電子郵件信箱"></property>
             </bean>
         </property>
     </bean>

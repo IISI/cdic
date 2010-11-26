@@ -32,6 +32,8 @@ public class A26 {
 
     private String intPayMemo;
 
+    private transient boolean sample;
+
     public String getUnit() {
         return unit;
     }
@@ -118,6 +120,14 @@ public class A26 {
 
     public void setIntPayMemo(String intPayMemo) {
         this.intPayMemo = intPayMemo;
+    }
+
+    public boolean isSample() {
+        return sample;
+    }
+
+    public void setSample(boolean sample) {
+        this.sample = sample;
     }
 
 }
