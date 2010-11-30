@@ -1,7 +1,5 @@
 package tw.com.citi.cdic.batch.item;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.springframework.batch.item.ItemProcessor;
 
 import tw.com.citi.cdic.batch.model.A73;
@@ -23,17 +21,15 @@ public class SBF21Processor implements ItemProcessor<A73, SBF21Output> {
     public SBF21Output process(A73 item) throws Exception {
         SBF21Output out = null;
         String srNo = item == null ? " " : item.getSrNo();
-        if ("9".equals(srNo.substring(0, 1))) {
-            String numCode = item == null ? "   " : item.getCurrencyCode();
-            Configuration config = new HierarchicalINIConfiguration("currency_mappings.ini");
-            String ccyCode = config.getString(numCode + ".code");
-            if ("TWD".equals(ccyCode)) {
-                out = createA73(item);
+        String ccyCode = item == null ? "   " : item.getCurrencyCode();
+        if ("TWD".equals(ccyCode)) {
+            out = createA73(item);
+        } else {
+            if ("8".equals(srNo.substring(0, 1))) {
+                out = createC73(item);
             } else {
                 out = createB73(item);
             }
-        } else {
-            out = createC73(item);
         }
         return out;
     }
