@@ -11,6 +11,10 @@ public class MaskUtils {
     }
 
     public static String mask(String str, int splitPos, String mask) {
+        if (str == null) {
+            return str;
+        }
+        
         if (splitPos >= str.length()) {
             return str;
         }
