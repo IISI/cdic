@@ -27,11 +27,23 @@ public class A22RecursiveCollectionLineAggregator implements
         RecursiveCollectionLineAggregator<A22> aggregator = new RecursiveCollectionLineAggregator<A22>();
         aggregator.setDelegate(delegate);
         if (type == 1) {
-            return aggregator.aggregate(item.getA22List());
+            if (item.getA22List() != null && item.getA22List().size() > 0) {
+                return aggregator.aggregate(item.getA22List());
+            } else {
+                return null;
+            }
         } else if (type == 2) {
-            return aggregator.aggregate(item.getB22List());
+            if (item.getB22List() != null && item.getB22List().size() >0) {
+                return aggregator.aggregate(item.getB22List());
+            } else {
+                return null;
+            }
         } else {
-            return aggregator.aggregate(item.getC22List());
+            if (item.getC22List() != null && item.getC22List().size() > 0) {
+                return aggregator.aggregate(item.getC22List());
+            } else {
+                return null;
+            }
         }
     }
 

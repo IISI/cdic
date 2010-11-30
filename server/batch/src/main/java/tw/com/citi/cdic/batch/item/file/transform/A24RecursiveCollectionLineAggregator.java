@@ -24,7 +24,11 @@ public class A24RecursiveCollectionLineAggregator implements
     public String aggregate(SBF18Output item) {
         RecursiveCollectionLineAggregator<A24> aggregator = new RecursiveCollectionLineAggregator<A24>();
         aggregator.setDelegate(delegate);
-        return aggregator.aggregate(item.getA24List());
+        if (item.getA24List() != null && item.getA24List().size() > 0) {
+            return aggregator.aggregate(item.getA24List());
+        } else {
+            return null;
+        }
     }
 
 }
