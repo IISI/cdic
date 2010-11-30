@@ -1,6 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
 
 /**
  * @author Chih-Liang Chang
@@ -18,11 +17,11 @@ public class Bus {
 
     private String dsctDescL;
 
-    private Date birthday;
+    private String birthday;
 
     private String branch;
 
-    private Date dateEstb;
+    private String dateEstb;
 
     private String custStat;
 
@@ -72,11 +71,11 @@ public class Bus {
         this.dsctDescL = dsctDescL;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
@@ -88,11 +87,11 @@ public class Bus {
         this.branch = branch;
     }
 
-    public Date getDateEstb() {
+    public String getDateEstb() {
         return dateEstb;
     }
 
-    public void setDateEstb(Date dateEstb) {
+    public void setDateEstb(String dateEstb) {
         this.dateEstb = dateEstb;
     }
 

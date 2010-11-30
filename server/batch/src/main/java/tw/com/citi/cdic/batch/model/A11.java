@@ -1,6 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
 
 /**
  * @author Chih-Liang Chang
@@ -20,7 +19,7 @@ public class A11 {
 
     private String CName;
 
-    private Date birthDate;
+    private String birthDate;
 
     private String ceoCode;
 
@@ -30,7 +29,7 @@ public class A11 {
 
     private String businessCode;
 
-    private Date createDate;
+    private String createDate;
 
     private String originalAddress;
 
@@ -92,11 +91,11 @@ public class A11 {
         CName = cName;
     }
 
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -132,11 +131,11 @@ public class A11 {
         this.businessCode = businessCode;
     }
 
-    public Date getCreateDate() {
+    public String getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
 
