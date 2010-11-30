@@ -1,7 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
-
 /**
  * A61 Layout
  * 
@@ -14,7 +12,7 @@ public class A61 {
     private String custId;
     private String custIdNo;
     private String srNo;
-    private Date date;
+    private String date;
     private double acctBalance;
     private double acctInt;
     private double noAcctBalance;
@@ -70,11 +68,11 @@ public class A61 {
         return srNo;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 

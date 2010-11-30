@@ -59,7 +59,7 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%3s%4s%11s%3s%30s%tY%&lt;tm%&lt;td%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f"></property>
+                <property name="format" value="%3s%4s%11s%3s%30s%8s%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f%15.2f"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="a61.unit,a61.branchNo,a61.custId,a61.custIdNo,a61.srNo,a61.date,a61.acctBalance,a61.acctInt,a61.noAcctBalance,a61.noAcctInt,a61.unDepBalance,a61.unDepInt,a61.acctBalanceEx,a61.acctIntEx,a61.noAcctBalanceEx,a61.noAcctIntEx,a61.unDepBalanceEx,a61.unDepIntEx,a61.obuDepBalance,a61.obuDepInt"></property>
