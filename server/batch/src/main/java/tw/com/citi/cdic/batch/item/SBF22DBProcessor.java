@@ -2,7 +2,9 @@ package tw.com.citi.cdic.batch.item;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,8 @@ import tw.com.citi.cdic.batch.model.CDICF22R;
 public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
 
     protected static final Logger logger = LoggerFactory.getLogger(SBF22DBProcessor.class);
+
+    private Set<String> pKeySet = new HashSet<String>();
 
     private A74 generateBaseA74(CDICF22R item) {
         A74 a74 = new A74();
@@ -76,6 +80,12 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
         if (a74.getLargeMax() > 9999999) {
             tf = false;
             logger.error(a74.getKey() + ", largeMax over 9999999");
+        }
+        if (pKeySet.contains(a74.getKey())) {
+            tf = false;
+            logger.error(a74.getKey() + ", unique violation");
+        } else {
+            pKeySet.add(a74.getKey());
         }
         return tf;
     }
