@@ -14,9 +14,15 @@ public class SBF03AProcessor implements ItemProcessor<A22, A22> {
 
     @Override
     public A22 process(A22 item) throws Exception {
-        if (item.getSrNo().startsWith("9")) {
-            if ("TWD".equals(item.getCurrencyCode())) {
-                if (type == 1) {
+        if ("TWD".equals(item.getCurrencyCode())) {
+            if (type == 1) {
+                return item;
+            } else {
+                return null;
+            }
+        } else {
+            if (item.getSrNo().startsWith("8")) {
+                if (type == 3) {
                     return item;
                 } else {
                     return null;
@@ -27,12 +33,6 @@ public class SBF03AProcessor implements ItemProcessor<A22, A22> {
                 } else {
                     return null;
                 }
-            }
-        } else {
-            if (type == 3) {
-                return item;
-            } else {
-                return null;
             }
         }
     }

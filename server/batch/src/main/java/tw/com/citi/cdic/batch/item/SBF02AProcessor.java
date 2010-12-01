@@ -15,13 +15,13 @@ public class SBF02AProcessor implements ItemProcessor<A21, A21> {
     @Override
     public A21 process(A21 item) throws Exception {
         if (b21) {
-            if (item.getSrNo().startsWith("9")) {
+            if (!item.getSrNo().startsWith("8")) {
                 return item;
             } else {
                 return null;
             }
         } else {
-            if (!item.getSrNo().startsWith("9")) {
+            if (item.getSrNo().startsWith("8")) {
                 return item;
             } else {
                 return null;
