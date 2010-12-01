@@ -22,7 +22,11 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
         a24.setCustomerBusinessCode(item.getNewBCode());
         a24.setBalance(item.getBalance());
         a24.setIntPayable(item.getInterest());
-        a24.setAddress(item.getCommAdr());
+        if (item.getCommAdr() != null && item.getCommAdr().length() > 6) {
+            a24.setAddress(item.getCommAdr().substring(0, 6));
+        } else {
+            a24.setAddress(item.getCommAdr());
+        }
         return a24;
     }
 
