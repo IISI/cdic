@@ -31,7 +31,7 @@ public class CDICF20DaoImpl extends SimpleJdbcDaoSupport implements CDICF20Dao {
                 f20.setTransRate(rs.getDouble("TRANS_RATE"));
                 return f20;
             }}, currencyCode);
-        return DataAccessUtils.singleResult(results);
+        return DataAccessUtils.requiredSingleResult(results);
     }
 
 }
