@@ -111,7 +111,7 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%-3s%-4s%-30s%-16s%-8s%-2s%-2s%-3s%15.2f%-40s"></property>
+                <property name="format" value="%-3s%-4s%-30s%-16s%-8s%-2s%-2s%-3s%015.2f%-40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="record.unit,record.branchNo,record.srNo,record.depositReceiptNo,record.txnDate,record.serNo,record.txnReason,record.currencyCode,record.holdAmt,record.memo"></property>
@@ -131,7 +131,7 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%-3s%-4s%-30s%-16s%-8s%-2s%-2s%-3s%15.2f%-40s"></property>
+                <property name="format" value="%-3s%-4s%-30s%-16s%-8s%-2s%-2s%-3s%015.2f%-40s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="record.unit,record.branchNo,record.srNo,record.depositReceiptNo,record.txnDate,record.serNo,record.txnReason,record.currencyCode,record.holdAmt,record.memo"></property>

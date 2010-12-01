@@ -36,7 +36,7 @@
         <property name="encoding" value="big5"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%-3s%-19s%-50s%08d%08d%3s%18.2f%-1s%-1s"></property>
+                <property name="format" value="%-3s%-19s%-50s%08d%08d%3s%018.2f%-1s%-1s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
                         <property name="names" value="unit,caseNo,caseName,dpisDate,dueDate,currencyCode,cryAmt,classType,protect"></property>

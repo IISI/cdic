@@ -104,7 +104,7 @@ public class A74 {
     }
 
     public String getKey() {
-        key = currencyCode + rateType + type + period + String.valueOf(largeMax) + effectiveDate;
+        key = currencyCode + rateType + type + period + effectiveDate + String.valueOf(largeMax);
         return key;
     }
 }
