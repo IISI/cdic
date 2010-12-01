@@ -2,6 +2,8 @@ package tw.com.citi.cdic.batch.item;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.ExecutionContext;
@@ -27,6 +29,8 @@ import tw.com.citi.cdic.batch.utils.MaskUtils;
  * @since 2010/10/14
  */
 public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
+
+    protected static final Logger logger = LoggerFactory.getLogger(SBF18Processor.class);
 
     private CDICF20Dao CDICF20Dao;
 
@@ -108,6 +112,8 @@ public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
         a22s = a22Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "0", "B22");
         for (A21 b21 : a21s) {
             CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(b21.getCurrencyCode());
+            logger.debug("b21 srno = {}, b21 currency code = {}", b21.getSrNo(), b21.getCurrencyCode());
+            logger.debug("cdicf20 = {}", cdicF20.getTransRate());
             temp13 += b21.getAccountBalance() * cdicF20.getTransRate();
             temp14 += b21.getIntPayable() * cdicF20.getTransRate();
         }
