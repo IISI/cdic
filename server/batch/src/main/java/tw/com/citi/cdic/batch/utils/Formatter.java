@@ -1099,6 +1099,11 @@ public final class Formatter implements Closeable, Flushable {
             try {
                 // big5 中文字當作 2 bytes
                 sp = width - s.getBytes("big5").length;
+                if(s.getBytes("big5").length > width) {
+                    byte[] cut = new byte[width];
+                    System.arraycopy(s.getBytes("big5"), 0, cut, 0, width);
+                    s = new String(cut, "big5");
+                }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -1109,6 +1114,7 @@ public final class Formatter implements Closeable, Flushable {
             if (pad)
                 for (int i = 0; i < sp; i++)
                     sb.append(' ');
+            // 擷取處理
             return sb.toString();
         }
 

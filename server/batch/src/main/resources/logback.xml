@@ -16,7 +16,7 @@
         </encoder>
     </appender>
 
-    <logger name="tw.com.citi.cdic.batch" level="DEBUG" />
+    <logger name="tw.com.citi.cdic.batch" level="WARN" />
 
     <root level="WARN">
         <appender-ref ref="FILE" />
