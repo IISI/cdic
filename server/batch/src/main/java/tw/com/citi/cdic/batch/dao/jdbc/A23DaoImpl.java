@@ -28,9 +28,8 @@ public class A23DaoImpl extends SimpleJdbcDaoSupport implements A23Dao {
     }
 
     @Override
-    public List<A23> findByCustomerIdAndJointCode(String customerId,
-            String jointCode) {
-        return super.getSimpleJdbcTemplate().query("SELECT * FROM A23 WHERE CKCUSTID = ? AND CKJOINTCODE = ? AND CKACTBAL > 0", new A23Mapper(), customerId, jointCode);
+    public List<A23> findByCustomerId(String customerId) {
+        return super.getSimpleJdbcTemplate().query("SELECT * FROM A23 WHERE CKCUSTID = ? AND CKACTBAL > 0", new A23Mapper(), customerId);
     }
 
 }

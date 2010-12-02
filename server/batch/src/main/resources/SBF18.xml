@@ -36,9 +36,9 @@
 
     <bean id="busDbReader2" class="org.springframework.batch.item.database.JdbcCursorItemReader">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="sql" value="SELECT * FROM LOCAL_BUS ORDER BY NATNID_REGNNUMB, CUST_NUMB"></property>
+        <property name="sql" value="SELECT DISTINCT NATNID_REGNNUMB FROM LOCAL_BUS ORDER BY NATNID_REGNNUMB"></property>
         <property name="rowMapper">
-            <bean class="tw.com.citi.cdic.batch.BusMapper"></bean>
+            <bean class="org.springframework.jdbc.core.simple.ParameterizedSingleColumnRowMapper"></bean>
         </property>
     </bean>
 
@@ -48,6 +48,7 @@
         <property name="a23Dao" ref="a23Dao"></property>
         <property name="a24Dao" ref="a24Dao"></property>
         <property name="CDICF20Dao" ref="CDICF20Dao"></property>
+        <property name="busDao" ref="busDao"></property>
     </bean>
 
     <bean id="a61FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">

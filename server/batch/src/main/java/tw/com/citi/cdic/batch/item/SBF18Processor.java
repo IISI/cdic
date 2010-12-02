@@ -1,5 +1,6 @@
 package tw.com.citi.cdic.batch.item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import tw.com.citi.cdic.batch.dao.A21Dao;
 import tw.com.citi.cdic.batch.dao.A22Dao;
 import tw.com.citi.cdic.batch.dao.A23Dao;
 import tw.com.citi.cdic.batch.dao.A24Dao;
+import tw.com.citi.cdic.batch.dao.BusDao;
 import tw.com.citi.cdic.batch.dao.CDICF20Dao;
 import tw.com.citi.cdic.batch.model.A21;
 import tw.com.citi.cdic.batch.model.A22;
@@ -28,9 +30,11 @@ import tw.com.citi.cdic.batch.utils.MaskUtils;
  * @author Chih-Liang Chang
  * @since 2010/10/14
  */
-public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
+public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
 
     protected static final Logger logger = LoggerFactory.getLogger(SBF18Processor.class);
+
+    private BusDao busDao;
 
     private CDICF20Dao CDICF20Dao;
 
@@ -47,129 +51,125 @@ public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
     private int writeSampleFrequency = 1000;
 
     @Override
-    public SBF18Output process(Bus item) throws Exception {
+    public SBF18Output process(String nationalId) throws Exception {
         double temp7 = 0, temp8 = 0, temp11 = 0, temp12 = 0, temp9 = 0, temp10 = 0, temp13 = 0, temp14 = 0, temp17 = 0, temp18 = 0, temp15 = 0, temp16 = 0, temp19 = 0, temp20 = 0;
         SBF18Output out = new SBF18Output();
         
-        // 1. Summary 台幣要保金額
-        List<A21> a21s = a21Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "0", "A21");
-        List<A22> a22s = a22Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "0", "A22");
-        List<A23> a23s = a23Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "0");
-        List<A24> a24s = a24Dao.findByCustomerId(item.getCustNumb());
-        for (A21 a21 : a21s) {
-            temp7 += a21.getAccountBalance();
-            temp8 += a21.getIntPayable();
-        }
-        for (A22 a22 : a22s) {
-            temp7 += a22.getAmount();
-            temp8 += a22.getIntPayable();
-        }
-        for (A23 a23 : a23s) {
-            temp7 += a23.getAccountBalance();
-        }
-        for (A24 a24 : a24s) {
-            temp7 += a24.getBalance();
-            temp8 += a24.getIntPayable();
-            
-            // 底下兩行程式碼，是為了寫 sample file 所做的處理
-            a24.setCustomerId(MaskUtils.mask(a24.getCustomerId(), 6));
-            a24.setCustomerName(MaskUtils.mask(a24.getCustomerName(), 2));
-        }
-        out.getA21List().addAll(a21s);
-        out.getA22List().addAll(a22s);
-        out.getA23List().addAll(a23s);
-        out.getA24List().addAll(a24s);
+        List<A21> a21s = new ArrayList<A21>();
+        List<A22> a22s = new ArrayList<A22>();
+        List<A23> a23s = new ArrayList<A23>();
+        List<A24> a24s = new ArrayList<A24>();
         
-        // 2. Summary 台幣聯名戶金額
-        a21s = a21Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "1", "A21");
-        a22s = a22Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "1", "A22");
-        a23s = a23Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "1");
-        for (A21 a21 : a21s) {
-            temp11 += a21.getAccountBalance();
-            temp12 += a21.getIntPayable();
-        }
-        for (A22 a22 : a22s) {
-            temp11 += a22.getAmount();
-            temp12 += a22.getIntPayable();
-        }
-        for (A23 a23 : a23s) {
-            temp11 += a23.getAccountBalance();
-        }
-        out.getA21List().addAll(a21s);
-        out.getA22List().addAll(a22s);
-        out.getA23List().addAll(a23s);
+        List<Bus> items = busDao.findByNationalId(nationalId);
         
-        // 3. Summary 台幣非要保金額
-        a22s = a22Dao.findByCustomerIdAndJointCodeAndCharCodeAndAmount(item.getCustNumb(), "A22");
-        for (A22 a22 : a22s) {
-            temp9 += a22.getAmount();
-            temp10 += a22.getIntPayable();
+        for (Bus item : items) {
+            a21s = a21Dao.findByCustomerId(item.getCustNumb(), "A21");
+            a22s = a22Dao.findByCustomerId(item.getCustNumb(), "A22");
+            a23s = a23Dao.findByCustomerId(item.getCustNumb());
+            a24s = a24Dao.findByCustomerId(item.getCustNumb());
+            for (A21 a21 : a21s) {
+                if ("1".equals(a21.getJointCode())) { // 2. Summary 台幣聯名戶金額
+                    temp11 += a21.getAccountBalance();
+                    temp12 += a21.getIntPayable();
+                } else { // 1. Summary 台幣要保金額
+                    temp7 += a21.getAccountBalance();
+                    temp8 += a21.getIntPayable();
+                }
+            }
+            for (A22 a22 : a22s) {
+                if ("1".equals(a22.getJointCode())) { // 2. Summary 台幣聯名戶金額
+                    temp11 += a22.getAmount();
+                    temp12 += a22.getIntPayable();
+                } else if (a22.getCharCode().startsWith("WNCD")
+                        || a22.getCharCode().startsWith("WBCD")
+                        || a22.getCharCode().startsWith("UBCD")
+                        || a22.getCharCode().startsWith("UNCD")
+                        || a22.getSdCase().startsWith("PMPL")) { //3. Summary 台幣非要保金額
+                    temp9 += a22.getAmount();
+                    temp10 += a22.getIntPayable();
+                } else { // 1. Summary 台幣要保金額
+                    temp7 += a22.getAmount();
+                    temp8 += a22.getIntPayable();
+                }
+            }
+            for (A23 a23 : a23s) {
+                if ("1".equals(a23.getJointCode())) { // 2. Summary 台幣聯名戶金額
+                    temp11 += a23.getAccountBalance();
+                } else { // 1. Summary 台幣要保金額
+                    temp7 += a23.getAccountBalance();
+                }
+            }
+            for (A24 a24 : a24s) {
+                // 1. Summary 台幣要保金額
+                temp7 += a24.getBalance();
+                temp8 += a24.getIntPayable();
+                
+                // 底下兩行程式碼，是為了寫 sample file 所做的處理
+                a24.setCustomerId(MaskUtils.mask(a24.getCustomerId(), 6));
+                a24.setCustomerName(MaskUtils.mask(a24.getCustomerName(), 2));
+            }
+            out.getA21List().addAll(a21s);
+            out.getA22List().addAll(a22s);
+            out.getA23List().addAll(a23s);
+            out.getA24List().addAll(a24s);
         }
-        out.getA22List().addAll(a22s);
         
-        // 4. Summary 外幣要保金額
-        a21s = a21Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "0", "B21");
-        a22s = a22Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "0", "B22");
-        for (A21 b21 : a21s) {
-            CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(b21.getCurrencyCode());
-            logger.debug("b21 srno = {}, b21 currency code = {}", b21.getSrNo(), b21.getCurrencyCode());
-            logger.debug("cdicf20 = {}", cdicF20.getTransRate());
-            temp13 += b21.getAccountBalance() * cdicF20.getTransRate();
-            temp14 += b21.getIntPayable() * cdicF20.getTransRate();
+        for (Bus item : items) {
+            a21s = a21Dao.findByCustomerId(item.getCustNumb(), "B21");
+            a22s = a22Dao.findByCustomerId(item.getCustNumb(), "B22");
+            for (A21 b21 : a21s) {
+                CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(b21.getCurrencyCode());
+                if ("1".equals(b21.getJointCode())) { // 5. Summary 外幣聯名戶金額
+                    temp17 += b21.getAccountBalance() * cdicF20.getTransRate();
+                    temp18 += b21.getIntPayable() * cdicF20.getTransRate();
+                } else { // 4. Summary 外幣要保金額
+                    temp13 += b21.getAccountBalance() * cdicF20.getTransRate();
+                    temp14 += b21.getIntPayable() * cdicF20.getTransRate();
+                }
+            }
+            for (A22 b22 : a22s) {
+                CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(b22.getCurrencyCode());
+                if ("1".equals(b22.getJointCode())) { // 5. Summary 外幣聯名戶金額
+                    temp17 += b22.getAmount() * cdicF20.getTransRate();
+                    temp18 += b22.getIntPayable() * cdicF20.getTransRate();
+                } else if (b22.getCharCode().startsWith("WNCD")
+                        || b22.getCharCode().startsWith("WBCD")
+                        || b22.getCharCode().startsWith("UBCD")
+                        || b22.getCharCode().startsWith("UNCD")
+                        || b22.getSdCase().startsWith("PMPL")) { // 6. Summary 外幣非要保金額
+                    temp15 += b22.getAmount() * cdicF20.getTransRate();
+                    temp16 += b22.getIntPayable() * cdicF20.getTransRate();
+                } else { // 4. Summary 外幣要保金額
+                    temp13 += b22.getAmount() * cdicF20.getTransRate();
+                    temp14 += b22.getIntPayable() * cdicF20.getTransRate();
+                }
+            }
+            out.getA21List().addAll(a21s);
+            out.getA22List().addAll(a22s);
         }
-        for (A22 b22 : a22s) {
-            CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(b22.getCurrencyCode());
-            temp13 += b22.getAmount() * cdicF20.getTransRate();
-            temp14 += b22.getIntPayable() * cdicF20.getTransRate();
-        }
-        out.getB21List().addAll(a21s);
-        out.getB22List().addAll(a22s);
         
-        // 5. Summary 外幣聯名戶金額
-        a21s = a21Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "1", "B21");
-        a22s = a22Dao.findByCustomerIdAndJointCode(item.getCustNumb(), "1", "B22");
-        for (A21 b21 : a21s) {
-            CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(b21.getCurrencyCode());
-            temp17 += b21.getAccountBalance() * cdicF20.getTransRate();
-            temp18 += b21.getIntPayable() * cdicF20.getTransRate();
+        for (Bus item : items) {
+            a21s = a21Dao.findByCustomerId(item.getCustNumb(), "C21");
+            a22s = a22Dao.findByCustomerId(item.getCustNumb(), "C22");
+            for (A21 c21 : a21s) { // 7. Summary OBU 要保金額
+                CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(c21.getCurrencyCode());
+                temp19 += c21.getAccountBalance() * cdicF20.getTransRate();
+                temp20 += c21.getIntPayable() * cdicF20.getTransRate();
+            }
+            for (A22 c22 : a22s) { // 7. Summary OBU 要保金額
+                CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(c22.getCurrencyCode());
+                temp19 += c22.getAmount() * cdicF20.getTransRate();
+                temp20 += c22.getIntPayable() * cdicF20.getTransRate();
+            }
+            out.getC21List().addAll(a21s);
+            out.getC22List().addAll(a22s);
         }
-        for (A22 b22 : a22s) {
-            CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(b22.getCurrencyCode());
-            temp17 += b22.getAmount() * cdicF20.getTransRate();
-            temp18 += b22.getIntPayable() * cdicF20.getTransRate();
-        }
-        out.getB21List().addAll(a21s);
-        out.getB22List().addAll(a22s);
-        
-        // 6. Summary 外幣非要保金額
-        a22s = a22Dao.findByCustomerIdAndJointCodeAndCharCodeOrSdCaseAndAmount(item.getCustNumb(), "B22");
-        for (A22 b22 : a22s) {
-            CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(b22.getCurrencyCode());
-            temp15 += b22.getAmount() * cdicF20.getTransRate();
-            temp16 += b22.getIntPayable() * cdicF20.getTransRate();
-        }
-        out.getB22List().addAll(a22s);
-        
-        // 7. Summary OBU要保金額
-        a21s = a21Dao.findByCustomerId(item.getCustNumb(), "C21");
-        a22s = a22Dao.findByCustomerId(item.getCustNumb(), "C22");
-        for (A21 c21 : a21s) {
-            CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(c21.getCurrencyCode());
-            temp19 += c21.getAccountBalance() * cdicF20.getTransRate();
-            temp20 += c21.getIntPayable() * cdicF20.getTransRate();
-        }
-        for (A22 c22 : a22s) {
-            temp19 += c22.getAmount();
-            temp20 += c22.getIntPayable();
-        }
-        out.getC21List().addAll(a21s);
-        out.getC22List().addAll(a22s);
         
         A61 a61 = new A61();
         a61.setUnit("021");
         a61.setBranchNo("0000");
-        a61.setCustId(item.getNatnidRegnnumb());
-        a61.setDate(null);
+        a61.setCustId(nationalId);
+        a61.setDate("00000000");
         a61.setAcctBalance(temp7);
         a61.setAcctInt(temp8);
         a61.setNoAcctBalance(temp9);
@@ -200,6 +200,10 @@ public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
     @BeforeStep
     public void saveStepExecution(StepExecution stepExecution) {
         this.stepExecution = stepExecution;
+    }
+
+    public void setBusDao(BusDao busDao) {
+        this.busDao = busDao;
     }
 
     public void setCDICF20Dao(CDICF20Dao cDICF20Dao) {

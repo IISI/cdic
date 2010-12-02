@@ -29,26 +29,8 @@ public class A22DaoImpl extends SimpleJdbcDaoSupport implements A22Dao {
     }
 
     @Override
-    public List<A22> findByCustomerIdAndJointCode(String customerId,
-            String jointCode, String tableName) {
-        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE TDCUSTID = ? AND TDJOINTCODE = ? AND TDAMT > 0", new A22Mapper(), customerId, jointCode);
-    }
-
-    @Override
-    public List<A22> findByCustomerIdAndJointCodeAndCharCodeAndAmount(
-            String customerId, String tableName) {
-        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE TDCUSTID = ? AND TDJOINTCODE = '0' AND (SUBSTRING(TDCHARCODE, 1, 4) = 'WNCD' OR SUBSTRING(TDCHARCODE, 1, 4) = 'WBCD' OR SUBSTRING(TDCHARCODE, 1, 4) = 'UBCD' OR SUBSTRING(TDCHARCODE, 1, 4) = 'UNCD') AND TDAMT > 0", new A22Mapper(), customerId);
-    }
-
-    @Override
-    public List<A22> findByCustomerIdAndJointCodeAndCharCodeOrSdCaseAndAmount(
-            String customerId, String tableName) {
-        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE TDCUSTID = ? and TDJOINTCODE = '0' AND ((SUBSTRING(TDCHARCODE, 1, 4) = 'WNCD' OR SUBSTRING(TDCHARCODE, 1, 4) = 'WBCD' OR SUBSTRING(TDCHARCODE, 1, 4) = 'UBCD' OR SUBSTRING(TDCHARCODE, 1, 4) = 'UNCD') OR SUBSTRING(TDSDCASE, 1, 4) = 'PMPL') AND TDAMT > 0", new A22Mapper(), customerId);
-    }
-
-    @Override
     public List<A22> findByCustomerId(String customerId, String tableName) {
-        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE TDCUSTID = ?", new A22Mapper(), customerId);
+        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE TDCUSTID = ? AND TDAMT > 0", new A22Mapper(), customerId);
     }
 
 }

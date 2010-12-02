@@ -24,12 +24,11 @@ public interface A23Dao {
     A23 findByCustomerIdAndSrNo(String customerId, String srNo);
 
     /**
-     * 根據 customerId, jointCode 為條件，找出 accountBalance > 0 的資料。
+     * 根據 customerId 為條件，找出 accountBalance > 0 的資料。
      * 
      * @param customerId
-     * @param jointCode
      * @return
      */
-    List<A23> findByCustomerIdAndJointCode(String customerId, String jointCode);
+    List<A23> findByCustomerId(String customerId);
 
 }

@@ -1,6 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-
 /**
  * @author Chih-Liang Chang
  * @since 2010/11/17
