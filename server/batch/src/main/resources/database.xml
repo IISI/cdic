@@ -10,6 +10,7 @@
         <property name="url" value="jdbc:jtds:sqlserver://#{dbInfo.serverName}:#{dbInfo.serverPort}/#{dbInfo.dbName}#{dbInfo.parameters}"></property>
         <property name="username" value="#{dbInfo.username}"></property>
         <property name="password" value="#{dbInfo.password}"></property>
+        <property name="maxActive" value="30"></property>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
