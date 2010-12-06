@@ -18,8 +18,6 @@ public class Report {
 
     private double interest;
 
-    private double fee;
-
     private double totalBalance;
 
     public String getFile() {
@@ -68,14 +66,6 @@ public class Report {
 
     public void setInterest(double interest) {
         this.interest = interest;
-    }
-
-    public double getFee() {
-        return fee;
-    }
-
-    public void setFee(double fee) {
-        this.fee = fee;
     }
 
     public double getTotalBalance() {

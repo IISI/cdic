@@ -22,7 +22,6 @@ public class ReportMapper implements RowMapper<Report> {
         report.setGl(rs.getString("gl"));
         report.setBalance(rs.getDouble("balance"));
         report.setInterest(rs.getDouble("interest"));
-        report.setFee(rs.getDouble("fee"));
         report.setTotalBalance(rs.getDouble("totalBalance"));
         return report;
     }
