@@ -28,7 +28,7 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
         } else {
             address = item.getCommAdr();
         }
-        a24.setAddress(new String(address.getBytes("big5"), "big5"));
+        a24.setAddress(new String(address.getBytes("big5"), "big5") + "ＸＸ路ＸＸ巷ＸＸ號ＸＸ樓");
         return a24;
     }
 
