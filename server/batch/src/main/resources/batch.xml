@@ -696,7 +696,7 @@
             <next on="EXECUTE" to="genReport" />
             <end on="SKIP" />
         </decision>
-        <step id="genReport">
+        <step id="f99-genReport">
             <tasklet>
                 <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.GenerateReportTasklet">
                     <beans:property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/report.pdf"></beans:property>
