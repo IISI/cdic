@@ -43,7 +43,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     private void callRemote(String cmd, String... args) throws Exception {
-        URL resourceUrl = Platform.getBundle("tw.com.citi.cdic.client.resources").getResource("PsExec.exe");
+        URL resourceUrl = Platform.getBundle("tw.com.citi.cdic.client.resources").getResource("triggerBatch.exe");
         if (resourceUrl != null) {
             try {
                 URL fileUrl = FileLocator.toFileURL(resourceUrl);
@@ -63,7 +63,7 @@ public class BatchServiceImpl implements BatchService {
                 throw e;
             }
         } else {
-            logger.error("Can not find file: PsExec.exe");
+            logger.error("Can not find file: triggerBatch.exe");
         }
     }
 
