@@ -693,7 +693,7 @@
             </flow>
         </split>
         <decision id="f99Decision" decider="f99Decider">
-            <next on="EXECUTE" to="genReport" />
+            <next on="EXECUTE" to="f99-genReport" />
             <end on="SKIP" />
         </decision>
         <step id="f99-genReport">
