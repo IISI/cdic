@@ -60,6 +60,9 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
 
     private List<A74> generateOtherData(CDICF22R item, A74 a74) {
         List<A74> list = new ArrayList<A74>();
+        if (a74.getLargeMax() > 9999999) {
+            a74.setLargeMax(9999999);
+        }
         if (checkA74(a74)) {
             if (item.getCustType() == null || "".equals(item.getCustType().trim())) {
                 for (int i = 0; i < 11; i++) {
@@ -77,10 +80,6 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
 
     private boolean checkA74(A74 a74) {
         boolean tf = true;
-        if (a74.getLargeMax() > 9999999) {
-            tf = false;
-            logger.error(a74.getKey() + ", largeMax over 9999999");
-        }
         if (pKeySet.contains(a74.getKey())) {
             tf = false;
             logger.error(a74.getKey() + ", unique violation");
