@@ -30,7 +30,6 @@
 	<field name="gl" class="java.lang.String"/>
 	<field name="balance" class="java.lang.Double"/>
 	<field name="interest" class="java.lang.Double"/>
-	<field name="fee" class="java.lang.Double"/>
 	<field name="totalBalance" class="java.lang.Double"/>
 	<variable name="SUM_BRANCH_BALANCE" class="java.lang.Double" resetType="Group" resetGroup="Branch" calculation="Sum">
 		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
