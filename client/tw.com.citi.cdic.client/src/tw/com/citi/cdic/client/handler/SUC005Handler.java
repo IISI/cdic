@@ -1,6 +1,7 @@
 package tw.com.citi.cdic.client.handler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -69,20 +70,41 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                 List<CDICFileSts> groupNos = getDao()
                         .query("SUC005_QRY_CDICFILESTS_BY_GROUP", CDICFileSts.class, param);
                 if (groupNos != null && groupNos.size() > 0) {
+                    // 加入是否為執行中的檢核，若狀態為執行中/待執行， Group 中的檔案全部略過。
+                    boolean execute = true;
                     for (CDICFileSts file : groupNos) {
-                        batches.add(file.getFileNo());
-                        CDICFileSts pojo = new CDICFileSts();
-                        pojo.setFileNo(file.getFileNo());
-                        pojo.setStatus("1");
-                        getDao().update("SUC005_UPD_CDICFILESTS_STATUS_BY_FILENO", pojo);
+                        if ("4".equals(file.getStatus()) || "1".equals(file.getStatus())) {
+                            execute = false;
+                            break;
+                        }
+                    }
+                    if (execute) {
+                        for (CDICFileSts file : groupNos) {
+                            batches.add(file.getFileNo());
+                            CDICFileSts pojo = new CDICFileSts();
+                            pojo.setFileNo(file.getFileNo());
+                            pojo.setStatus("1");
+                            getDao().update("SUC005_UPD_CDICFILESTS_STATUS_BY_FILENO", pojo);
+                        }
                     }
                 }
             } else {
-                batches.add(name);
-                CDICFileSts pojo = new CDICFileSts();
-                pojo.setFileNo(name);
-                pojo.setStatus("1");
-                getDao().update("SUC005_UPD_CDICFILESTS_STATUS_BY_FILENO", pojo);
+                // 加入是否為執行中的檢核，若狀態為執行中/待執行，略過。
+                Map<String, Object> queryParams = new HashMap<String, Object>();
+                queryParams.put("fileNo", name);
+                List<CDICFileSts> cdicFileList = getDao().query("SUC006_QRY_CDICFILESTS_BY_FILENO", CDICFileSts.class,
+                        queryParams);
+                if (cdicFileList != null && cdicFileList.size() > 0) {
+                    for (CDICFileSts cdicFile : cdicFileList) {
+                        if (!"4".equals(cdicFile.getStatus()) && !"1".equals(cdicFile.getStatus())) {
+                            batches.add(name);
+                            CDICFileSts pojo = new CDICFileSts();
+                            pojo.setFileNo(name);
+                            pojo.setStatus("1");
+                            getDao().update("SUC005_UPD_CDICFILESTS_STATUS_BY_FILENO", pojo);
+                        }
+                    }
+                }
             }
         }
         if (batches.size() > 0) {
@@ -279,13 +301,18 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                 }
                 dto.setSourceReady(sourceReady.toString());
                 dto.setSourceNotReady(sourceNotReady.toString());
-                if (sourceNotReady.length() == 0) {
+                // 加入 cdic file 狀態判斷
+                if (sourceNotReady.length() == 0 && !"4".equals(cdicFile.getStatus())
+                        && !"1".equals(cdicFile.getStatus())) {
                     dto.setAllowExecution(true);
                 } else {
                     dto.setAllowExecution(false);
                 }
                 // 有未準備好的來源，將 group 的 allowExecution 設為 false
-                if (sourceNotReady.length() != 0 && hasGroup) {
+                // 加入 cdic file 狀態判斷
+                if (hasGroup
+                        && (sourceNotReady.length() != 0 || "4".equals(cdicFile.getStatus()) || "1".equals(cdicFile
+                                .getStatus()))) {
                     BatchDto groupDto = batchMap.get(group + "_");
                     groupDto.setAllowExecution(false);
                     batchMap.put(group + "_", groupDto);
