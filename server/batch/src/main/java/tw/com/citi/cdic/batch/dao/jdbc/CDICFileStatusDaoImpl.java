@@ -28,5 +28,11 @@ public class CDICFileStatusDaoImpl extends SimpleJdbcDaoSupport implements
     public int update(CDICFileStatus CDICFileStatus) {
         return super.getSimpleJdbcTemplate().update("UPDATE CDICFILESTS SET FILEGROUP = :fileGroup, SUBFILE = :subFile, FILENAME = :filename, STATUS = :status, CONFIRMER = :confirmer, CONFIRMDATETIME = :confirmDateTime WHERE FILENO = :fileNo", new BeanPropertySqlParameterSource(CDICFileStatus));
     }
+    
+    @Override
+    public List<CDICFileStatus> findByGroup(String group) {
+        List<CDICFileStatus> results = super.getSimpleJdbcTemplate().query("SELECT * FROM CDICFILESTS WHERE FILEGROUP = ?", new CDICFileStatusMapper(), group);
+        return results;
+    }
 
 }

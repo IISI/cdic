@@ -2,6 +2,7 @@ package tw.com.citi.cdic.batch;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -37,14 +38,16 @@ public class FileStatusUpdater {
                 ExitStatus status = stepResults.get(stepName);
                 if (status == null) {
                     stepResults.put(stepName, stepExecution.getExitStatus());
-                    logger.debug("record step status, step name = {}, status = {}", stepName, stepExecution.getExitStatus().getExitCode());
+                    logger.debug("record step status, step name = {}, status = {}", stepName, stepExecution
+                            .getExitStatus().getExitCode());
                 } else {
                     stepResults.put(stepName, stepExecution.getExitStatus().and(status));
-                    logger.debug("record step status, step name = {}, status = {}", stepName, stepExecution.getExitStatus().and(status).getExitCode());
+                    logger.debug("record step status, step name = {}, status = {}", stepName, stepExecution
+                            .getExitStatus().and(status).getExitCode());
                 }
             }
         }
-        
+
         for (Map.Entry<String, ExitStatus> entry : stepResults.entrySet()) {
             FileStep fileStep = FileStep.valueOf(entry.getKey());
             CDICFileStatus fileStatus = this.CDICFileStatusDao.findByFileNo(fileStep);
@@ -54,7 +57,17 @@ public class FileStatusUpdater {
                 fileStatus.setStatus("5");
             }
             this.CDICFileStatusDao.update(fileStatus);
-            logger.debug("update step status, step name = {}, status = {}", entry.getKey(), entry.getValue().getExitCode());
+            // Group處理，若fileStatus有Group，且ExitStatus不為COMPLETED，則，同Group的狀態都設為失敗
+            String group = fileStatus.getFileGroup();
+            if (group != null && !"".equals(group.trim()) && ExitStatus.COMPLETED.compareTo(entry.getValue()) != 0) {
+                List<CDICFileStatus> files = this.CDICFileStatusDao.findByGroup(group);
+                for (CDICFileStatus file : files) {
+                    file.setStatus("5");
+                    this.CDICFileStatusDao.update(file);
+                }
+            }
+            logger.debug("update step status, step name = {}, status = {}", entry.getKey(), entry.getValue()
+                    .getExitCode());
         }
     }
 

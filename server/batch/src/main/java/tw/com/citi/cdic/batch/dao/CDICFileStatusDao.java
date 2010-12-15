@@ -1,5 +1,7 @@
 package tw.com.citi.cdic.batch.dao;
 
+import java.util.List;
+
 import tw.com.citi.cdic.batch.FileStep;
 import tw.com.citi.cdic.batch.model.CDICFileStatus;
 
@@ -10,6 +12,8 @@ import tw.com.citi.cdic.batch.model.CDICFileStatus;
 public interface CDICFileStatusDao {
 
     CDICFileStatus findByFileNo(FileStep fileStep);
+    
+    List<CDICFileStatus> findByGroup(String group);
 
     int update(CDICFileStatus CDICFileStatus);
 

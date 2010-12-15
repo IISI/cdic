@@ -1099,10 +1099,16 @@ public final class Formatter implements Closeable, Flushable {
             try {
                 // big5 中文字當作 2 bytes
                 sp = width - s.getBytes("big5").length;
-                if(s.getBytes("big5").length > width) {
+                if (s.getBytes("big5").length > width) {
                     byte[] cut = new byte[width];
                     System.arraycopy(s.getBytes("big5"), 0, cut, 0, width);
                     s = new String(cut, "big5");
+                    // 判斷結尾是否為"半個"中文字
+                    String tail = s.substring(s.length() - 1);
+                    if (tail.getBytes().length == 3 && tail.getBytes("big5").length == 1) {
+                        s = s.substring(0, s.length() - 1);
+                        sp = 1;
+                    }
                 }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
