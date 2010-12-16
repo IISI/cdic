@@ -55,8 +55,12 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setBranchNo("0000");
             }
         } else {
-            if (StringUtils.isNumeric(item.getDescription().substring(0, 10))) {
-                String srNo = item.getDescription().substring(0, 10);
+            int srNoMaxPos = 10;
+            if (item.getDescription().length() < 10) {
+                srNoMaxPos = item.getDescription().length();
+            }
+            if (StringUtils.isNumeric(item.getDescription().substring(0, srNoMaxPos))) {
+                String srNo = item.getDescription().substring(0, srNoMaxPos);
                 A21 a21 = a21Dao.findBySrNo(srNo, "A21");
                 if (a21 != null) {
                     a26.setSrNo(a21.getSrNo());
@@ -90,8 +94,12 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
     }
 
     private void createB26(CDICF07H item, A26 b26) throws Exception {
-        if (StringUtils.isNumeric(item.getDescription().substring(0, 10))) {
-            String srNo = item.getDescription().substring(0, 10);
+        int srNoMaxPos = 10;
+        if (item.getDescription().length() < 10) {
+            srNoMaxPos = item.getDescription().length();
+        }
+        if (StringUtils.isNumeric(item.getDescription().substring(0, srNoMaxPos))) {
+            String srNo = item.getDescription().substring(0, srNoMaxPos);
             A21 b21 = a21Dao.findBySrNo(srNo, "B21");
             if (b21 != null) {
                 b26.setSrNo(b21.getSrNo());
@@ -117,8 +125,12 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
     }
 
     private void createC26(CDICF07H item, A26 c26) throws Exception {
-        if (StringUtils.isNumeric(item.getDescription().substring(0, 10))) {
-            String srNo = item.getDescription().substring(0, 10);
+        int srNoMaxPos = 10;
+        if (item.getDescription().length() < 10) {
+            srNoMaxPos = item.getDescription().length();
+        }
+        if (StringUtils.isNumeric(item.getDescription().substring(0, srNoMaxPos))) {
+            String srNo = item.getDescription().substring(0, srNoMaxPos);
             A21 c21 = a21Dao.findBySrNo(srNo, "C21");
             if (c21 != null) {
                 c26.setSrNo(c21.getSrNo());
