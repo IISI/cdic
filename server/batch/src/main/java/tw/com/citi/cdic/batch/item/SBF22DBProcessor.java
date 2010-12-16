@@ -46,15 +46,15 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
             period = "Y";
             break;
         }
-        DecimalFormat df = new DecimalFormat("00");
-        String len = "00";
+        DecimalFormat df = new DecimalFormat("000");
+        String len = "000";
         try {
             len = df.format(item.getTenorLen());
         } catch (Exception e) {
-            // 如果發生 Exception，len 預設為 "00"
+            // 如果發生 Exception，len 預設為 "000"
         }
-        a74.setPeriod(period + len.substring(0, 2));
-        a74.setEffectiveDate(item.getTimestamp() == null ? "00000000" : item.getTimestamp().substring(0, 8));
+        a74.setPeriod(period + len.substring(1, 3));
+        a74.setEffectiveDate(item.getKeyDate());
         return a74;
     }
 
@@ -101,8 +101,14 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
                             + Double.parseDouble(item.getTierRateFraction0()) / 1000000);
                     largeMax = Double.parseDouble(item.getTierMinAmt0())
                             + Double.parseDouble(item.getTierMinAmtFraction0()) / 100;
-                    // 若為台幣則以百萬為單位，外幣則取到整數位。
-                    a74.setLargeMax("TWD".equals(a74.getCurrencyCode()) ? (int) (largeMax / 1000000) : (int) largeMax);
+                    // 若為台幣則以百萬為單位，XAU 百元為單位，其他取到整數位。
+                    if ("TWD".equalsIgnoreCase(a74.getCurrencyCode())) {
+                        a74.setLargeMax((int) (largeMax / 1000000));
+                    } else if ("XAU".equalsIgnoreCase(a74.getCurrencyCode())) {
+                        a74.setLargeMax((int) (largeMax));
+                    } else {
+                        a74.setLargeMax((int) (largeMax / 100));
+                    }
                     a74List.addAll(generateOtherData(item, a74));
                 } else {
                     for (int i = 0; i < item.getNoOfTier(); i++) {
@@ -169,9 +175,14 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
                                     + Double.parseDouble(item.getTierMinAmtFraction9()) / 100;
                             break;
                         }
-                        a74.setLargeMax("TWD".equals(a74.getCurrencyCode()) ? (int) (largeMax / 1000000)
-                                : (int) largeMax);
-                        // a74.setLargeMax((int) (largeMax / 1000000));
+                        // 若為台幣則以百萬為單位，XAU 百元為單位，其他取到整數位。
+                        if ("TWD".equalsIgnoreCase(a74.getCurrencyCode())) {
+                            a74.setLargeMax((int) (largeMax / 1000000));
+                        } else if ("XAU".equalsIgnoreCase(a74.getCurrencyCode())) {
+                            a74.setLargeMax((int) (largeMax));
+                        } else {
+                            a74.setLargeMax((int) (largeMax / 100));
+                        }
                         a74List.addAll(generateOtherData(item, a74));
                     }
                 }

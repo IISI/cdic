@@ -56,6 +56,7 @@ public class CDICF22R {
     private String tierMinAmtFraction9;
     private String numCcyCode;
     private String rateType;
+    private String keyDate;
     private String filler;
 
     public String getRecType() {
@@ -504,5 +505,13 @@ public class CDICF22R {
 
     public void setMinAmtDep(String minAmtDep) {
         this.minAmtDep = minAmtDep;
+    }
+
+    public void setKeyDate(String keyDate) {
+        this.keyDate = keyDate;
+    }
+
+    public String getKeyDate() {
+        return keyDate;
     }
 }
