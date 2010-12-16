@@ -29,14 +29,14 @@ public class SBT02Processor implements ItemProcessor<FMBCDWN4, T02> {
                 String acct = item.getAcct().substring(0, 10);
                 String code = item.getIBCode();
                 FMBCDWN4 exist = dao.findByAcctAndIBCode(acct, code);
-                // table 中無資料，且此次批次處理過程中也無相同的 acct + code 時，新增一筆
+                // table 中無資料，且此次批次處理過程中也無相同的 acct or code 時，新增一筆
                 if (exist == null) {
-                    if (!tempKeySet.contains(acct + code)) {
+                    if (!tempKeySet.contains(acct)) {
                         t02 = new T02();
                         t02.setAcct(item.getAcct());
                         t02.setIBCode(item.getIBCode());
                         t02.setDescription(item.getDescription());
-                        tempKeySet.add(acct + code);
+                        tempKeySet.add(acct);
                     }
                 }
             }
