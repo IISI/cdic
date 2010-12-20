@@ -40,30 +40,50 @@ public class PasswordUtil {
 
     public static String encodePwd(String plain) throws ConfigurationException {
         StringBuffer cipher = new StringBuffer();
+        if (plain == null || "".equals(plain.trim())) {
+            throw new ConfigurationException("Parameter missing.");
+        }
         int[] b = new int[40];
         for (int i = 0; i < plain.length(); i++) {
             b[39 - i * 2] = plain.charAt(i);
         }
         for (int i = 0; i < b.length; i++) {
             b[i] = (b[i] == 0 ? i % 2 == 0 ? 0 : 32 : b[i]) + 128 + b.length - i;
+            if (b[i] >= 256) {
+                b[i] -= 256;
+            }
             cipher.append(String.valueOf(b[i])).append(i == b.length - 1 ? "" : ";");
         }
         return cipher.toString();
     }
 
+    public static String encodePwdToBinaryString(String plain) throws ConfigurationException {
+        StringBuffer cipher = new StringBuffer();
+        if (plain == null || "".equals(plain.trim())) {
+            throw new ConfigurationException("Parameter missing.");
+        }
+        int[] b = new int[40];
+        for (int i = 0; i < plain.length(); i++) {
+            b[39 - i * 2] = plain.charAt(i);
+        }
+        for (int i = 0; i < b.length; i++) {
+            b[i] = (b[i] == 0 ? i % 2 == 0 ? 0 : 32 : b[i]) + 128 + b.length - i;
+            if (b[i] >= 256) {
+                b[i] -= 256;
+            }
+            String binary = Integer.toHexString(b[i]);
+            cipher.append(binary.length() == 1 ? "0" + binary : binary);
+        }
+        return cipher.toString();
+    }
+
     public static void main(String[] args) throws Exception {
-        // System.out
-        // .println(decodePwd("168;199;166;197;164;195;162;193;160;191;158;189;156;187;154;185;152;183;150;181;148;179;146;177;144;175;142;173;140;171;138;169;136;167;134;200;132;200;130;212"));
-        // String enc = encodePwd("SEC");
-        // System.out.println(enc);
-        // System.out
-        // .println(enc
-        // .equals("168;199;166;197;164;195;162;193;160;191;158;189;156;187;154;185;152;183;150;181;148;179;146;177;144;175;142;173;140;171;138;169;136;167;134;200;132;200;130;212"));
-        // System.out.println(decodePwd(enc));
-        // System.out.println(encodePwd("p@ssw0rd"));
+        args = new String[]{"passw0rd"};
         if (args != null && args.length > 0) {
             System.out.println("input : " + args[0]);
             System.out.println("output: " + encodePwd(args[0]));
+            System.out.println("output: 0x" + encodePwdToBinaryString(args[0]));
+            System.out.println("output: " + decodePwd(encodePwd(args[0])));
         }
     }
 }
