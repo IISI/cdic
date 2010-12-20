@@ -139,13 +139,90 @@
         <split id="importFiles" next="f99Decision" task-executor="asyncTaskExecutor">
             <flow>
                 <decision id="f01Decision" decider="f01Decider">
-                    <next on="EXECUTE" to="f01" />
+                    <next on="EXECUTE" to="f01-del" />
                     <end on="SKIP" />
                 </decision>
-                <step id="f01">
-                    <description>把 bus view 的資料 import 至 A11 file</description>
+                <step id="f01-del" next="f01-db">
+                    <description>把 A11 table 的資料清空</description>
                     <tasklet>
-                        <chunk reader="busDbReader" processor="f01Processor" writer="a11Writer" commit-interval="500"></chunk>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource" />
+                            <beans:property name="sql" value="DELETE FROM A11" />
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f01-db" next="f01-count-dup-id">
+                    <description>把 bus view 的資料 export 至 A11 table</description>
+                    <tasklet>
+                        <chunk reader="busDbReader" processor="f01Processor" writer="a11DbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f01-count-dup-id" next="f01-file">
+                    <description>把 A11 當中，身份證字號重覆的資料，再寫一筆回 A11 table 中。</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource" />
+                            <beans:property name="sql">
+                                <beans:value>
+                                    <![CDATA[
+                                        INSERT INTO A11(CUSTUNIT, CUSTBRNO, CUSTID, CUSTIDNO, CUSTHEADID, CUSTCNAME, CUSTBIRDATE, CUSTCEOCODE, CUSTCEONAME,
+                                            CUSTSTACODE, CUSTBUSCODE, CUSTCRTDATE, CUSTOADDRESS, CUSTADDRESS, CUSTTEL1, CUSTTEL2, CUSTEMAILADD)
+                                        SELECT D.CUSTUNIT, D.CUSTBRNO, LTRIM(RTRIM(D.CUSTHEADID)) + CAST((D.SER_NO - E.MIN_SER_NO + 1) AS CHAR), D.CUSTIDNO,
+                                            D.CUSTHEADID, D.CUSTCNAME, D.CUSTBIRDATE, D.CUSTCEOCODE, D.CUSTCEONAME, D.CUSTSTACODE, D.CUSTBUSCODE,
+                                            D.CUSTCRTDATE, D.CUSTOADDRESS, D.CUSTADDRESS, D.CUSTTEL1, D.CUSTTEL2, D.CUSTEMAILADD
+                                        FROM (
+                                            SELECT X.*, ROW_NUMBER() OVER(ORDER BY X.CUSTHEADID) AS SER_NO
+                                            FROM (
+                                                SELECT D1.* 
+                                                FROM (
+                                                    SELECT *, ROW_NUMBER() OVER(ORDER BY CUSTHEADID, CUSTCNAME) AS 序號
+                                                    FROM A11
+                                                    WHERE CUSTHEADID IN (SELECT CUSTHEADID FROM A11 GROUP BY CUSTHEADID HAVING COUNT(CUSTHEADID) > 1)
+                                                ) D1 INNER JOIN (
+                                                    SELECT E0.CUSTHEADID, E0.CUSTCNAME, MIN(E0.序號) AS 最小序號
+                                                    FROM (
+                                                        SELECT *, ROW_NUMBER() OVER(ORDER BY CUSTHEADID, CUSTCNAME) AS 序號
+                                                        FROM A11
+                                                        WHERE CUSTHEADID IN (SELECT CUSTHEADID FROM A11 GROUP BY CUSTHEADID HAVING COUNT(CUSTHEADID) > 1)
+                                                    ) E0
+                                                    GROUP BY E0.CUSTHEADID, E0.CUSTCNAME
+                                                ) E1 ON D1.CUSTHEADID + D1.CUSTCNAME = E1.CUSTHEADID + E1.CUSTCNAME
+                                                WHERE (D1.序號 - E1.最小序號 + 1) <= 1
+                                            ) X
+                                        ) D INNER JOIN (
+                                            SELECT B.CUSTHEADID, MIN(B.SER_NO) AS MIN_SER_NO 
+                                            FROM (
+                                                SELECT Y.*, ROW_NUMBER() OVER(ORDER BY Y.CUSTHEADID) AS SER_NO
+                                                FROM (
+                                                    SELECT D1.* 
+                                                    FROM (
+                                                        SELECT *, ROW_NUMBER() OVER(ORDER BY CUSTHEADID, CUSTCNAME) AS 序號
+                                                        FROM A11
+                                                        WHERE CUSTHEADID IN (SELECT CUSTHEADID FROM A11 GROUP BY CUSTHEADID HAVING COUNT(CUSTHEADID) > 1)
+                                                    ) D1 INNER JOIN (
+                                                        SELECT E0.CUSTHEADID, E0.CUSTCNAME, MIN(E0.序號) AS 最小序號
+                                                        FROM (
+                                                            SELECT *, ROW_NUMBER() OVER(ORDER BY CUSTHEADID, CUSTCNAME) AS 序號
+                                                            FROM A11
+                                                            WHERE CUSTHEADID IN (SELECT CUSTHEADID FROM A11 GROUP BY CUSTHEADID HAVING COUNT(CUSTHEADID) > 1)
+                                                        ) E0
+                                                        GROUP BY E0.CUSTHEADID, E0.CUSTCNAME
+                                                    ) E1 ON D1.CUSTHEADID + D1.CUSTCNAME = E1.CUSTHEADID + E1.CUSTCNAME
+                                                    WHERE (D1.序號 - E1.最小序號 + 1) <= 1
+                                                ) Y 
+                                            ) B
+                                            GROUP BY B.CUSTHEADID
+                                        ) E ON D.CUSTHEADID = E.CUSTHEADID
+                                    ]]>
+                                </beans:value>
+                            </beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f01-file">
+                    <description>把 A11 table 的資料 copy 至 A11 file</description>
+                    <tasklet>
+                        <chunk reader="a11DbReader" processor="f01SampleCountProcessor" writer="a11Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>

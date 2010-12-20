@@ -11,10 +11,6 @@ import tw.com.citi.cdic.batch.model.Bus;
  */
 public class SBF01Processor implements ItemProcessor<Bus, A11> {
 
-    private long processCount;
-
-    private int writeSampleFrequency = 1000;
-
     @Override
     public A11 process(Bus item) throws Exception {
         A11 a11 = new A11();
@@ -41,12 +37,6 @@ public class SBF01Processor implements ItemProcessor<Bus, A11> {
         a11.setTel1("");
         a11.setTel2("");
         a11.setEmail("");
-        
-        processCount++;
-        if (processCount % writeSampleFrequency == 1) {
-            a11.setSample(true);
-        }
-        
         return a11;
     }
 

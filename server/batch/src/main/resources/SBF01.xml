@@ -20,6 +20,24 @@
 
     <bean id="f01Processor" class="tw.com.citi.cdic.batch.item.SBF01Processor"></bean>
 
+    <bean id="a11DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO A11(CUSTUNIT, CUSTBRNO, CUSTID, CUSTIDNO, CUSTHEADID, CUSTCNAME, CUSTBIRDATE, CUSTCEOCODE, CUSTCEONAME, CUSTSTACODE, CUSTBUSCODE, CUSTCRTDATE, CUSTOADDRESS, CUSTADDRESS, CUSTTEL1, CUSTTEL2, CUSTEMAILADD) VALUES(:unit, :branchNo, :id, :idNo, :headId, :CName, :birthDate, :ceoCode, :ceoName, :statusCode, :businessCode, :createDate, :originalAddress, :address, :tel1, :tel2, :email)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="a11DbReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="SELECT * FROM A11 ORDER BY CUSTHEADID, CUSTCNAME, CUSTID"></property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.A11Mapper"></bean>
+        </property>
+        <property name="fetchSize" value="500"></property>
+        <property name="maxRows" value="500"></property>
+    </bean>
+
+    <bean id="f01SampleCountProcessor" class="tw.com.citi.cdic.batch.item.SBF01SampleCountProcessor"></bean>
+
     <bean id="a11FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
