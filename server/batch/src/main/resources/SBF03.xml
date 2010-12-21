@@ -103,16 +103,9 @@
         <property name="sql" value="UPDATE B22 SET TDJOINTCODE = :jointCode WHERE TDCUSTID = :customerId AND TDSRNO = :srNo"></property>
     </bean>
 
-    <bean id="a22DbReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
+    <bean id="a22DbReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="pageSize" value="500"></property>
-        <property name="queryProvider">
-            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
-                <property name="selectClause" value="SELECT *"></property>
-                <property name="fromClause" value="FROM A22"></property>
-                <property name="sortKey" value="TDSRNO"></property>
-            </bean>
-        </property>
+        <property name="sql" value="SELECT * FROM A22 ORDER BY TDSRNO"></property>
         <property name="rowMapper">
             <bean class="tw.com.citi.cdic.batch.A22Mapper"></bean>
         </property>
@@ -127,13 +120,7 @@
     </bean>
 
     <bean id="b22DbReader" parent="a22DbReader">
-        <property name="queryProvider">
-            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
-                <property name="selectClause" value="SELECT *"></property>
-                <property name="fromClause" value="FROM B22"></property>
-                <property name="sortKey" value="TDSRNO"></property>
-            </bean>
-        </property>
+        <property name="sql" value="SELECT * FROM B22 ORDER BY TDSRNO"></property>
     </bean>
 
     <bean id="b22FileWriter" parent="c22FileWriter">
