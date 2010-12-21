@@ -1,6 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-
 /**
  * A73, B73, C73, CDICF21I, CDICF21R Layout
  * 
@@ -18,6 +17,7 @@ public class A73 {
     private String currencyCode;
     private double holdAmt;
     private String memo;
+    private String key;
 
     public void setUnit(String unit) {
         this.unit = unit;
@@ -97,5 +97,14 @@ public class A73 {
 
     public String getMemo() {
         return memo;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        key = srNo + depositReceiptNo + txnDate + serNo + currencyCode + txnReason + memo;
+        return key;
     }
 }
