@@ -17,7 +17,7 @@ public class A21DaoImpl extends SimpleJdbcDaoSupport implements A21Dao {
 
     @Override
     public A21 findBySrNo(String srNo, String tableName) {
-        List<A21> results = super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE PBSRNO = ?", new A21Mapper(), srNo);
+        List<A21> results = super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE LEFT(PBSRNO, 10) = ?", new A21Mapper(), srNo);
         return DataAccessUtils.singleResult(results);
     }
 

@@ -17,7 +17,7 @@ public class A22DaoImpl extends SimpleJdbcDaoSupport implements A22Dao {
 
     @Override
     public A22 findBySrNo(String srNo, String tableName) {
-        List<A22> results = super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE TDSRNO = ?", new A22Mapper(), srNo);
+        List<A22> results = super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE LEFT(TDSRNO, 10) = ?", new A22Mapper(), srNo);
         return DataAccessUtils.singleResult(results);
     }
 
