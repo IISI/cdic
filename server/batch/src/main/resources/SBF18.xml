@@ -40,8 +40,6 @@
         <property name="rowMapper">
             <bean class="tw.com.citi.cdic.batch.SBF18Mapper"></bean>
         </property>
-        <property name="fetchSize" value="200"></property>
-        <property name="maxRows" value="200"></property>
     </bean>
 
     <bean id="SBF18Processor" class="tw.com.citi.cdic.batch.item.SBF18Processor">
