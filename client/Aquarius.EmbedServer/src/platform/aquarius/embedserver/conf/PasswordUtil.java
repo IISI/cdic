@@ -49,15 +49,41 @@ public class PasswordUtil {
         }
         for (int i = 0; i < b.length; i++) {
             b[i] = (b[i] == 0 ? i % 2 == 0 ? 0 : 32 : b[i]) + 128 + b.length - i;
+            if (b[i] >= 256) {
+                b[i] -= 256;
+            }
             cipher.append(String.valueOf(b[i])).append(i == b.length - 1 ? "" : ";");
         }
         return cipher.toString();
     }
 
+    public static String encodePwdToBinaryString(String plain) throws Exception {
+        StringBuffer cipher = new StringBuffer();
+        if (plain == null || "".equals(plain.trim())) {
+            throw new ConfigurationException("Parameter missing.");
+        }
+        int[] b = new int[40];
+        for (int i = 0; i < plain.length(); i++) {
+            b[39 - i * 2] = plain.charAt(i);
+        }
+        for (int i = 0; i < b.length; i++) {
+            b[i] = (b[i] == 0 ? i % 2 == 0 ? 0 : 32 : b[i]) + 128 + b.length - i;
+            if (b[i] >= 256) {
+                b[i] -= 256;
+            }
+            String binary = Integer.toHexString(b[i]);
+            cipher.append(binary.length() == 1 ? "0" + binary : binary);
+        }
+        return cipher.toString();
+    }
+
     public static void main(String[] args) throws Exception {
+        args = new String[]{"passw0rd"};
         if (args != null && args.length > 0) {
             System.out.println("input : " + args[0]);
             System.out.println("output: " + encodePwd(args[0]));
+            System.out.println("output: 0x" + encodePwdToBinaryString(args[0]));
+            System.out.println("output: " + decodePwd(encodePwd(args[0])));
         }
     }
 }
