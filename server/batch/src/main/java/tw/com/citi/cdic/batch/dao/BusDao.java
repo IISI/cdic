@@ -10,6 +10,6 @@ import tw.com.citi.cdic.batch.model.Bus;
  */
 public interface BusDao {
 
-    List<Bus> findByNationalId(String nationalId);
+    List<Bus> findByNationalIdAndTitle(String nationalId, String title);
 
 }
