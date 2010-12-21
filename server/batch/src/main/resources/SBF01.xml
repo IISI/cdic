@@ -3,16 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="busDbReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
+    <bean id="busDbReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="pageSize" value="500"></property>
-        <property name="queryProvider">
-            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
-                <property name="selectClause" value="SELECT *"></property>
-                <property name="fromClause" value="FROM LOCAL_BUS"></property>
-                <property name="sortKey" value="CUST_NUMB"></property>
-            </bean>
-        </property>
+        <property name="sql" value="SELECT CUST_NUMB, CUST_TYPE, LEFT(NATNID_REGNNUMB, 11) AS NATNID_REGNNUMB, CUST_TITL_LINE1, DSCT_DESC_L, BIRTHDAY, BRANCH, DATE_ESTB, CUST_STAT, BIZ_TYPE, CUST_ASSNNATID, CUST_ASSNNAME FROM LOCAL_BUS ORDER BY CUST_NUMB"></property>
         <property name="rowMapper">
             <bean class="tw.com.citi.cdic.batch.BusMapper"></bean>
         </property>
@@ -32,8 +25,6 @@
         <property name="rowMapper">
             <bean class="tw.com.citi.cdic.batch.A11Mapper"></bean>
         </property>
-        <property name="fetchSize" value="500"></property>
-        <property name="maxRows" value="500"></property>
     </bean>
 
     <bean id="f01SampleCountProcessor" class="tw.com.citi.cdic.batch.item.SBF01SampleCountProcessor"></bean>
