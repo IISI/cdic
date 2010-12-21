@@ -18,7 +18,11 @@ public class A23DaoImpl extends SimpleJdbcDaoSupport implements A23Dao {
     @Override
     public A23 findBySrNo(String srNo) {
         List<A23> results = super.getSimpleJdbcTemplate().query("SELECT * FROM A23 WHERE LEFT(CKSRNO, 10) = ?", new A23Mapper(), srNo);
-        return DataAccessUtils.singleResult(results);
+        if (results != null && results.size() > 0) {
+            return results.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Override
