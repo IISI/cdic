@@ -54,14 +54,14 @@
     <bean id="a73DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql"
-            value="INSERT INTO A73(UNIT, BRANCH_NO, SR_NO, DEPOSIT_RECEIPT_NO, TXN_DATE, SER_NO, TXN_REASON, CURRENCY_CODE, HOLD_AMT, MEMO) VALUES(:unit, :branchNo, :srNo, :depositReceiptNo, :txnDate, :serNo, :txnReason, :currencyCode, :holdAmt, :memo)"></property>
+            value="INSERT INTO A73(UNIT, BRANCH_NO, SR_NO, DEPOSIT_RECEIPT_NO, TXN_DATE, SER_NO, TXN_REASON, CURRENCY_CODE, HOLD_AMT, MEMO, PKEY) VALUES(:unit, :branchNo, :srNo, :depositReceiptNo, :txnDate, :serNo, :txnReason, :currencyCode, :holdAmt, :memo, :key)"></property>
         <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 
     <bean id="a73DbWriter1" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql"
-            value="INSERT INTO A73(UNIT, BRANCH_NO, SR_NO, DEPOSIT_RECEIPT_NO, TXN_DATE, SER_NO, TXN_REASON, CURRENCY_CODE, HOLD_AMT, MEMO) VALUES(:record.unit, :record.branchNo, :record.srNo, :record.depositReceiptNo, :record.txnDate, :record.serNo, :record.txnReason, :record.currencyCode, :record.holdAmt, :record.memo)"></property>
+            value="INSERT INTO A73(UNIT, BRANCH_NO, SR_NO, DEPOSIT_RECEIPT_NO, TXN_DATE, SER_NO, TXN_REASON, CURRENCY_CODE, HOLD_AMT, MEMO, PKEY) VALUES(:record.unit, :record.branchNo, :record.srNo, :record.depositReceiptNo, :record.txnDate, :record.serNo, :record.txnReason, :record.currencyCode, :record.holdAmt, :record.memo, :record.key)"></property>
         <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 
@@ -73,7 +73,7 @@
             <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
                 <property name="selectClause" value="SELECT *"></property>
                 <property name="fromClause" value="FROM A73"></property>
-                <property name="sortKey" value="SR_NO"></property>
+                <property name="sortKey" value="PKEY"></property>
             </bean>
         </property>
         <property name="rowMapper">
