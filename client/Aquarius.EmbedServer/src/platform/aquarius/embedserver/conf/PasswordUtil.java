@@ -78,7 +78,6 @@ public class PasswordUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        args = new String[]{"passw0rd"};
         if (args != null && args.length > 0) {
             System.out.println("input : " + args[0]);
             System.out.println("output: " + encodePwd(args[0]));
