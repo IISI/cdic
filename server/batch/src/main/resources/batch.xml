@@ -791,4 +791,28 @@
         </listeners>
     </job>
 
+    <beans:bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry"></beans:bean>
+
+    <beans:bean id="jobRegistryBeanPostProcessor" class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+        <beans:property name="jobRegistry" ref="jobRegistry"></beans:property>
+    </beans:bean>
+
+    <beans:bean id="jobOperator" class="org.springframework.batch.core.launch.support.SimpleJobOperator">
+        <beans:property name="jobExplorer">
+            <beans:bean class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+                <beans:property name="dataSource" ref="dataSource"></beans:property>
+            </beans:bean>
+        </beans:property>
+        <beans:property name="jobRepository" ref="jobRepository"></beans:property>
+        <beans:property name="jobRegistry" ref="jobRegistry"></beans:property>
+        <beans:property name="jobLauncher" ref="jobLauncher"></beans:property>
+    </beans:bean>
+
+    <beans:bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <beans:property name="serviceName" value="BatchService"></beans:property>
+        <beans:property name="service" ref="jobOperator"></beans:property>
+        <beans:property name="serviceInterface" value="org.springframework.batch.core.launch.JobOperator"></beans:property>
+        <beans:property name="registryPort" value="1099"></beans:property>
+    </beans:bean>
+
 </beans:beans>
