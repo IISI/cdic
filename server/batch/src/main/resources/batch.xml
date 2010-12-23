@@ -100,7 +100,7 @@
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql"
-                                value="INSERT INTO LOCAL_BUS (CUST_NUMB, CUST_TYPE, NATNID_REGNNUMB, CUST_TITL_LINE1, DSCT_DESC_L, BIRTHDAY, BRANCH, DATE_ESTB, CUST_STAT, BIZ_TYPE, CUST_ASSNNATID, CUST_ASSNNAME) SELECT CUST_NUMB, CUST_TYPE, NATNID_REGNNUMB, CUST_TITL_LINE1, DSCT_DESC_L, BIRTHDAY, BRANCH, DATE_ESTB, CUST_STAT, BIZ_TYPE, CUST_ASSNNATID, CUST_ASSNNAME FROM BUS"></beans:property>
+                                value="INSERT INTO LOCAL_BUS (CUST_NUMB, CUST_TYPE, NATNID_REGNNUMB, CUST_TITL_LINE1, DSCT_DESC_L, BIRTHDAY, BRANCH, DATE_ESTB, CUST_STAT, BIZ_TYPE, CUST_ASSNNATID, CUST_ASSNNAME, PKEY) SELECT CUST_NUMB, CUST_TYPE, NATNID_REGNNUMB, CUST_TITL_LINE1, DSCT_DESC_L, BIRTHDAY, BRANCH, DATE_ESTB, CUST_STAT, BIZ_TYPE, CUST_ASSNNATID, CUST_ASSNNAME, NATNID_REGNNUMB + CUST_TITL_LINE1 FROM BUS"></beans:property>
                         </beans:bean>
                     </tasklet>
                 </step>

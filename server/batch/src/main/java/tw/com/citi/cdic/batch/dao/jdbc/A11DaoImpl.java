@@ -17,7 +17,7 @@ public class A11DaoImpl extends SimpleJdbcDaoSupport implements A11Dao {
 
     @Override
     public A11 findByNationalIdAndTitle(String nationalId, String title) {
-        List<A11> results = super.getSimpleJdbcTemplate().query("SELECT * FROM A11 WHERE CUSTHEADID = ? AND CUSTCNAME = ? AND CUSTID LIKE ?", new A11Mapper(), nationalId, title, nationalId + "%");
+        List<A11> results = super.getSimpleJdbcTemplate().query("SELECT * FROM A11 WHERE CUSTHEADID = ? AND CUSTCNAME = ? AND LEFT(CUSTID, " + nationalId.length() + ") = ?", new A11Mapper(), nationalId, title, nationalId + "%");
         A11 a11 = DataAccessUtils.singleResult(results);
         return a11;
     }
