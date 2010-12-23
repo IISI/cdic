@@ -113,3 +113,4 @@ Export-Package: net.sf.jasperreports.ant,
  platform.aquarius.embedserver.pages
 Import-Package: platform.aquarius.def
 Bundle-ActivationPolicy: lazy
+Spring-Context: *;create-asynchronously:=false
