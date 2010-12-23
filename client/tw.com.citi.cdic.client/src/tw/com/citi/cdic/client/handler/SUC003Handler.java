@@ -49,7 +49,7 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
             names = gson.fromJson(actionParam.get("data").toString(), String[].class);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+            throw new IllegalArgumentException(Messages.Handler_Params_Error, e);
         }
         String[] args = Platform.getApplicationArgs();
         String processUser = null;
@@ -73,7 +73,7 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
             } catch (FileSystemException e) {
                 e.printStackTrace();
                 // 前端只能接到 RuntimeException
-                throw new SecurityException(Messages.bind(Messages.Access_Host_File_Error, new Object[] { name }));
+                throw new SecurityException(Messages.bind(Messages.Access_Host_File_Error, new Object[] { name }), e);
             }
         }
         return "";

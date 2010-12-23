@@ -55,7 +55,7 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
             fileNos = gson.fromJson(actionParam.get("data").toString(), String[].class);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+            throw new IllegalArgumentException(Messages.Handler_Params_Error, e);
         }
         Date now = new Date();
         for (String fileNo : fileNos) {
@@ -86,7 +86,7 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
             fileNo = actionParam.getString("fileNo");
         } catch (JSONException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+            throw new IllegalArgumentException(Messages.Handler_Params_Error, e);
         }
         // 根據 fileNo 取得 subFile
         Map<String, Object> queryParams = new HashMap<String, Object>();
@@ -110,7 +110,7 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
                 } catch (FileSystemException e) {
                     e.printStackTrace();
                     throw new SecurityException(Messages.bind(Messages.Download_Sample_File_Error,
-                            new Object[] { fileNo }));
+                            new Object[] { fileNo }), e);
                 }
             }
         }
