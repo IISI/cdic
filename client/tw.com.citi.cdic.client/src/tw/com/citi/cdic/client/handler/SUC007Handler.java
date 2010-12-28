@@ -55,18 +55,25 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
             List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
             if (cdicFileList != null && cdicFileList.size() > 0) {
                 for (CDICFileSts cdicFile : cdicFileList) {
-                    // 狀態不是已完成的，在 process_out folder 產生一個空檔。
-                    if (!"3".equals(cdicFile.getStatus())) {
-                        String subFiles = cdicFile.getSubFile();
-                        StringTokenizer st = new StringTokenizer(subFiles == null ? "" : subFiles.trim(), " ");
-                        while (st.hasMoreElements()) {
-                            String file = st.nextToken();
-                            if (file != null && !"".equals(file.trim())) {
+                    String subFiles = cdicFile.getSubFile();
+                    StringTokenizer st = new StringTokenizer(subFiles == null ? "" : subFiles.trim(), " ");
+                    while (st.hasMoreElements()) {
+                        String file = st.nextToken();
+                        if (file != null && !"".equals(file.trim())) {
+                            if ("3".equals(cdicFile.getStatus())) {
                                 try {
-                                    FileUtil.createFile(FolderType.PROCESS_OUT, file);
                                     // copy file to icg folder
                                     FileUtil.copyFile(FolderType.PROCESS_OUT, FolderType.ICG, "", "-" + custDate,
                                             new String[] { file });
+                                } catch (FileSystemException e) {
+                                    e.printStackTrace();
+                                    throw new SecurityException(Messages.bind(Messages.COPY_CDIC_File_Error,
+                                            new Object[] { file }), e);
+                                }
+                            } else {
+                                // 狀態不是已確認的，在 icg folder 產生一個空檔。
+                                try {
+                                    FileUtil.createFile(FolderType.ICG, file + "-" + custDate);
                                 } catch (FileSystemException e) {
                                     e.printStackTrace();
                                     throw new SecurityException(Messages.bind(Messages.COPY_CDIC_File_Error,
