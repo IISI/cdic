@@ -8,7 +8,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF21I"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -88,7 +88,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A73"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%-3s%-4s%-30s%-16s%-8s%-2s%-2s%-3s%015.2f%-40s"></property>
@@ -108,7 +108,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B73"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%-3s%-4s%-30s%-16s%-8s%-2s%-2s%-3s%015.2f%-40s"></property>
@@ -128,7 +128,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/C73"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%-3s%-4s%-30s%-16s%-8s%-2s%-2s%-3s%015.2f%-40s"></property>
@@ -154,7 +154,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A73_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,%15.2f,'%s"></property>
@@ -179,7 +179,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B73_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,%15.2f,'%s"></property>
@@ -204,7 +204,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/C73_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,%s,%s,%15.2f,'%s"></property>

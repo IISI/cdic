@@ -9,7 +9,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF20"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -66,7 +66,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A61"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%-3s%-4s%-11s%-3s%-30s%-8s%015.2f%015.2f%015.2f%015.2f%015.2f%015.2f%015.2f%015.2f%015.2f%015.2f%015.2f%015.2f%015.2f%015.2f"></property>
@@ -85,7 +85,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A61_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
                 <property name="fieldExtractor">
@@ -109,7 +109,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A21_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.file.transform.A21RecursiveCollectionLineAggregator">
                 <property name="delegate">
@@ -138,7 +138,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B21_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.file.transform.A21RecursiveCollectionLineAggregator">
                 <property name="delegate">
@@ -167,7 +167,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/C21_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.file.transform.A21RecursiveCollectionLineAggregator">
                 <property name="delegate">
@@ -196,7 +196,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A22_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.file.transform.A22RecursiveCollectionLineAggregator">
                 <property name="delegate">
@@ -225,7 +225,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B22_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.file.transform.A22RecursiveCollectionLineAggregator">
                 <property name="delegate">
@@ -254,7 +254,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/C22_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.file.transform.A22RecursiveCollectionLineAggregator">
                 <property name="delegate">
@@ -283,7 +283,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A23_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.file.transform.A23RecursiveCollectionLineAggregator">
                 <property name="delegate">
@@ -311,7 +311,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A24_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.file.transform.A24RecursiveCollectionLineAggregator">
                 <property name="delegate">

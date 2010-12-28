@@ -8,7 +8,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF11"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -33,7 +33,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B35"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%-3s%-19s%-50s%08d%08d%3s%018.2f%-1s%-1s"></property>
@@ -53,7 +53,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B35_sample.csv"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,%s,'%s,'%s"></property>
