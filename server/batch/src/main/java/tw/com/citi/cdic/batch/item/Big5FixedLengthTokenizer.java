@@ -84,7 +84,7 @@ public class Big5FixedLengthTokenizer extends AbstractLineTokenizer {
         String token = "";
 
         try {
-            lineLength = line.getBytes("big5").length;
+            lineLength = line.getBytes("ms950").length;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -105,16 +105,16 @@ public class Big5FixedLengthTokenizer extends AbstractLineTokenizer {
             if (lineLength >= endPos) {
                 realToken = new byte[endPos - startPos];
                 try {
-                    System.arraycopy(line.getBytes("big5"), startPos, realToken, 0, endPos - startPos);
-                    token = new String(realToken, "big5");
+                    System.arraycopy(line.getBytes("ms950"), startPos, realToken, 0, endPos - startPos);
+                    token = new String(realToken, "ms950");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
             } else if (lineLength >= startPos) {
                 realToken = new byte[lineLength - startPos];
                 try {
-                    System.arraycopy(line.getBytes("big5"), startPos, realToken, 0, lineLength - startPos);
-                    token = new String(realToken, "big5");
+                    System.arraycopy(line.getBytes("ms950"), startPos, realToken, 0, lineLength - startPos);
+                    token = new String(realToken, "ms950");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

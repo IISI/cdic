@@ -25,9 +25,9 @@ public class SBT06Processor implements ItemProcessor<T01, List<T01>> {
                 desc[i] = (byte) 0x20;
             }
             String itemDesc = item.getDescription() == null ? "" : item.getDescription();
-            int len = desc.length > itemDesc.getBytes("big5").length ? itemDesc.getBytes("big5").length : desc.length;
-            System.arraycopy(itemDesc.getBytes("big5"), 0, desc, 0, len);
-            t06.setDescription(new String(desc, "big5"));
+            int len = desc.length > itemDesc.getBytes("ms950").length ? itemDesc.getBytes("ms950").length : desc.length;
+            System.arraycopy(itemDesc.getBytes("ms950"), 0, desc, 0, len);
+            t06.setDescription(new String(desc, "ms950"));
             out.add(t06);
         }
         return out;

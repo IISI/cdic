@@ -19,7 +19,7 @@ public class SBF01Processor implements ItemProcessor<Bus, A11> {
         a11.setId(item.getCustNumb());
         a11.setIdNo("");
         a11.setHeadId(item.getNatnidRegnnumb());
-        a11.setCName(new String(item.getCustTitlLine1().getBytes("big5"), "big5"));
+        a11.setCName(new String(item.getCustTitlLine1().getBytes("ms950"), "ms950"));
         a11.setBirthDate(item.getBirthday());
         a11.setCeoCode(item.getCustAssnnatid());
         a11.setCeoName(item.getCustAssnname());
@@ -29,9 +29,9 @@ public class SBF01Processor implements ItemProcessor<Bus, A11> {
         a11.setOriginalAddress("");
         String addr = null;
         if (item.getDsctDescL() != null && item.getDsctDescL().length() > 6) {
-            addr = new String(item.getDsctDescL().substring(0, 6).getBytes("big5"), "big5");
+            addr = new String(item.getDsctDescL().substring(0, 6).getBytes("ms950"), "ms950");
         } else {
-            addr = new String(item.getDsctDescL().getBytes("big5"), "big5");
+            addr = new String(item.getDsctDescL().getBytes("ms950"), "ms950");
         }
         a11.setAddress(addr + "ＸＸ路ＸＸ巷ＸＸ號ＸＸ樓");
         a11.setTel1("");

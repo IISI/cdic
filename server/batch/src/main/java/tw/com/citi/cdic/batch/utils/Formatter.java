@@ -1097,15 +1097,15 @@ public final class Formatter implements Closeable, Flushable {
             boolean pad = f.contains(Flags.LEFT_JUSTIFY);
             int sp = 0;
             try {
-                // big5 中文字當作 2 bytes
-                sp = width - s.getBytes("big5").length;
-                if (s.getBytes("big5").length > width) {
+                // ms950 中文字當作 2 bytes
+                sp = width - s.getBytes("ms950").length;
+                if (s.getBytes("ms950").length > width) {
                     byte[] cut = new byte[width];
-                    System.arraycopy(s.getBytes("big5"), 0, cut, 0, width);
-                    s = new String(cut, "big5");
+                    System.arraycopy(s.getBytes("ms950"), 0, cut, 0, width);
+                    s = new String(cut, "ms950");
                     // 判斷結尾是否為"半個"中文字
                     String tail = s.substring(s.length() - 1);
-                    if (tail.getBytes().length == 3 && tail.getBytes("big5").length == 1) {
+                    if (tail.getBytes().length == 3 && tail.getBytes("ms950").length == 1) {
                         s = s.substring(0, s.length() - 1);
                         sp = 1;
                     }

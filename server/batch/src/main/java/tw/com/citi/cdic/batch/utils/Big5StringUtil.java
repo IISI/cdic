@@ -9,8 +9,8 @@ public class Big5StringUtil {
             out[i] = (byte) 0x20;
         }
         orignal = orignal == null ? "" : orignal;
-        int copyLen = len > orignal.getBytes("big5").length ? orignal.getBytes("big5").length : len;
-        System.arraycopy(orignal.getBytes("big5"), 0, out, 0, copyLen);
-        return new String(out, "big5");
+        int copyLen = len > orignal.getBytes("ms950").length ? orignal.getBytes("ms950").length : len;
+        System.arraycopy(orignal.getBytes("ms950"), 0, out, 0, copyLen);
+        return new String(out, "ms950");
     }
 }
