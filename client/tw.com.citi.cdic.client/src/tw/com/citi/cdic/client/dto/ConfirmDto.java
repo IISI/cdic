@@ -13,8 +13,10 @@ public class ConfirmDto {
     private String status;
 
     private String confirmer;
-    
+
     private String fileNo;
+
+    private String confirmDateTime;
 
     public String getGroup() {
         return group;
@@ -54,6 +56,14 @@ public class ConfirmDto {
 
     public String getFileNo() {
         return fileNo;
+    }
+
+    public void setConfirmDateTime(String confirmDateTime) {
+        this.confirmDateTime = confirmDateTime;
+    }
+
+    public String getConfirmDateTime() {
+        return confirmDateTime;
     }
 
 }

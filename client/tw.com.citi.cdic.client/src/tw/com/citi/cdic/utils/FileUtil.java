@@ -224,6 +224,9 @@ public class FileUtil {
                 "smb://" + config.getProperty(target.getKey() + ".host")
                         + config.getProperty(target.getKey() + ".path"), opts);
         FileObject file = fsManager.resolveFile(folder, fileName);
+        if (exist(target, fileName)) {
+            file.delete();
+        }
         file.createFile();
     }
 
