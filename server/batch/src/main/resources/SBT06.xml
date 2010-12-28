@@ -36,7 +36,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/T06"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%-16s%-40s"></property>

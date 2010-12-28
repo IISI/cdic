@@ -8,7 +8,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICT04"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -33,7 +33,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/T04"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%-4s%-40s"></property>

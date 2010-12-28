@@ -9,7 +9,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/JointAcclist"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="strict" value="false"></property>
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -40,7 +40,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A31"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%-3s%-4s%-30s%-3s%-11s%-3s%06.2f%-40s"></property>
@@ -55,7 +55,7 @@
 
     <bean id="a31SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A31SampleFileWriter">
         <property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/A31_sample.csv"></property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
                 <property name="fieldExtractor">

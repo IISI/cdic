@@ -32,7 +32,7 @@
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A24"></constructor-arg>
             </bean>
         </property>
-        <property name="encoding" value="big5"></property>
+        <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
                 <property name="format" value="%-3s%-4s%-30s%-30s%-12s%-8s%-11s%-3s%-60s%-6s%-3s%-3s%015.2f%-16s%08.5f%015.2f%-1s%015.2f%015.2f%-80s%-80s%-16s%-16s"></property>
