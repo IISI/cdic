@@ -70,7 +70,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                                 } catch (FileSystemException e) {
                                     e.printStackTrace();
                                     throw new SecurityException(Messages.bind(Messages.COPY_CDIC_File_Error,
-                                            new Object[] { file }));
+                                            new Object[] { file }), e);
                                 }
                             }
                         }

@@ -52,7 +52,7 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
                 uploadFiles(items);
             } catch (FileUploadException e) {
                 e.printStackTrace();
-                throw new SecurityException(Messages.Upload_Local_File_Error);
+                throw new SecurityException(Messages.Upload_Local_File_Error, e);
             }
             return "";
         } else {
@@ -87,7 +87,7 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
             FileUtil.uploadFile(is, FolderType.PROCESS, name);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new SecurityException(Messages.bind(Messages.Upload_Local_File_Error, new Object[] { name }));
+            throw new SecurityException(Messages.bind(Messages.Upload_Local_File_Error, new Object[] { name }), e);
         }
     }
 
@@ -117,13 +117,13 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
             fileName = actionParam.getString("fileName");
         } catch (JSONException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("Cannot find params.");
+            throw new IllegalArgumentException("Cannot find params.", e);
         }
         try {
             FileUtil.copyFile(FolderType.PROCESS, savePath, new String[] { fileName });
         } catch (FileSystemException e) {
             e.printStackTrace();
-            throw new SecurityException(Messages.bind(Messages.Access_Host_File_Error, new Object[] { fileName }));
+            throw new SecurityException(Messages.bind(Messages.Access_Host_File_Error, new Object[] { fileName }), e);
         }
         return "";
     }
@@ -134,7 +134,7 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
             saveLocalFileStsByName(actionParam.getString("fileName"));
         } catch (JSONException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+            throw new IllegalArgumentException(Messages.Handler_Params_Error, e);
         }
         return getInitInfo();
     }
@@ -153,7 +153,7 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
                 } catch (FileSystemException e) {
                     e.printStackTrace();
                     throw new SecurityException(Messages.bind(Messages.Get_Local_File_Info_Error,
-                            new Object[] { localFile.getName() }));
+                            new Object[] { localFile.getName() }), e);
                 }
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.create();

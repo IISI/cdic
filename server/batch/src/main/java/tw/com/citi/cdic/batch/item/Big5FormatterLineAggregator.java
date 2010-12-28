@@ -68,12 +68,12 @@ public class Big5FormatterLineAggregator<T> extends FormatterLineAggregator<T> {
 
         try {
             if (maximumLength > 0) {
-                Assert.state(value.getBytes("big5").length <= maximumLength, String.format(
+                Assert.state(value.getBytes("ms950").length <= maximumLength, String.format(
                         "String overflowed in formatter -" + " longer than %d characters: [%s", maximumLength, value));
             }
 
             if (minimumLength > 0) {
-                Assert.state(value.getBytes("big5").length >= minimumLength, String.format(
+                Assert.state(value.getBytes("ms950").length >= minimumLength, String.format(
                         "String underflowed in formatter -" + " shorter than %d characters: [%s", minimumLength, value));
             }
         } catch (UnsupportedEncodingException e) {

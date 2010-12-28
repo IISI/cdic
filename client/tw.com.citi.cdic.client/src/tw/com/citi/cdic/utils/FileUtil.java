@@ -53,8 +53,8 @@ public class FileUtil {
         try {
             URL url = Platform.getBundle("tw.com.citi.cdic.client.resources").getResource("folders.properties");
             config.load(url.openStream());
-            StaticUserAuthenticator auth = new StaticUserAuthenticator(null, config.getProperty("host.user"),
-                    getPassword("host.password"));
+            StaticUserAuthenticator auth = new StaticUserAuthenticator(null, config.getProperty("functionalId"),
+                    getPassword("functionalPwd"));
             opts = new FileSystemOptions();
             DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(opts, auth);
             fsManager = new OSGiFileSystemManager();
@@ -62,6 +62,7 @@ public class FileUtil {
             init = true;
         } catch (Exception e) {
             e.printStackTrace();
+            throw new SecurityException("Load folder settings error.", e);
         }
     }
 

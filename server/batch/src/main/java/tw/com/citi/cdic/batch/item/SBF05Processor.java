@@ -20,7 +20,7 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
         a24.setCharCode(item.getProdName());
         a24.setRateType(item.getProdName());
         a24.setCustomerId(item.getUnino());
-        a24.setCustomerName(new String(item.getName().getBytes("big5"), "big5"));
+        a24.setCustomerName(new String(item.getName().getBytes("ms950"), "ms950"));
         a24.setCustomerBusinessCode(item.getNewBCode());
         a24.setBalance(item.getBalance());
         a24.setIntPayable(item.getInterest());
@@ -30,7 +30,7 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
         } else {
             address = item.getCommAdr();
         }
-        a24.setAddress(new String(address.getBytes("big5"), "big5") + "ＸＸ路ＸＸ巷ＸＸ號ＸＸ樓");
+        a24.setAddress(new String(address.getBytes("ms950"), "ms950") + "ＸＸ路ＸＸ巷ＸＸ號ＸＸ樓");
         return a24;
     }
 

@@ -65,7 +65,7 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
             names = gson.fromJson(actionParam.get("data").toString(), String[].class);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+            throw new IllegalArgumentException(Messages.Handler_Params_Error, e);
         }
         List<String> batches = new ArrayList<String>();
         for (String name : names) {
@@ -123,7 +123,7 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                 jobOperator.start("convertJob", "schedule.timestamp(long)=" + new Date().getTime());
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new UnsupportedOperationException(Messages.Start_Batch_Error);
+                throw new UnsupportedOperationException(Messages.Start_Batch_Error, e);
             }
         }
         return "";
@@ -175,7 +175,7 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
             fileNo = actionParam.getString("fileNo").trim();
         } catch (JSONException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException(Messages.Handler_Params_Error);
+            throw new IllegalArgumentException(Messages.Handler_Params_Error, e);
         }
         FileDepend parameters = new FileDepend();
         parameters.setName(fileNo);
