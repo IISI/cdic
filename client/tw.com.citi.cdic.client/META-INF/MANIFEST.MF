@@ -12,7 +12,11 @@ Require-Bundle: org.eclipse.core.runtime,
  com.google.gson;bundle-version="1.4.0",
  org.springframework.jdbc;bundle-version="3.0.4",
  tw.com.citi.cdic.client.resources;bundle-version="1.0.0",
- javax.servlet;bundle-version="2.5.0"
+ javax.servlet;bundle-version="2.5.0",
+ org.springframework.batch.core;bundle-version="2.1.5",
+ org.springframework.context;bundle-version="3.0.4",
+ org.springframework.aop;bundle-version="3.0.4",
+ com.springsource.org.aopalliance;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: IISI

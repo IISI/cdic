@@ -7,12 +7,14 @@ import java.util.List;
 import org.apache.wicket.PageParameters;
 import org.eclipse.core.runtime.Platform;
 import org.json.JSONObject;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.launch.JobOperator;
 
+import platform.aquarius.embedserver.Activator;
 import platform.aquarius.embedserver.AquariusAjaxDaoHandler;
-import tw.com.citi.cdic.client.BatchService;
-import tw.com.citi.cdic.client.BatchServiceImpl;
 import tw.com.citi.cdic.client.model.CDICFileSts;
 import tw.com.citi.cdic.client.model.HostFileSts;
 import tw.com.citi.cdic.client.model.LocalFileSts;
@@ -29,6 +31,8 @@ import com.google.gson.GsonBuilder;
 public class SUC002Handler extends AquariusAjaxDaoHandler {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private JobOperator jobOperator;
 
     @Override
     public Object execute(PageParameters params) throws Exception {
@@ -104,8 +108,12 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
                 new Object[] { new Object(), tableFlow, fileSts, hostFileSts,
                         localFileSts });
         
-        BatchService batchService = new BatchServiceImpl();
-        batchService.init();
+        if (jobOperator == null) {
+            BundleContext bundleContext = Platform.getBundle(Activator.PLUGIN_ID).getBundleContext();
+            ServiceReference ref= bundleContext.getServiceReference("org.springframework.batch.core.launch.JobOperator");
+            jobOperator = (JobOperator) bundleContext.getService(ref);
+        }
+        jobOperator.start("copyViewJob", "schedule.timestamp(long)=" + new Date().getTime());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("yyyy/MM/dd HH:mm"); //$NON-NLS-1$

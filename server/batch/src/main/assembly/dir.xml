@@ -8,11 +8,13 @@
         <format>dir</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
-    <files>
-        <file>
-            <source>launch.cmd</source>
+    <fileSets>
+        <fileSet>
+            <directory>src/main/wrapper-windows-x86-32-3.5.6</directory>
             <outputDirectory>/</outputDirectory>
-        </file>
+        </fileSet>
+    </fileSets>
+    <files>
         <file>
             <source>src/main/resources/database.ini</source>
             <outputDirectory>conf/</outputDirectory>

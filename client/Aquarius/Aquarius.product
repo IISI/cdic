@@ -93,6 +93,7 @@
       <plugin id="org.mortbay.jetty.util"/>
       <plugin id="org.springframework.aop"/>
       <plugin id="org.springframework.asm"/>
+      <plugin id="org.springframework.batch.core"/>
       <plugin id="org.springframework.beans"/>
       <plugin id="org.springframework.context"/>
       <plugin id="org.springframework.core"/>
