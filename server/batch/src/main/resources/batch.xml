@@ -151,68 +151,133 @@
                         </beans:bean>
                     </tasklet>
                 </step>
-                <step id="f01-db" next="f01-count-dup-id">
+                <step id="f01-db" next="f01-del-joint-account">
                     <description>把 bus view 的資料 export 至 A11 table</description>
                     <tasklet>
                         <chunk reader="busDbReader" processor="f01Processor" writer="a11DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="f01-count-dup-id" next="f01-file">
-                    <description>把 A11 當中，身份證字號重覆的資料，再寫一筆回 A11 table 中。</description>
+                <step id="f01-del-joint-account" next="f01-copy-joint-account">
+                    <description>把 Joint Account table 的資料清空</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource" />
+                            <beans:property name="sql" value="DELETE FROM JOINT_ACCOUNT" />
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f01-copy-joint-account" next="f01-del-cif">
+                    <description>把 Joint Account 檔案的資料寫入 table 中</description>
+                    <tasklet>
+                        <chunk reader="jointAcclistFileReader" writer="jointAccountDbWriter" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f01-del-cif" next="f01-gen-cif">
+                    <description>把 Joint Account table 的資料清空</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource" />
+                            <beans:property name="sql" value="DELETE FROM CIF" />
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f01-gen-cif" next="f01-update-a11">
+                    <description>產生 CIF table 的資料</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
                             <beans:property name="dataSource" ref="dataSource" />
                             <beans:property name="sql">
                                 <beans:value>
                                     <![CDATA[
-                                        INSERT INTO A11(CUSTUNIT, CUSTBRNO, CUSTID, CUSTIDNO, CUSTHEADID, CUSTCNAME, CUSTBIRDATE, CUSTCEOCODE, CUSTCEONAME,
-                                            CUSTSTACODE, CUSTBUSCODE, CUSTCRTDATE, CUSTOADDRESS, CUSTADDRESS, CUSTTEL1, CUSTTEL2, CUSTEMAILADD)
-                                        SELECT D.CUSTUNIT, D.CUSTBRNO, LTRIM(RTRIM(D.CUSTHEADID)) + CAST((D.SER_NO - E.MIN_SER_NO + 1) AS CHAR), D.CUSTIDNO,
-                                            D.CUSTHEADID, D.CUSTCNAME, D.CUSTBIRDATE, D.CUSTCEOCODE, D.CUSTCEONAME, D.CUSTSTACODE, D.CUSTBUSCODE,
-                                            D.CUSTCRTDATE, D.CUSTOADDRESS, D.CUSTADDRESS, D.CUSTTEL1, D.CUSTTEL2, D.CUSTEMAILADD
+                                        INSERT INTO CIF(NATNID_REGNNUMB, CUST_NUMB, CIF, JOINT_FLAG, JOINT_ID)
+                                        SELECT
+                                            T1.*,
+                                            CASE(T1.JOINT_FLAG)
+                                                WHEN 'Y' THEN ISNULL(MIN(T2.CIF), T1.NATNID_REGNNUMB)
+                                                ELSE T1.CIF
+                                            END AS JOINT_ID
                                         FROM (
-                                            SELECT X.*, ROW_NUMBER() OVER(ORDER BY X.CUSTHEADID) AS SER_NO
+                                            SELECT
+                                                NATNID_REGNNUMB,
+                                                CUST_NUMB,
+                                                CASE(RANK() OVER(PARTITION BY NATNID_REGNNUMB ORDER BY M DESC, CUST_NUMB) - 1)
+                                                    WHEN 0 THEN NATNID_REGNNUMB
+                                                    ELSE RTRIM(NATNID_REGNNUMB) + (CONVERT(VARCHAR(3), RANK() OVER(PARTITION BY NATNID_REGNNUMB ORDER BY M DESC, CUST_NUMB) - 1))
+                                                END AS CIF,
+                                                CASE(M)
+                                                    WHEN 'N' THEN 'N'
+                                                    ELSE 'Y'
+                                                END AS JOINT_FLAG
                                             FROM (
-                                                SELECT D1.* 
-                                                FROM (
-                                                    SELECT *, ROW_NUMBER() OVER(ORDER BY CUSTHEADID, CUSTCNAME) AS 序號
-                                                    FROM A11
-                                                    WHERE CUSTHEADID IN (SELECT CUSTHEADID FROM A11 GROUP BY CUSTHEADID HAVING COUNT(CUSTHEADID) > 1)
-                                                ) D1 INNER JOIN (
-                                                    SELECT E0.CUSTHEADID, E0.CUSTCNAME, MIN(E0.序號) AS 最小序號
-                                                    FROM (
-                                                        SELECT *, ROW_NUMBER() OVER(ORDER BY CUSTHEADID, CUSTCNAME) AS 序號
-                                                        FROM A11
-                                                        WHERE CUSTHEADID IN (SELECT CUSTHEADID FROM A11 GROUP BY CUSTHEADID HAVING COUNT(CUSTHEADID) > 1)
-                                                    ) E0
-                                                    GROUP BY E0.CUSTHEADID, E0.CUSTCNAME
-                                                ) E1 ON D1.CUSTHEADID + D1.CUSTCNAME = E1.CUSTHEADID + E1.CUSTCNAME
-                                                WHERE (D1.序號 - E1.最小序號 + 1) <= 1
-                                            ) X
-                                        ) D INNER JOIN (
-                                            SELECT B.CUSTHEADID, MIN(B.SER_NO) AS MIN_SER_NO 
+                                                SELECT LB.NATNID_REGNNUMB, LB.CUST_NUMB, ISNULL(JA.CUST_NUMB, 'N') AS M
+                                                FROM LOCAL_BUS LB
+                                                LEFT JOIN (SELECT DISTINCT CUST_NUMB FROM JOINT_ACCOUNT) JA ON LB.CUST_NUMB = JA.CUST_NUMB
+                                            ) T
+                                        ) T1
+                                        LEFT JOIN (
+                                            SELECT
+                                                NATNID_REGNNUMB,
+                                                CUST_NUMB,
+                                                CASE(RANK() OVER(PARTITION BY NATNID_REGNNUMB ORDER BY M DESC, CUST_NUMB) - 1)
+                                                    WHEN 0 THEN NATNID_REGNNUMB
+                                                    ELSE RTRIM(NATNID_REGNNUMB) + (CONVERT(VARCHAR(3), RANK() OVER(PARTITION BY NATNID_REGNNUMB ORDER BY M DESC, CUST_NUMB) - 1))
+                                                END AS CIF,
+                                                CASE(M)
+                                                    WHEN 'N' THEN 'N'
+                                                    ELSE 'Y'
+                                                END AS JOINT_FLAG
                                             FROM (
-                                                SELECT Y.*, ROW_NUMBER() OVER(ORDER BY Y.CUSTHEADID) AS SER_NO
-                                                FROM (
-                                                    SELECT D1.* 
-                                                    FROM (
-                                                        SELECT *, ROW_NUMBER() OVER(ORDER BY CUSTHEADID, CUSTCNAME) AS 序號
-                                                        FROM A11
-                                                        WHERE CUSTHEADID IN (SELECT CUSTHEADID FROM A11 GROUP BY CUSTHEADID HAVING COUNT(CUSTHEADID) > 1)
-                                                    ) D1 INNER JOIN (
-                                                        SELECT E0.CUSTHEADID, E0.CUSTCNAME, MIN(E0.序號) AS 最小序號
-                                                        FROM (
-                                                            SELECT *, ROW_NUMBER() OVER(ORDER BY CUSTHEADID, CUSTCNAME) AS 序號
-                                                            FROM A11
-                                                            WHERE CUSTHEADID IN (SELECT CUSTHEADID FROM A11 GROUP BY CUSTHEADID HAVING COUNT(CUSTHEADID) > 1)
-                                                        ) E0
-                                                        GROUP BY E0.CUSTHEADID, E0.CUSTCNAME
-                                                    ) E1 ON D1.CUSTHEADID + D1.CUSTCNAME = E1.CUSTHEADID + E1.CUSTCNAME
-                                                    WHERE (D1.序號 - E1.最小序號 + 1) <= 1
-                                                ) Y 
-                                            ) B
-                                            GROUP BY B.CUSTHEADID
-                                        ) E ON D.CUSTHEADID = E.CUSTHEADID
+                                                SELECT LB.NATNID_REGNNUMB, LB.CUST_NUMB, ISNULL(JA.CUST_NUMB, 'N') AS M
+                                                FROM LOCAL_BUS LB
+                                                LEFT JOIN (SELECT DISTINCT CUST_NUMB FROM JOINT_ACCOUNT) JA ON LB.CUST_NUMB = JA.CUST_NUMB
+                                            ) T
+                                        ) T2 ON T2.JOINT_FLAG = 'N' AND T1.NATNID_REGNNUMB = T2.NATNID_REGNNUMB
+                                        GROUP BY T1.NATNID_REGNNUMB, T1.CIF, T1.CUST_NUMB, T1.JOINT_FLAG
+                                    ]]>
+                                </beans:value>
+                            </beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f01-update-a11" next="f01-copy-non-joint-data">
+                    <description>把 A11 table 的 natnid_regnnumb 欄位資料更新 CIF table 裏的 joint_id 欄位值</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource" />
+                            <beans:property name="sql" value="UPDATE A11 SET CUSTHEADID = (SELECT CIF.JOINT_ID FROM CIF WHERE A11.CUSTID = CIF.CUST_NUMB) WHERE EXISTS (SELECT CIF.JOINT_ID FROM CIF WHERE A11.CUSTID = CIF.CUST_NUMB)" />
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f01-copy-non-joint-data" next="f01-file">
+                    <description>把 CIF table 中的資料新增至 A11 table</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource" />
+                            <beans:property name="sql">
+                                <beans:value>
+                                    <![CDATA[
+                                        INSERT INTO A11 (CUSTUNIT, CUSTBRNO, CUSTID, CUSTIDNO, CUSTHEADID, CUSTCNAME, CUSTBIRDATE, CUSTCEOCODE, CUSTCEONAME, CUSTSTACODE, CUSTBUSCODE, CUSTCRTDATE, CUSTOADDRESS, CUSTADDRESS, CUSTTEL1, CUSTTEL2, CUSTEMAILADD)
+                                        SELECT
+                                            '021' CUSTUNIT,
+                                            '0000' CUSTBRNO,
+                                            CIF.JOINT_ID CUSTID,
+                                            '' CUSTIDNO,
+                                            CIF.JOINT_ID CUSTHEADID,
+                                            LB.CUST_TITL_LINE1 CUSTCNAME,
+                                            LB.BIRTHDAY CUSTBIRDATE,
+                                            LB.CUST_ASSNNATID CUSTCEOCODE,
+                                            LB.CUST_ASSNNAME CUSTCEONAME,
+                                            LB.CUST_STAT CUSTSTACODE,
+                                            LB.BIZ_TYPE CUSTBUSCODE,
+                                            LB.DATE_ESTB CUSTCRTDATE,
+                                            '' CUSTOADDRESS,
+                                            LTRIM(RTRIM(SUBSTRING(LB.DSCT_DESC_L, 1, 6))) CUSTADDRESS,
+                                            '' CUSTTEL1,
+                                            '' CUSTTEL2,
+                                            '' CUSTEMAILADD
+                                        FROM CIF
+                                        LEFT JOIN LOCAL_BUS LB ON CIF.CUST_NUMB = LB.CUST_NUMB
+                                        WHERE CIF.CUST_NUMB = CIF.JOINT_ID;
                                     ]]>
                                 </beans:value>
                             </beans:property>
