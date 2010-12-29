@@ -34,17 +34,9 @@
         <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 
-    <bean id="busDbReader2" class="org.springframework.batch.item.database.JdbcPagingItemReader">
+    <bean id="busDbReader2" class="org.springframework.batch.item.database.JdbcCursorItemReader">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="pageSize" value="200"></property>
-        <property name="queryProvider">
-            <bean class="tw.com.citi.cdic.batch.utils.GroupBySqlServerPagingQueryProvider">
-                <property name="selectClause" value="SELECT NATNID_REGNNUMB, CUST_TITL_LINE1, PKEY"></property>
-                <property name="fromClause" value="FROM LOCAL_BUS"></property>
-                <property name="groupKey" value="NATNID_REGNNUMB, CUST_TITL_LINE1, PKEY"></property>
-                <property name="sortKey" value="PKEY"></property>
-            </bean>
-        </property>
+        <property name="sql" value="SELECT NATNID_REGNNUMB, CUST_TITL_LINE1 FROM LOCAL_BUS GROUP BY NATNID_REGNNUMB, CUST_TITL_LINE1"></property>
         <property name="rowMapper">
             <bean class="tw.com.citi.cdic.batch.SBF18Mapper"></bean>
         </property>
