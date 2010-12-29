@@ -14,14 +14,13 @@ import tw.com.citi.cdic.batch.dao.A21Dao;
 import tw.com.citi.cdic.batch.dao.A22Dao;
 import tw.com.citi.cdic.batch.dao.A23Dao;
 import tw.com.citi.cdic.batch.dao.A24Dao;
-import tw.com.citi.cdic.batch.dao.BusDao;
 import tw.com.citi.cdic.batch.dao.CDICF20Dao;
+import tw.com.citi.cdic.batch.dao.CifDao;
 import tw.com.citi.cdic.batch.model.A21;
 import tw.com.citi.cdic.batch.model.A22;
 import tw.com.citi.cdic.batch.model.A23;
 import tw.com.citi.cdic.batch.model.A24;
 import tw.com.citi.cdic.batch.model.A61;
-import tw.com.citi.cdic.batch.model.Bus;
 import tw.com.citi.cdic.batch.model.CDICF20;
 import tw.com.citi.cdic.batch.model.SBF18Output;
 import tw.com.citi.cdic.batch.utils.MaskUtils;
@@ -34,7 +33,7 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
 
     protected static final Logger logger = LoggerFactory.getLogger(SBF18Processor.class);
 
-    private BusDao busDao;
+    private CifDao cifDao;
 
     private CDICF20Dao CDICF20Dao;
 
@@ -51,7 +50,7 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
     private int writeSampleFrequency = 1000;
 
     @Override
-    public SBF18Output process(String nationalId) throws Exception {
+    public SBF18Output process(String jointId) throws Exception {
         double temp7 = 0, temp8 = 0, temp11 = 0, temp12 = 0, temp9 = 0, temp10 = 0, temp13 = 0, temp14 = 0, temp17 = 0, temp18 = 0, temp15 = 0, temp16 = 0, temp19 = 0, temp20 = 0;
         SBF18Output out = new SBF18Output();
         
@@ -60,13 +59,13 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
         List<A23> a23s = new ArrayList<A23>();
         List<A24> a24s = new ArrayList<A24>();
         
-        List<Bus> items = busDao.findByNationalId(nationalId);
+        List<String> custNumbs = cifDao.findCustNumbByJointId(jointId);
         
-        for (Bus item : items) {
-            a21s = a21Dao.findByCustomerId(item.getCustNumb(), "A21");
-            a22s = a22Dao.findByCustomerId(item.getCustNumb(), "A22");
-            a23s = a23Dao.findByCustomerId(item.getCustNumb());
-            a24s = a24Dao.findByCustomerId(item.getCustNumb());
+        for (String item : custNumbs) {
+            a21s = a21Dao.findByCustomerId(item, "A21");
+            a22s = a22Dao.findByCustomerId(item, "A22");
+            a23s = a23Dao.findByCustomerId(item);
+            a24s = a24Dao.findByCustomerId(item);
             for (A21 a21 : a21s) {
                 if ("1".equals(a21.getJointCode())) { // 2. Summary 台幣聯名戶金額
                     temp11 += a21.getAccountBalance();
@@ -115,9 +114,9 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
             out.getA24List().addAll(a24s);
         }
         
-        for (Bus item : items) {
-            a21s = a21Dao.findByCustomerId(item.getCustNumb(), "B21");
-            a22s = a22Dao.findByCustomerId(item.getCustNumb(), "B22");
+        for (String item : custNumbs) {
+            a21s = a21Dao.findByCustomerId(item, "B21");
+            a22s = a22Dao.findByCustomerId(item, "B22");
             for (A21 b21 : a21s) {
                 CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(b21.getCurrencyCode());
                 if ("1".equals(b21.getJointCode())) { // 5. Summary 外幣聯名戶金額
@@ -150,9 +149,9 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
             out.getA22List().addAll(a22s);
         }
         
-        for (Bus item : items) {
-            a21s = a21Dao.findByCustomerId(item.getCustNumb(), "C21");
-            a22s = a22Dao.findByCustomerId(item.getCustNumb(), "C22");
+        for (String item : custNumbs) {
+            a21s = a21Dao.findByCustomerId(item, "C21");
+            a22s = a22Dao.findByCustomerId(item, "C22");
             for (A21 c21 : a21s) { // 7. Summary OBU 要保金額
                 CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(c21.getCurrencyCode());
                 temp19 += c21.getAccountBalance() * cdicF20.getTransRate();
@@ -170,7 +169,7 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
         A61 a61 = new A61();
         a61.setUnit("021");
         a61.setBranchNo("0000");
-        a61.setCustId(nationalId);
+        a61.setCustId(jointId);
         a61.setDate("00000000");
         a61.setAcctBalance(temp7);
         a61.setAcctInt(temp8);
@@ -204,8 +203,8 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
         this.stepExecution = stepExecution;
     }
 
-    public void setBusDao(BusDao busDao) {
-        this.busDao = busDao;
+    public void setCifDao(CifDao cifDao) {
+        this.cifDao = cifDao;
     }
 
     public void setCDICF20Dao(CDICF20Dao cDICF20Dao) {

@@ -34,15 +34,15 @@
         <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 
-    <bean id="busDbReader2" class="org.springframework.batch.item.database.JdbcPagingItemReader">
+    <bean id="cifDbReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
         <property name="dataSource" ref="dataSource"></property>
         <property name="pageSize" value="200"></property>
         <property name="queryProvider">
             <bean class="tw.com.citi.cdic.batch.utils.GroupBySqlServerPagingQueryProvider">
-                <property name="selectClause" value="SELECT NATNID_REGNNUMB"></property>
-                <property name="fromClause" value="FROM LOCAL_BUS"></property>
-                <property name="groupKey" value="NATNID_REGNNUMB"></property>
-                <property name="sortKey" value="NATNID_REGNNUMB"></property>
+                <property name="selectClause" value="SELECT JOINT_ID"></property>
+                <property name="fromClause" value="FROM CIF"></property>
+                <property name="groupKey" value="JOINT_ID"></property>
+                <property name="sortKey" value="JOINT_ID"></property>
             </bean>
         </property>
         <property name="rowMapper">
@@ -56,7 +56,7 @@
         <property name="a23Dao" ref="a23Dao"></property>
         <property name="a24Dao" ref="a24Dao"></property>
         <property name="CDICF20Dao" ref="CDICF20Dao"></property>
-        <property name="busDao" ref="busDao"></property>
+        <property name="cifDao" ref="cifDao"></property>
     </bean>
 
     <bean id="a61FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
