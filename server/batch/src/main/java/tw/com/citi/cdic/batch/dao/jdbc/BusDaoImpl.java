@@ -15,8 +15,8 @@ import tw.com.citi.cdic.batch.model.Bus;
 public class BusDaoImpl extends SimpleJdbcDaoSupport implements BusDao {
 
     @Override
-    public List<Bus> findByNationalIdAndTitle(String nationalId, String title) {
-        return super.getSimpleJdbcTemplate().query("SELECT * FROM LOCAL_BUS WHERE NATNID_REGNNUMB = ? AND CUST_TITL_LINE1 = ? ORDER BY CUST_NUMB", new BusMapper(), nationalId, title);
+    public List<Bus> findByNationalId(String nationalId) {
+        return super.getSimpleJdbcTemplate().query("SELECT * FROM LOCAL_BUS WHERE NATNID_REGNNUMB = ? ORDER BY CUST_NUMB", new BusMapper(), nationalId);
     }
 
 }

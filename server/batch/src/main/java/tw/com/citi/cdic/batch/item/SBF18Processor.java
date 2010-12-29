@@ -5,16 +5,17 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 
-import tw.com.citi.cdic.batch.dao.A11Dao;
 import tw.com.citi.cdic.batch.dao.A21Dao;
 import tw.com.citi.cdic.batch.dao.A22Dao;
 import tw.com.citi.cdic.batch.dao.A23Dao;
 import tw.com.citi.cdic.batch.dao.A24Dao;
 import tw.com.citi.cdic.batch.dao.BusDao;
 import tw.com.citi.cdic.batch.dao.CDICF20Dao;
-import tw.com.citi.cdic.batch.model.A11;
 import tw.com.citi.cdic.batch.model.A21;
 import tw.com.citi.cdic.batch.model.A22;
 import tw.com.citi.cdic.batch.model.A23;
@@ -29,7 +30,7 @@ import tw.com.citi.cdic.batch.utils.MaskUtils;
  * @author Chih-Liang Chang
  * @since 2010/10/14
  */
-public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
+public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
 
     protected static final Logger logger = LoggerFactory.getLogger(SBF18Processor.class);
 
@@ -45,14 +46,12 @@ public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
 
     private A24Dao a24Dao;
 
-    private A11Dao a11Dao;
-
-    private long processCount;
+    private StepExecution stepExecution;
 
     private int writeSampleFrequency = 1000;
 
     @Override
-    public SBF18Output process(Bus bus) throws Exception {
+    public SBF18Output process(String nationalId) throws Exception {
         double temp7 = 0, temp8 = 0, temp11 = 0, temp12 = 0, temp9 = 0, temp10 = 0, temp13 = 0, temp14 = 0, temp17 = 0, temp18 = 0, temp15 = 0, temp16 = 0, temp19 = 0, temp20 = 0;
         SBF18Output out = new SBF18Output();
         
@@ -61,7 +60,7 @@ public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
         List<A23> a23s = new ArrayList<A23>();
         List<A24> a24s = new ArrayList<A24>();
         
-        List<Bus> items = busDao.findByNationalIdAndTitle(bus.getNatnidRegnnumb(), bus.getCustTitlLine1());
+        List<Bus> items = busDao.findByNationalId(nationalId);
         
         for (Bus item : items) {
             a21s = a21Dao.findByCustomerId(item.getCustNumb(), "A21");
@@ -171,12 +170,7 @@ public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
         A61 a61 = new A61();
         a61.setUnit("021");
         a61.setBranchNo("0000");
-        A11 a11 = a11Dao.findByNationalIdAndTitle(bus.getNatnidRegnnumb(), bus.getCustTitlLine1());
-        if (a11 == null) {
-            a61.setCustId(bus.getNatnidRegnnumb());
-        } else {
-            a61.setCustId(a11.getId());
-        }
+        a61.setCustId(nationalId);
         a61.setDate("00000000");
         a61.setAcctBalance(temp7);
         a61.setAcctInt(temp8);
@@ -194,12 +188,20 @@ public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
         a61.setObuDepInt(temp20);
         
         out.setA61(a61);
+        ExecutionContext stepContext = stepExecution.getExecutionContext();
+        long processCount = stepContext.getLong("PROCESS_COUNT", 0);
         processCount++;
+        stepContext.putLong("PROCESS_COUNT", processCount);
         if (processCount % writeSampleFrequency == 1) {
             out.setWriteSample(true);
         }
         
         return out;
+    }
+
+    @BeforeStep
+    public void saveStepExecution(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
     }
 
     public void setBusDao(BusDao busDao) {
@@ -224,10 +226,6 @@ public class SBF18Processor implements ItemProcessor<Bus, SBF18Output> {
 
     public void setA24Dao(A24Dao a24Dao) {
         this.a24Dao = a24Dao;
-    }
-
-    public void setA11Dao(A11Dao a11Dao) {
-        this.a11Dao = a11Dao;
     }
 
     public void setWriteSampleFrequency(int writeSampleFrequency) {
