@@ -1,5 +1,6 @@
 package tw.com.citi.cdic.client.handler;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -121,6 +122,7 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
         List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
         if (cdicFileList != null && cdicFileList.size() > 0) {
             JsonArray result = new JsonArray();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             for (CDICFileSts cdicFile : cdicFileList) {
                 ConfirmDto dto = new ConfirmDto();
                 dto.setConfirmer(cdicFile.getConfirmer());
@@ -130,6 +132,8 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
                 dto.setFileSet(fileSet.toString());
                 dto.setGroup(cdicFile.getFileGroup());
                 dto.setFileNo(cdicFile.getFileNo());
+                dto.setConfirmDateTime(cdicFile.getConfirmDateTime() == null ? "" : sdf.format(cdicFile
+                        .getConfirmDateTime()));
                 if (cdicFile.getStatus() != null) {
                     String status = null;
                     switch (Integer.parseInt(cdicFile.getStatus())) {
