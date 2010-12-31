@@ -16,6 +16,8 @@
         </encoder>
     </appender>
 
+    <logger name="tw.com.citi.cdic.batch.item.SBF07Processor" level="INFO" />
+
     <logger name="tw.com.citi.cdic.batch" level="WARN" />
 
     <root level="WARN">

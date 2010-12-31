@@ -298,25 +298,153 @@
             </flow>
             <flow>
                 <decision id="f07Decision" decider="f07Decider">
-                    <next on="EXECUTE" to="f07-a26" />
+                    <next on="EXECUTE" to="f07-init" />
                     <end on="SKIP" />
                 </decision>
-                <step id="f07-a26" next="f07-b26">
-                    <description>把 CDICF07H 的資料 import 至 A26 file</description>
+                <step id="f07-init" next="f07-split">
+                    <description>清空 table A26, B26, C26 的資料</description>
                     <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="a26Processor" writer="a26Writer" commit-interval="500"></chunk>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource" />
+                            <beans:property name="sql" value="DELETE FROM A26; DELETE FROM B26; DELETE FROM C26;" />
+                        </beans:bean>
                     </tasklet>
                 </step>
-                <step id="f07-b26" next="f07-c26">
-                    <description>把 CDICF07H 的資料 import 至 B26 file</description>
+                <step id="f07-split" next="f07-delete">
+                    <description>把 CDICF07H 的資料分檔並套上客戶資料，然後 copy 至 A26, B26, C26 table</description>
                     <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="b26Processor" writer="b26Writer" commit-interval="500"></chunk>
+                        <chunk reader="cdicF07FileReader" processor="f07Processor" writer="f07DbWriter" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
-                <step id="f07-c26">
-                    <description>把 CDICF07H 的資料 import 至 C26 file</description>
+                <step id="f07-delete" next="f07-sum">
+                    <description>若同一群組當中，有兩筆以上金額大於零的資料，就把整個群組資料刪掉</description>
                     <tasklet>
-                        <chunk reader="cdicF07HFileReader" processor="c26Processor" writer="c26Writer" commit-interval="500"></chunk>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource" />
+                            <beans:property name="sql">
+                                <beans:value>
+                                    <![CDATA[
+                                        DELETE FROM A26 WHERE EXISTS (
+                                            SELECT *
+                                            FROM (
+                                                SELECT OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                FROM A26
+                                                WHERE OTPAYSAV >= 0
+                                                GROUP BY OTCOMPCODE, OTRCCODE, OTREFNO
+                                            ) T
+                                            WHERE T.C > 1 AND A26.OTCOMPCODE = T.OTCOMPCODE AND A26.OTRCCODE = T.OTRCCODE AND A26.OTREFNO = T.OTREFNO
+                                        );
+                                        
+                                        DELETE FROM B26 WHERE EXISTS (
+                                            SELECT *
+                                            FROM (
+                                                SELECT OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                FROM B26
+                                                WHERE OTPAYSAV >= 0
+                                                GROUP BY OTCOMPCODE, OTRCCODE, OTREFNO
+                                            ) T
+                                            WHERE T.C > 1 AND B26.OTCOMPCODE = T.OTCOMPCODE AND B26.OTRCCODE = T.OTRCCODE AND B26.OTREFNO = T.OTREFNO
+                                        );
+                                        
+                                        DELETE FROM C26 WHERE EXISTS (
+                                            SELECT *
+                                            FROM (
+                                                SELECT OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                FROM C26
+                                                WHERE OTPAYSAV >= 0
+                                                GROUP BY OTCOMPCODE, OTRCCODE, OTREFNO
+                                            ) T
+                                            WHERE T.C > 1 AND C26.OTCOMPCODE = T.OTCOMPCODE AND C26.OTRCCODE = T.OTRCCODE AND C26.OTREFNO = T.OTREFNO
+                                        );
+                                    ]]>
+                                </beans:value>
+                            </beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f07-sum" next="f07-del-neg">
+                    <description>加總金額欄位</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource" />
+                            <beans:property name="sql">
+                                <beans:value>
+                                    <![CDATA[
+                                        UPDATE A26 SET OTPAYSAV = (
+                                            SELECT SUM(OTPAYSAV)
+                                            FROM A26 B
+                                            WHERE A26.OTCOMPCODE = B.OTCOMPCODE AND A26.OTRCCODE = B.OTRCCODE AND A26.OTREFNO = B.OTREFNO
+                                            GROUP BY B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
+                                        )
+                                        WHERE EXISTS (
+                                            SELECT *
+                                            FROM A26 B
+                                            WHERE A26.OTCOMPCODE = B.OTCOMPCODE
+                                                AND A26.OTRCCODE = B.OTRCCODE
+                                                AND A26.OTREFNO = B.OTREFNO
+                                                AND A26.OTPAYSAV >= 0
+                                        );
+                                        
+                                        UPDATE B26 SET OTPAYSAV = (
+                                            SELECT SUM(OTPAYSAV)
+                                            FROM B26 B
+                                            WHERE B26.OTCOMPCODE = B.OTCOMPCODE AND B26.OTRCCODE = B.OTRCCODE AND B26.OTREFNO = B.OTREFNO
+                                            GROUP BY B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
+                                        )
+                                        WHERE EXISTS (
+                                            SELECT *
+                                            FROM B26 B
+                                            WHERE B26.OTCOMPCODE = B.OTCOMPCODE
+                                                AND B26.OTRCCODE = B.OTRCCODE
+                                                AND B26.OTREFNO = B.OTREFNO
+                                                AND B26.OTPAYSAV >= 0
+                                        );
+                                        
+                                        UPDATE C26 SET OTPAYSAV = (
+                                            SELECT SUM(OTPAYSAV)
+                                            FROM C26 B
+                                            WHERE C26.OTCOMPCODE = B.OTCOMPCODE AND C26.OTRCCODE = B.OTRCCODE AND C26.OTREFNO = B.OTREFNO
+                                            GROUP BY B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
+                                        )
+                                        WHERE EXISTS (
+                                            SELECT *
+                                            FROM C26 B
+                                            WHERE C26.OTCOMPCODE = B.OTCOMPCODE
+                                                AND C26.OTRCCODE = B.OTRCCODE
+                                                AND C26.OTREFNO = B.OTREFNO
+                                                AND C26.OTPAYSAV >= 0
+                                        );
+                                    ]]>
+                                </beans:value>
+                            </beans:property>
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f07-del-neg" next="f07-a26-export">
+                    <description>把 A26, B26, C26 金額欄位小於零的資料刪除掉</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource" />
+                            <beans:property name="sql" value="DELETE FROM A26 WHERE OTPAYSAV &lt;= 0; DELETE FROM C26 WHERE OTPAYSAV &lt;= 0; DELETE FROM C26 WHERE OTPAYSAV &lt;= 0;" />
+                        </beans:bean>
+                    </tasklet>
+                </step>
+                <step id="f07-a26-export" next="f07-b26-export">
+                    <description>把 A26 的資料匯出至檔案</description>
+                    <tasklet>
+                        <chunk reader="a26DbReader" processor="a26Processor" writer="a26Writer" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f07-b26-export" next="f07-c26-export">
+                    <description>把 A26 的資料匯出至檔案</description>
+                    <tasklet>
+                        <chunk reader="b26DbReader" processor="b26Processor" writer="b26Writer" commit-interval="500"></chunk>
+                    </tasklet>
+                </step>
+                <step id="f07-c26-export">
+                    <description>把 A26 的資料匯出至檔案</description>
+                    <tasklet>
+                        <chunk reader="c26DbReader" processor="c26Processor" writer="c26Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
             </flow>

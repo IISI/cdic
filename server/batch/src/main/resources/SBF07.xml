@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="cdicF07HFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+    <bean id="cdicF07FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF07"></constructor-arg>
@@ -16,38 +16,57 @@
                 <property name="fieldSetMapper">
                     <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
                         <property name="targetType" value="tw.com.citi.cdic.batch.model.CDICF07H"></property>
-                        <property name="customEditors">
-                            <map>
-                                <entry key="java.util.Date">
-                                    <bean class="org.springframework.beans.propertyeditors.CustomDateEditor">
-                                        <constructor-arg>
-                                            <bean class="java.text.SimpleDateFormat">
-                                                <constructor-arg value="yyyyMMdd"></constructor-arg>
-                                            </bean>
-                                        </constructor-arg>
-                                        <constructor-arg value="true"></constructor-arg>
-                                    </bean>
-                                </entry>
-                            </map>
-                        </property>
                     </bean>
                 </property>
                 <property name="lineTokenizer">
                     <bean class="tw.com.citi.cdic.batch.item.Big5FixedLengthTokenizer">
-                        <property name="columns" value="1,11,21,25,50,70"></property>
-                        <property name="names" value="gl,rc,company,description,amount,effectDate"></property>
+                        <property name="columns" value="1,11,21,25,50,70,78"></property>
+                        <property name="names" value="gl,rc,company,description,amount,effectDate,refNo"></property>
                     </bean>
                 </property>
             </bean>
         </property>
     </bean>
 
-    <bean id="a26Processor" class="tw.com.citi.cdic.batch.item.SBF07Processor">
+    <bean id="f07Processor" class="tw.com.citi.cdic.batch.item.SBF07Processor">
         <property name="a21Dao" ref="a21Dao"></property>
         <property name="a22Dao" ref="a22Dao"></property>
         <property name="a23Dao" ref="a23Dao"></property>
-        <property name="type" value="1"></property>
     </bean>
+
+    <bean id="a26DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO A26(OTUNIT, OTBRNO, OTAPNO, OTSRNO, OTCUSTID, OTCUSTIDNO, OTCHECKNO, OTCURCODE, OTPAYSAV, OTINTPAYABLE, OTINTPAYMEMO, OTCOMPCODE, OTRCCODE, OTREFNO) VALUES(:unit, :branchNo, :apNo, :srNo, :customerId, :customerIdNo, :checkNo, :currencyCode, :paySav, :intPayable, :intPayMemo, :company, :rc, :refNo)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="b26DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO B26(OTUNIT, OTBRNO, OTAPNO, OTSRNO, OTCUSTID, OTCUSTIDNO, OTCHECKNO, OTCURCODE, OTPAYSAV, OTINTPAYABLE, OTINTPAYMEMO, OTCOMPCODE, OTRCCODE, OTREFNO) VALUES(:unit, :branchNo, :apNo, :srNo, :customerId, :customerIdNo, :checkNo, :currencyCode, :paySav, :intPayable, :intPayMemo, :company, :rc, :refNo)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="c26DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO C26(OTUNIT, OTBRNO, OTAPNO, OTSRNO, OTCUSTID, OTCUSTIDNO, OTCHECKNO, OTCURCODE, OTPAYSAV, OTINTPAYABLE, OTINTPAYMEMO, OTCOMPCODE, OTRCCODE, OTREFNO) VALUES(:unit, :branchNo, :apNo, :srNo, :customerId, :customerIdNo, :checkNo, :currencyCode, :paySav, :intPayable, :intPayMemo, :company, :rc, :refNo)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="f07DbWriter" class="tw.com.citi.cdic.batch.item.database.A26JdbcWriter">
+        <property name="a26ItemWriter" ref="a26DbWriter"></property>
+        <property name="b26ItemWriter" ref="b26DbWriter"></property>
+        <property name="c26ItemWriter" ref="c26DbWriter"></property>
+    </bean>
+
+    <bean id="a26DbReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="SELECT * FROM A26 WHERE OTPAYSAV > 0"></property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.A26Mapper"></bean>
+        </property>
+    </bean>
+
+    <bean id="a26Processor" class="tw.com.citi.cdic.batch.item.A26SampleCountProcessor"></bean>
 
     <bean id="a26FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
@@ -58,10 +77,10 @@
         <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                <property name="format" value="%-3s%-4s%-12s%-30s%-11s%-3s%-7s%-3s%015.2f%tY%&lt;tm%&lt;td%-60s"></property>
+                <property name="format" value="%-3s%-4s%-12s%-30s%-11s%-3s%-7s%-3s%015.2f%-8s%-38s%-4s%-10s%-8s"></property>
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,apNo,srNo,customerId,customerIdNo,checkNo,currencyCode,paySav,intPayable,intPayMemo"></property>
+                        <property name="names" value="unit,branchNo,apNo,srNo,customerId,customerIdNo,checkNo,currencyCode,paySav,intPayable,intPayMemo,company,rc,refNo"></property>
                     </bean>
                 </property>
             </bean>
@@ -75,22 +94,16 @@
             <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
                 <property name="fieldExtractor">
                     <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                        <property name="names" value="unit,branchNo,apNo,srNo,customerId,customerIdNo,checkNo,currencyCode,paySav,intPayable,intPayMemo"></property>
+                        <property name="names" value="unit,branchNo,apNo,srNo,customerId,customerIdNo,checkNo,currencyCode,paySav,intPayable,intPayMemo,company,rc,refNo"></property>
                     </bean>
                 </property>
             </bean>
         </property>
         <property name="headerCallback">
             <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
-                <property name="line" value="總機構代號,分支機構代號,會計科子目代碼,存款帳號,客戶識別碼,保留欄位,票據號碼,幣別,帳列金額,存款轉入其他應付款日期,轉入原因"></property>
+                <property name="line" value="總機構代號,分支機構代號,會計科子目代碼,存款帳號,客戶識別碼,保留欄位,票據號碼,幣別,帳列金額,存款轉入其他應付款日期,轉入原因,Company Code,RC code,Reference Number"></property>
             </bean>
         </property>
-    </bean>
-
-    <bean id="a26DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
-        <property name="dataSource" ref="dataSource"></property>
-        <property name="sql" value="INSERT INTO A26(OTUNIT, OTBRNO, OTAPNO, OTSRNO, OTCUSTID, OTCUSTIDNO, OTCHECKNO, OTCURCODE, OTPAYSAV, OTINTPAYABLE, OTINTPAYMEMO) VALUES(:unit, :branchNo, :apNo, :srNo, :customerId, :customerIdNo, :checkNo, :currencyCode, :paySav, :intPayable, :intPayMemo)"></property>
-        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 
     <bean id="a26Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
@@ -98,14 +111,15 @@
             <list>
                 <ref bean="a26FileWriter" />
                 <ref bean="a26SampleFileWriter" />
-                <ref bean="a26DbWriter" />
             </list>
         </property>
     </bean>
 
-    <bean id="b26Processor" parent="a26Processor">
-        <property name="type" value="2"></property>
+    <bean id="b26DbReader" parent="a26DbReader">
+        <property name="sql" value="SELECT * FROM B26 WHERE OTPAYSAV > 0"></property>
     </bean>
+
+    <bean id="b26Processor" class="tw.com.citi.cdic.batch.item.A26SampleCountProcessor"></bean>
 
     <bean id="b26FileWriter" parent="a26FileWriter">
         <property name="resource">
@@ -119,25 +133,20 @@
         <property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/B26_sample.csv"></property>
     </bean>
 
-    <bean id="b26DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
-        <property name="dataSource" ref="dataSource"></property>
-        <property name="sql" value="INSERT INTO B26(OTUNIT, OTBRNO, OTAPNO, OTSRNO, OTCUSTID, OTCUSTIDNO, OTCHECKNO, OTCURCODE, OTPAYSAV, OTINTPAYABLE, OTINTPAYMEMO) VALUES(:unit, :branchNo, :apNo, :srNo, :customerId, :customerIdNo, :checkNo, :currencyCode, :paySav, :intPayable, :intPayMemo)"></property>
-        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
-    </bean>
-
     <bean id="b26Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
         <property name="delegates">
             <list>
                 <ref bean="b26FileWriter" />
                 <ref bean="b26SampleFileWriter" />
-                <ref bean="b26DbWriter" />
             </list>
         </property>
     </bean>
 
-    <bean id="c26Processor" parent="a26Processor">
-        <property name="type" value="3"></property>
+    <bean id="c26DbReader" parent="a26DbReader">
+        <property name="sql" value="SELECT * FROM C26 WHERE OTPAYSAV > 0"></property>
     </bean>
+
+    <bean id="c26Processor" class="tw.com.citi.cdic.batch.item.A26SampleCountProcessor"></bean>
 
     <bean id="c26FileWriter" parent="a26FileWriter">
         <property name="resource">
@@ -151,18 +160,11 @@
         <property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/C26_sample.csv"></property>
     </bean>
 
-    <bean id="c26DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
-        <property name="dataSource" ref="dataSource"></property>
-        <property name="sql" value="INSERT INTO C26(OTUNIT, OTBRNO, OTAPNO, OTSRNO, OTCUSTID, OTCUSTIDNO, OTCHECKNO, OTCURCODE, OTPAYSAV, OTINTPAYABLE, OTINTPAYMEMO) VALUES(:unit, :branchNo, :apNo, :srNo, :customerId, :customerIdNo, :checkNo, :currencyCode, :paySav, :intPayable, :intPayMemo)"></property>
-        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
-    </bean>
-
     <bean id="c26Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
         <property name="delegates">
             <list>
                 <ref bean="c26FileWriter" />
                 <ref bean="c26SampleFileWriter" />
-                <ref bean="c26DbWriter" />
             </list>
         </property>
     </bean>

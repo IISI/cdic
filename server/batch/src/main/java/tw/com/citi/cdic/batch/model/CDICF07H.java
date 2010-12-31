@@ -1,6 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
 
 /**
  * @author Chih-Liang Chang
@@ -18,7 +17,9 @@ public class CDICF07H {
 
     private double amount;
 
-    private Date effectDate;
+    private String effectDate;
+
+    private String refNo;
 
     public String getGl() {
         return gl;
@@ -60,12 +61,20 @@ public class CDICF07H {
         this.amount = amount;
     }
 
-    public Date getEffectDate() {
+    public String getEffectDate() {
         return effectDate;
     }
 
-    public void setEffectDate(Date effectDate) {
+    public void setEffectDate(String effectDate) {
         this.effectDate = effectDate;
+    }
+
+    public String getRefNo() {
+        return refNo;
+    }
+
+    public void setRefNo(String refNo) {
+        this.refNo = refNo;
     }
 
 }

@@ -1,6 +1,5 @@
 package tw.com.citi.cdic.batch.model;
 
-import java.util.Date;
 
 /**
  * A26, B26, C26 共用的 domain 物件。
@@ -9,6 +8,12 @@ import java.util.Date;
  * @since 2010/10/4
  */
 public class A26 {
+
+    public enum Type {
+
+        A, B, C
+
+    }
 
     private String unit;
 
@@ -28,9 +33,17 @@ public class A26 {
 
     private double paySav;
 
-    private Date intPayable;
+    private String intPayable;
 
     private String intPayMemo;
+
+    private String company;
+
+    private String rc;
+
+    private String refNo;
+
+    private transient Type type;
 
     private transient boolean sample;
 
@@ -106,11 +119,11 @@ public class A26 {
         this.paySav = paySav;
     }
 
-    public Date getIntPayable() {
+    public String getIntPayable() {
         return intPayable;
     }
 
-    public void setIntPayable(Date intPayable) {
+    public void setIntPayable(String intPayable) {
         this.intPayable = intPayable;
     }
 
@@ -120,6 +133,38 @@ public class A26 {
 
     public void setIntPayMemo(String intPayMemo) {
         this.intPayMemo = intPayMemo;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getRc() {
+        return rc;
+    }
+
+    public void setRc(String rc) {
+        this.rc = rc;
+    }
+
+    public String getRefNo() {
+        return refNo;
+    }
+
+    public void setRefNo(String refNo) {
+        this.refNo = refNo;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public boolean isSample() {
