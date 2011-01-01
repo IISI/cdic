@@ -57,6 +57,7 @@
         <property name="a24Dao" ref="a24Dao"></property>
         <property name="CDICF20Dao" ref="CDICF20Dao"></property>
         <property name="cifDao" ref="cifDao"></property>
+        <property name="tableFlowDao" ref="tableFlowDao"></property>
     </bean>
 
     <bean id="a61FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">

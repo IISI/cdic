@@ -1,6 +1,8 @@
 package tw.com.citi.cdic.batch.item;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import tw.com.citi.cdic.batch.dao.A23Dao;
 import tw.com.citi.cdic.batch.dao.A24Dao;
 import tw.com.citi.cdic.batch.dao.CDICF20Dao;
 import tw.com.citi.cdic.batch.dao.CifDao;
+import tw.com.citi.cdic.batch.dao.TableFlowDao;
 import tw.com.citi.cdic.batch.model.A21;
 import tw.com.citi.cdic.batch.model.A22;
 import tw.com.citi.cdic.batch.model.A23;
@@ -23,6 +26,7 @@ import tw.com.citi.cdic.batch.model.A24;
 import tw.com.citi.cdic.batch.model.A61;
 import tw.com.citi.cdic.batch.model.CDICF20;
 import tw.com.citi.cdic.batch.model.SBF18Output;
+import tw.com.citi.cdic.batch.model.TableFlow;
 import tw.com.citi.cdic.batch.utils.MaskUtils;
 
 /**
@@ -44,6 +48,8 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
     private A23Dao a23Dao;
 
     private A24Dao a24Dao;
+
+    private TableFlowDao tableFlowDao;
 
     private StepExecution stepExecution;
 
@@ -170,7 +176,10 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
         a61.setUnit("021");
         a61.setBranchNo("0000");
         a61.setCustId(jointId);
-        a61.setDate("00000000");
+        TableFlow tableFlow = tableFlowDao.getTableFlow();
+        Date custDate = tableFlow.getCustDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        a61.setDate(sdf.format(custDate));
         a61.setAcctBalance(temp7);
         a61.setAcctInt(temp8);
         a61.setNoAcctBalance(temp9);
@@ -225,6 +234,10 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
 
     public void setA24Dao(A24Dao a24Dao) {
         this.a24Dao = a24Dao;
+    }
+
+    public void setTableFlowDao(TableFlowDao tableFlowDao) {
+        this.tableFlowDao = tableFlowDao;
     }
 
     public void setWriteSampleFrequency(int writeSampleFrequency) {
