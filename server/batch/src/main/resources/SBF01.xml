@@ -5,7 +5,7 @@
 
     <bean id="busDbReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="sql" value="SELECT CUST_NUMB, CUST_TYPE, LEFT(NATNID_REGNNUMB, 11) AS NATNID_REGNNUMB, CUST_TITL_LINE1, DSCT_DESC_L, BIRTHDAY, BRANCH, DATE_ESTB, CUST_STAT, BIZ_TYPE, CUST_ASSNNATID, CUST_ASSNNAME FROM LOCAL_BUS ORDER BY CUST_NUMB"></property>
+        <property name="sql" value="SELECT CUST_NUMB, CUST_TYPE, LEFT(NATNID_REGNNUMB, 11) AS NATNID_REGNNUMB, CUST_TITL_LINE1, DSCT_DESC_L, BIRTHDAY, BRANCH, DATE_ESTB, CUST_STAT, BIZ_TYPE, CUST_ASSNNATID, CUST_ASSNNAME FROM LOCAL_BUS"></property>
         <property name="rowMapper">
             <bean class="tw.com.citi.cdic.batch.BusMapper"></bean>
         </property>
@@ -25,7 +25,7 @@
 
     <bean id="a11DbReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="sql" value="SELECT * FROM A11 ORDER BY CUSTHEADID, CUSTCNAME, CUSTID"></property>
+        <property name="sql" value="SELECT * FROM A11 ORDER BY CUSTID, CUSTHEADID"></property>
         <property name="rowMapper">
             <bean class="tw.com.citi.cdic.batch.A11Mapper"></bean>
         </property>
