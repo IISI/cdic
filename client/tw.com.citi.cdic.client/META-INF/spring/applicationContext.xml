@@ -5,7 +5,11 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd">
 
     <bean id="batchService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
-        <property name="serviceUrl" value="rmi://bath:1099/BatchService"></property>
+    	<!-- UAT -->
+        <property name="serviceUrl" value="rmi://APACCITITWUA110:1099/BatchService"></property>
+        <!-- PROD
+        <property name="serviceUrl" value="rmi://APACCITITWAP110:1099/BatchService"></property>
+		-->
         <property name="serviceInterface" value="org.springframework.batch.core.launch.JobOperator"></property>
     </bean>
 
