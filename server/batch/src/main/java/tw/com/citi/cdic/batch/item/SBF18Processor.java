@@ -89,7 +89,7 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
                         || a22.getCharCode().startsWith("WBCD")
                         || a22.getCharCode().startsWith("UBCD")
                         || a22.getCharCode().startsWith("UNCD")
-                        || !a22.getSdCase().isEmpty()
+                        || !a22.getSdCase().trim().isEmpty()
                         || "XAU".equals(a22.getCurrencyCode())) { //3. Summary 台幣非要保金額
                     temp9 += a22.getAmount();
                     temp10 += a22.getIntPayable();
@@ -142,7 +142,7 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
                         || b22.getCharCode().startsWith("WBCD")
                         || b22.getCharCode().startsWith("UBCD")
                         || b22.getCharCode().startsWith("UNCD")
-                        || !b22.getSdCase().isEmpty()
+                        || !b22.getSdCase().trim().isEmpty()
                         || "XAU".equals(b22.getCurrencyCode())) { // 6. Summary 外幣非要保金額
                     temp15 += b22.getAmount() * cdicF20.getTransRate();
                     temp16 += b22.getIntPayable() * cdicF20.getTransRate();
