@@ -19,11 +19,16 @@ import org.apache.commons.vfs.FileSystemOptions;
 import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemConfigBuilder;
 import org.eclipse.core.runtime.Platform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import platform.aquarius.embedserver.conf.PasswordUtil;
 import tw.com.citi.cdic.client.vfs.OSGiFileSystemManager;
 
 public class FileUtil {
+    
+    final static Logger logger = LoggerFactory.getLogger(FileUtil.class);
+    
     public static enum FolderType {
         HOST("host"), ICG("icg"), PROCESS("process"), PROCESS_OUT("processout");
         private String key;
@@ -53,7 +58,9 @@ public class FileUtil {
         try {
             URL url = Platform.getBundle("tw.com.citi.cdic.client.resources").getResource("folders.properties");
             config.load(url.openStream());
-            StaticUserAuthenticator auth = new StaticUserAuthenticator(null, config.getProperty("functionalId"),
+            logger.info(config.getProperty("functionalId"));
+            logger.info(getPassword("functionalPwd"));
+            StaticUserAuthenticator auth = new StaticUserAuthenticator("APAC", config.getProperty("functionalId"),
                     getPassword("functionalPwd"));
             opts = new FileSystemOptions();
             DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(opts, auth);

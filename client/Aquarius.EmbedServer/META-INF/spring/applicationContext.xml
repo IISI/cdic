@@ -9,14 +9,14 @@
     <bean id="secDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
         <property name="jdbcUrl" value="jdbc:sqlserver://#{dbInfo.secServerName};databaseName=#{dbInfo.secDbName}"></property>
-        <property name="user" value="sa"></property>
+        <property name="user" value="SECUSR"></property>
         <property name="password" value="#{dbInfo.secPassword}"></property>
     </bean>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
         <property name="jdbcUrl" value="jdbc:sqlserver://#{dbInfo.appServerName};databaseName=#{dbInfo.appDbName}"></property>
-        <property name="user" value="sa"></property>
+        <property name="user" value="CBCFXUSR"></property>
         <property name="password" value="#{dbInfo.appPassword}"></property>
     </bean>
 
