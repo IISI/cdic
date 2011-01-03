@@ -1,6 +1,8 @@
 package platform.aquarius.embedserver.conf;
 
+import java.io.Console;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
@@ -84,5 +86,12 @@ public class PasswordUtil {
             System.out.println("output: 0x" + encodePwdToBinaryString(args[0]));
             System.out.println("output: " + decodePwd(encodePwd(args[0])));
         }
+        Console console = System.console();
+        char[] password1 = console.readPassword("\nPlease input first half functional password: ");
+        char[] password2 = console.readPassword("\nPlease input last half functional password: ");
+        String password = new String(password1) + new String(password2);
+        Arrays.fill(password1, ' ');
+        Arrays.fill(password2, ' ');
+        System.out.println("\nEncrypted Password :\n" + encodePwd(password));
     }
 }
