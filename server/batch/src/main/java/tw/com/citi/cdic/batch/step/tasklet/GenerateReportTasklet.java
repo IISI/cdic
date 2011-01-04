@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -45,12 +47,15 @@ public class GenerateReportTasklet implements Tasklet {
         TableFlow tableFlow = tableFlowDao.getTableFlow();
         parameters.put("baseDate", tableFlow.getCustDate());
         
+        Map<JRExporterParameter, Object> jasperExporterParams = new HashMap<JRExporterParameter, Object>();
+        jasperExporterParams.put(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
+        
         List<Report> data = reportDao.findAll();
         JRDataSource reportData = JasperReportsUtils.convertReportData(data);
         
         File file = resource.getFile();
         FileOutputStream stream = new FileOutputStream(file, false);
-        JasperReportsUtils.renderAsPdf(report, parameters, reportData, stream);
+        JasperReportsUtils.renderAsXls(report, parameters, reportData, stream, jasperExporterParams);
         return RepeatStatus.FINISHED;
     }
 

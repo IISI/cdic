@@ -972,7 +972,7 @@
                 <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.GenerateReportTasklet">
                     <beans:property name="resource">
                         <beans:bean class="org.springframework.core.io.FileSystemResource">
-                            <beans:constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/report.pdf"></beans:constructor-arg>
+                            <beans:constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/report.xls"></beans:constructor-arg>
                         </beans:bean>
                     </beans:property>
                     <beans:property name="tableFlowDao" ref="tableFlowDao"></beans:property>
