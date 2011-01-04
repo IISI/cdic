@@ -54,7 +54,11 @@
     </bean>
 
     <bean id="a31SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A31SampleFileWriter">
-        <property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/A31_sample.csv"></property>
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A31_sample.csv"></constructor-arg>
+            </bean>
+        </property>
         <property name="encoding" value="ms950"></property>
         <property name="lineAggregator">
             <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
@@ -94,7 +98,11 @@
     </bean>
 
     <bean id="b31SampleFileWriter" parent="a31SampleFileWriter">
-        <property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/B31_sample.csv"></property>
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B31_sample.csv"></constructor-arg>
+            </bean>
+        </property>
     </bean>
 
     <bean id="b31Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
