@@ -79,7 +79,8 @@
     <beans:bean id="asyncTaskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor"></beans:bean>
 
     <beans:bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
-        <beans:property name="jobRepository" ref="jobRepository"></beans:property>
+        <beans:property name="jobRepository" ref="jobRepository" />
+        <beans:property name="taskExecutor" ref="asyncTaskExecutor" />
     </beans:bean>
 
     <beans:bean id="itemSqlParameterSourceProvider" class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"></beans:bean>
@@ -969,7 +970,11 @@
         <step id="f99-genReport">
             <tasklet>
                 <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.GenerateReportTasklet">
-                    <beans:property name="resource" value="file://#{systemProperties['FOLDER.PROCESS.OUT']}/report.pdf"></beans:property>
+                    <beans:property name="resource">
+                        <beans:bean class="org.springframework.core.io.FileSystemResource">
+                            <beans:constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/report.xls"></beans:constructor-arg>
+                        </beans:bean>
+                    </beans:property>
                     <beans:property name="tableFlowDao" ref="tableFlowDao"></beans:property>
                     <beans:property name="reportDao" ref="reportDao"></beans:property>
                 </beans:bean>
