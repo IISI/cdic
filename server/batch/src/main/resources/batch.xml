@@ -79,7 +79,8 @@
     <beans:bean id="asyncTaskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor"></beans:bean>
 
     <beans:bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
-        <beans:property name="jobRepository" ref="jobRepository"></beans:property>
+        <beans:property name="jobRepository" ref="jobRepository" />
+        <beans:property name="taskExecutor" ref="asyncTaskExecutor" />
     </beans:bean>
 
     <beans:bean id="itemSqlParameterSourceProvider" class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"></beans:bean>
