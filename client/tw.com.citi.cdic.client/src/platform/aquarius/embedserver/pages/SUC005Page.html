@@ -233,6 +233,7 @@
                         "dataType": "json",
                         "data": payload,
                         "success": function(data){
+                            msgDialog2.html("批次作業已開始執行，可關閉程式或繼續執行其他批次產檔作業。").dialog("open");
                             batchList.clearGridData();
                             loadInitInfo();
                         },
@@ -247,6 +248,17 @@
                     callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.CloseBrowserHandler");
                 });
                 
+                var msgDialog2 = $("<div></div>").dialog({
+                    "title": "INFO",
+                    "autoOpen": false,
+                    "modal": true,
+                    "buttons": {
+                        "關閉": function(){
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+
                 var msgDialog = $("<div></div>").dialog({
                     "title": "ERROR",
                     "autoOpen": false,
