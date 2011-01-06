@@ -25,7 +25,12 @@ public class SBF01Processor implements ItemProcessor<Bus, A11> {
         a11.setCeoName(item.getCustAssnname());
         a11.setStatusCode(item.getCustStat());
         a11.setBusinessCode(item.getBizType());
-        a11.setCreateDate(item.getDateEstb());
+        String createDate = item.getDateEstb();
+        if (createDate == null || "".equals(createDate.trim())) {
+            createDate = "00000000";
+        }
+        createDate = createDate.replaceAll("-", "");
+        a11.setCreateDate(createDate);
         a11.setOriginalAddress("");
         String addr = null;
         if (item.getDsctDescL() != null && item.getDsctDescL().length() > 6) {
@@ -39,5 +44,4 @@ public class SBF01Processor implements ItemProcessor<Bus, A11> {
         a11.setEmail("");
         return a11;
     }
-
 }
