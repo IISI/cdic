@@ -151,8 +151,8 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
                     temp14 += b22.getIntPayable() * cdicF20.getTransRate();
                 }
             }
-            out.getA21List().addAll(a21s);
-            out.getA22List().addAll(a22s);
+            out.getB21List().addAll(a21s);
+            out.getB22List().addAll(a22s);
         }
         
         for (String item : custNumbs) {
@@ -196,12 +196,17 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
         a61.setObuDepInt(temp20);
         
         out.setA61(a61);
-        ExecutionContext stepContext = stepExecution.getExecutionContext();
-        long processCount = stepContext.getLong("PROCESS_COUNT", 0);
-        processCount++;
-        stepContext.putLong("PROCESS_COUNT", processCount);
-        if (processCount % writeSampleFrequency == 1) {
-            out.setWriteSample(true);
+        if (!(temp7 == 0 && temp8 == 0 && temp9 == 0  && temp10 == 0
+                && temp11 == 0 && temp12 == 0 && temp13 == 0 && temp14 == 0
+                && temp15 == 0 && temp16 == 0 && temp17 == 0 && temp18 == 0
+                && temp19 == 0 && temp20 == 0)) {
+            ExecutionContext stepContext = stepExecution.getExecutionContext();
+            long processCount = stepContext.getLong("PROCESS_COUNT", 0);
+            processCount++;
+            stepContext.putLong("PROCESS_COUNT", processCount);
+            if (processCount % writeSampleFrequency == 1) {
+                out.setWriteSample(true);
+            }
         }
         
         return out;
