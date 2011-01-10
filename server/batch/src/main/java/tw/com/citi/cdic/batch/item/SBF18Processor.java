@@ -151,8 +151,8 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
                     temp14 += b22.getIntPayable() * cdicF20.getTransRate();
                 }
             }
-            out.getA21List().addAll(a21s);
-            out.getA22List().addAll(a22s);
+            out.getB21List().addAll(a21s);
+            out.getB22List().addAll(a22s);
         }
         
         for (String item : custNumbs) {
