@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import platform.aquarius.embedserver.AquariusAjaxDaoHandler;
 import tw.com.citi.cdic.client.model.HostFileSts;
+import tw.com.citi.cdic.client.model.TableFlow;
 import tw.com.citi.cdic.utils.FileUtil;
 import tw.com.citi.cdic.utils.FileUtil.FolderType;
 import tw.com.citi.cdic.utils.Messages;
@@ -80,6 +81,15 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
     }
 
     private Object getInitInfo() {
+        List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object());
+        if (tableFlowList != null && tableFlowList.size() > 0) {
+            String status = tableFlowList.get(0).getInitStatus();
+            if ("1".equals(status)) {
+                throw new IllegalStateException(Messages.SUC002Handler_InitStateError);
+            }
+        } else {
+            throw new IllegalStateException(Messages.SUC005Handler_InitFirst);
+        }
         List<HostFileSts> hostFileList = getDao().query("SUC003_QRY_HOSTFILESTS", HostFileSts.class, new Object());
         if (hostFileList != null && hostFileList.size() > 0) {
             JsonArray result = new JsonArray();
