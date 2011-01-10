@@ -100,7 +100,7 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
                 String subFiles = cdicFile.getSubFile();
                 StringTokenizer st = new StringTokenizer(subFiles, " ");
                 while (st.hasMoreElements()) {
-                    String file = st.nextToken() + "_sample.csv";
+                    String file = "f99".equalsIgnoreCase(fileNo) ? st.nextToken() : st.nextToken() + "_sample.csv";
                     files.add(file);
                 }
             }

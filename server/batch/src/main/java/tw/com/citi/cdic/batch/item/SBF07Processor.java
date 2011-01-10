@@ -43,6 +43,9 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
         Configuration config = new HierarchicalINIConfiguration("currency_mappings.ini");
         String ccyCode = config.getString(numCode + ".code");
         a26.setCurrencyCode(ccyCode);
+        a26.setCompany(item.getCompany());
+        a26.setRc(item.getRc());
+        a26.setRefNo(item.getRefNo());
         return a26;
     }
 
