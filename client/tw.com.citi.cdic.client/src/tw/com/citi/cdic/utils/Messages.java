@@ -12,6 +12,7 @@ public class Messages extends NLS {
     public static String STATUS_5;
     public static String STATUS_6;
     public static String SUC002Handler_InitStateError;
+    public static String SUC002Handler_BatchServiceNotAvaliable;
     public static String SUC005Handler_InitFirst;
     public static String Access_Host_File_Error;
     public static String Download_Local_File_Error;

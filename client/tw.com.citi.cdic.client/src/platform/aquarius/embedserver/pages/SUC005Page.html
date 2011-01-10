@@ -23,6 +23,21 @@
             
             var infoGrid;
             
+            var dependencies = {
+                "Group1": false,
+                "F01": false,
+                "F05": false,
+                "F07": false,
+                "F10": false,
+                "F12": false,
+                "F24": false
+            };
+            
+            var checkDep = {
+                "F07": false,
+                "F18": false,
+                "F99": false
+            };
             var sourceInfoDialog = $('#sourceInfoDialog').dialog({
                 "autoOpen": false,
                 "modal": true,
@@ -65,6 +80,73 @@
             };
             
             $(function(){
+                var checkRelation = function(name, checked){
+                    var ids = batchList.getDataIDs();
+                    // 設定 dependencies
+                    if (name == 'All') {
+                        if (checked) {
+                            dependencies = {
+                                "Group1": false,
+                                "F01": false,
+                                "F05": false,
+                                "F07": false,
+                                "F10": false,
+                                "F12": false,
+                                "F24": false
+                            };
+                            checkDep = {
+                                "F07": false,
+                                "F18": false,
+                                "F99": false
+                            }
+                        }
+                        for (var i = 0; i < ids.length; i++) {
+                            var batchName = batchList.getCell(ids[i], "batchName");
+                            var batchStatus = batchList.getCell(ids[i], "status");
+                            var allow = batchList.getCell(ids[i], "allowExecution");
+                            var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
+                            if (batchName != 'All') {
+                                checkBox.attr("disabled", checked) && checkBox.attr("checked", checked);
+                                if (!checked && (batchName == 'F07' || batchName == 'F18' || batchName == 'F99')) {
+                                    allow == 'true' && batchStatus != "4" && (checkDep[batchName] || batchStatus == '2' || batchStatus == '3') ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true) && checkBox.attr("checked", false);
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        for (var i = 0; i < ids.length; i++) {
+                            if (name == 'Group1' || name == 'F01' || name == 'F05' || name == 'F07' || name == 'F10' || name == 'F12' || name == 'F24') {
+                                var batchName = batchList.getCell(ids[i], "batchName");
+                                if (name == batchName) {
+                                    var batchChecked = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox").attr("checked");
+                                    var batchStatus = batchList.getCell(ids[i], "status");
+                                    // status 為已完成或已確認者或是有被勾選，batchChecked 視為 true
+                                    if (batchStatus == '2' || batchStatus == '3' || batchChecked) {
+                                        batchChecked = true;
+                                    }
+                                    else {
+                                        batchChecked = false;
+                                    }
+                                    dependencies[name] = batchChecked;
+                                }
+                            }
+                        }
+                        // 設定是否開放勾選
+                        checkDep["F07"] = dependencies["Group1"];
+                        checkDep["F18"] = dependencies["Group1"] && dependencies["F01"] && dependencies["F05"];
+                        checkDep["F99"] = dependencies["Group1"] && dependencies["F05"] && dependencies["F07"] && dependencies["F10"] && dependencies["F12"] && dependencies["F24"];
+                        for (var i = 0; i < ids.length; i++) {
+                            var batchName = batchList.getCell(ids[i], "batchName");
+                            var batchStatus = batchList.getCell(ids[i], "status");
+                            var allow = batchList.getCell(ids[i], "allowExecution");
+                            var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
+                            if (batchName == 'F07' || batchName == 'F18' || batchName == 'F99') {
+                                allow == 'true' && batchStatus != "4" && (checkDep[batchName] || batchStatus == '2' || batchStatus == '3') ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true) && checkBox.attr("checked", false);
+                            }
+                        }
+                    }
+                };
+                
                 infoGrid = $('#infoGrid').iGrid({
                     datatype: "local",
                     height: 200,
@@ -115,7 +197,7 @@
                         width: 50
                     }, {
                         colHeader: '狀態',
-                        name: 'status',
+                        name: 'statusShow',
                         sortable: false,
                         width: 50
                     }, {
@@ -130,7 +212,7 @@
                         colHeader: ' ',
                         name: 'process',
                         sortable: false,
-                        width: 50,
+                        width: 70,
                         align: 'center'
                     }, {
                         name: 'allowExecution',
@@ -138,7 +220,14 @@
                     }, {
                         name: 'hasGroup',
                         hidden: true
+                    }, {
+                        name: 'status',
+                        hidden: true
                     }]
+                }).delegate("td[aria-describedby$=batchList_execute] :checkbox", "click", function(){
+                    var $this = $(this);
+                    var name = $this.parents("td:first").siblings("td[aria-describedby$=batchList_batchName]").attr("title");
+                    checkRelation(name, $this.attr("checked"));
                 });
                 $(window).bind('resize', function(){
                     batchList.setGridWidth($(window).width() - 10);
@@ -168,7 +257,12 @@
                                     batchList.setCell(ids[i], "batchName", "  " + batchName);
                                 }
                                 else {
-                                    allow == 'true' && status != "4" ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true);
+                                    if (batchName == 'F07' || batchName == 'F18' || batchName == 'F99') {
+                                        allow == 'true' && status != "4" && (checkDep[batchName] || status == '2' || status == '3') ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true);
+                                    }
+                                    else {
+                                        allow == 'true' && status != "4" ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true);
+                                    }
                                 }
                                 var sourceReady = batchList.getCell(ids[i], "sourceReady");
                                 var sourceNotReady = batchList.getCell(ids[i], "sourceNotReady");
@@ -179,27 +273,27 @@
                                     })
                                 }
                                 if (sourceNotReady != '') {
-                                    batchList.setCell(ids[i], "status", "資料未備妥")
+                                    batchList.setCell(ids[i], "statusShow", "<font color='red'>資料未備妥</font>")
                                 }
                                 else {
                                     switch (status) {
                                         case '0':
-                                            batchList.setCell(ids[i], "status", "未開始")
+                                            batchList.setCell(ids[i], "statusShow", "<font color='red'>未開始</font>")
                                             break;
                                         case '1':
-                                            batchList.setCell(ids[i], "status", "待執行")
+                                            batchList.setCell(ids[i], "statusShow", "<font color='red'>待執行</font>")
                                             break;
                                         case '2':
-                                            batchList.setCell(ids[i], "status", "已完成")
+                                            batchList.setCell(ids[i], "statusShow", "<font color='green'>已完成</font>")
                                             break;
                                         case '3':
-                                            batchList.setCell(ids[i], "status", "已確認")
+                                            batchList.setCell(ids[i], "statusShow", "<font color='green'>已確認</font>")
                                             break;
                                         case '4':
-                                            batchList.setCell(ids[i], "status", "執行中")
+                                            batchList.setCell(ids[i], "statusShow", "<font color='red'>執行中</font>")
                                             break;
                                         case '5':
-                                            batchList.setCell(ids[i], "status", "執行失敗")
+                                            batchList.setCell(ids[i], "statusShow", "<font color='red'>執行失敗</font>")
                                             break;
                                     }
                                 }
@@ -208,6 +302,7 @@
                         "error": function(xhr, status, error){
                             var resp = JSON.parse(xhr.responseText);
                             msgDialog.html(resp.message).dialog("open");
+                            $("#start").hide();
                         }
                     });
                 }
@@ -258,7 +353,7 @@
                         }
                     }
                 });
-
+                
                 var msgDialog = $("<div></div>").dialog({
                     "title": "ERROR",
                     "autoOpen": false,

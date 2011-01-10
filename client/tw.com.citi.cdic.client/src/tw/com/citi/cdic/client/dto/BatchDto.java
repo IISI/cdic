@@ -2,7 +2,7 @@ package tw.com.citi.cdic.client.dto;
 
 public class BatchDto {
     public static enum BatchType {
-        GROUP, FILE, REPORT
+        All, GROUP, FILE, REPORT
     }
 
     private boolean allowExecution;

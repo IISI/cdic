@@ -109,7 +109,7 @@
                         "error": function(xhr, status, error){
                             var resp = JSON.parse(xhr.responseText);
                             msgDialog.html(resp.message).dialog("open");
-							$("#confirm").hide();
+                            $("#confirm").hide();
                         }
                     });
                 }
