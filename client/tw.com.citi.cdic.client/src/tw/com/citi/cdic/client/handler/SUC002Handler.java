@@ -59,6 +59,16 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
     }
 
     private Object init(PageParameters params) throws Exception {
+        try {
+            if (jobOperator == null) {
+                BundleContext bundleContext = Platform.getBundle(Activator.PLUGIN_ID).getBundleContext();
+                ServiceReference ref= bundleContext.getServiceReference("org.springframework.batch.core.launch.JobOperator");
+                jobOperator = (JobOperator) bundleContext.getService(ref);
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(Messages.SUC002Handler_BatchServiceNotAvaliable, e);
+        }
+        
         JSONObject actionParam = new JSONObject(params.getString("actionParam")); //$NON-NLS-1$
         logger.debug("base date = {}", actionParam.getString("baseDate")); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -108,11 +118,6 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
                 new Object[] { new Object(), tableFlow, fileSts, hostFileSts,
                         localFileSts });
         
-        if (jobOperator == null) {
-            BundleContext bundleContext = Platform.getBundle(Activator.PLUGIN_ID).getBundleContext();
-            ServiceReference ref= bundleContext.getServiceReference("org.springframework.batch.core.launch.JobOperator");
-            jobOperator = (JobOperator) bundleContext.getService(ref);
-        }
         jobOperator.start("copyViewJob", "schedule.timestamp(long)=" + new Date().getTime());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
