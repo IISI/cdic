@@ -40,9 +40,6 @@ import java.util.UnknownFormatFlagsException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sun.misc.DoubleConsts;
 import sun.misc.FormattedFloatingDecimal;
 import sun.misc.FpUtils;
@@ -798,7 +795,6 @@ public final class Formatter implements Closeable, Flushable {
     };
 
     private class FormatSpecifier implements FormatString {
-        protected final Logger logger = LoggerFactory.getLogger(FormatSpecifier.class);
         private int index = -1;
         private Flags f = Flags.NONE;
         private int width;
@@ -1109,8 +1105,6 @@ public final class Formatter implements Closeable, Flushable {
                     s = new String(cut, "ms950");
                     // 判斷結尾是否為"半個"中文字
                     String tail = s.substring(s.length() - 1);
-                    logger.warn("tail length in utf-8 = " + tail.getBytes("utf-8").length);
-                    logger.warn("tail length in ms950 = " + tail.getBytes("ms950").length);
                     if (tail.getBytes("utf-8").length == 3 && tail.getBytes("ms950").length == 1) {
                         s = s.substring(0, s.length() - 1);
                         sp = 1;
