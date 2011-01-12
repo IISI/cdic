@@ -82,7 +82,6 @@ $(function() {
 
     var baseDate = $("#baseDate").datepicker({
     	"dateFormat": "yymmdd",
-    	"maxDate": new Date(),
     	"changeMonth": true,
     	"changeYear": true,
     	"showButtonPanel": true
@@ -126,20 +125,8 @@ $(function() {
 
     $("#begin").click(function() {
         if (baseDate.datepicker("getDate") != null) {
-            try {
-                var date = $.datepicker.parseDate("yymmdd", baseDate.val());
-                if (date > new Date()) {
-                    throw {"message": "基準日不可超過本日。"};
-                }
-                confirmDialog.dialog("open");
-                return false;
-            } catch (e) {
-                if (e.message) {
-                    msgDialog.html(e.message).dialog("open");
-                } else {
-                    msgDialog.html(e).dialog("open");
-                }
-            }
+            confirmDialog.dialog("open");
+            return false;
     	} else {
     	    msgDialog.html("基準日不可為空白。").dialog("open");
     	}
