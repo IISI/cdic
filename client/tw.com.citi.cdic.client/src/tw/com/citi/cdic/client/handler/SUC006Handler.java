@@ -59,19 +59,19 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
             throw new IllegalArgumentException(Messages.Handler_Params_Error, e);
         }
         Date now = new Date();
+        String[] args = Platform.getApplicationArgs();
+        String processUser = null;
+        for (String arg : args) {
+            String[] keyValue = arg.split("=", 2);
+            if ("userId".equalsIgnoreCase(keyValue[0])) {
+                processUser = keyValue[1];
+            }
+        }
         for (String fileNo : fileNos) {
             CDICFileSts fileSts = new CDICFileSts();
             fileSts.setFileNo(fileNo);
             fileSts.setStatus("3");
             fileSts.setConfirmDateTime(now);
-            String[] args = Platform.getApplicationArgs();
-            String processUser = null;
-            for (String arg : args) {
-                String[] keyValue = arg.split("=", 2);
-                if ("userId".equalsIgnoreCase(keyValue[0])) {
-                    processUser = keyValue[1];
-                }
-            }
             fileSts.setConfirmer(processUser);
             getDao().update("SUC006_UPD_CDICFILESTS_BY_FILENO", fileSts);
         }
@@ -122,7 +122,7 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
         List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
         if (cdicFileList != null && cdicFileList.size() > 0) {
             JsonArray result = new JsonArray();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
             for (CDICFileSts cdicFile : cdicFileList) {
                 ConfirmDto dto = new ConfirmDto();
                 dto.setConfirmer(cdicFile.getConfirmer());
@@ -158,6 +158,7 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
                     }
                     dto.setStatus(status);
                 }
+                dto.setFileDesc(cdicFile.getFileDesc());
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.create();
                 result.add(gson.toJsonTree(dto, ConfirmDto.class));

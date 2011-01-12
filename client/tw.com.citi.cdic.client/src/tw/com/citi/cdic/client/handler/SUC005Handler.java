@@ -1,5 +1,6 @@
 package tw.com.citi.cdic.client.handler;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,6 +69,15 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
             throw new IllegalArgumentException(Messages.Handler_Params_Error, e);
         }
         List<String> batches = new ArrayList<String>();
+        Date now = new Date();
+        String[] args = Platform.getApplicationArgs();
+        String executor = null;
+        for (String arg : args) {
+            String[] keyValue = arg.split("=", 2);
+            if ("userId".equalsIgnoreCase(keyValue[0])) {
+                executor = keyValue[1];
+            }
+        }
         for (String name : names) {
             if (name.startsWith("Group")) {
                 String group = name.substring(5);
@@ -90,6 +100,8 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                             CDICFileSts pojo = new CDICFileSts();
                             pojo.setFileNo(file.getFileNo());
                             pojo.setStatus("1");
+                            pojo.setExecutor(executor);
+                            pojo.setExecuteDateTime(now);
                             getDao().update("SUC005_UPD_CDICFILESTS_STATUS_BY_FILENO", pojo);
                         }
                     }
@@ -107,6 +119,8 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                             CDICFileSts pojo = new CDICFileSts();
                             pojo.setFileNo(name);
                             pojo.setStatus("1");
+                            pojo.setExecutor(executor);
+                            pojo.setExecuteDateTime(now);
                             getDao().update("SUC005_UPD_CDICFILESTS_STATUS_BY_FILENO", pojo);
                         }
                     }
@@ -116,7 +130,8 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
         if (batches.size() > 0) {
             if (jobOperator == null) {
                 BundleContext bundleContext = Platform.getBundle(Activator.PLUGIN_ID).getBundleContext();
-                ServiceReference ref= bundleContext.getServiceReference("org.springframework.batch.core.launch.JobOperator");
+                ServiceReference ref = bundleContext
+                        .getServiceReference("org.springframework.batch.core.launch.JobOperator");
                 jobOperator = (JobOperator) bundleContext.getService(ref);
             }
             try {
@@ -252,6 +267,7 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
             all.setStatus("");
             all.setAllowExecution(true);
             batchMap.put(allBatchId, all);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
             for (CDICFileSts cdicFile : cdicFileList) {
                 // 判斷有無 group
                 String batchId = "";
@@ -342,6 +358,9 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                     batchMap.put(group + "_", groupDto);
                 }
                 dto.setStatus(cdicFile.getStatus());
+                dto.setExecutor(cdicFile.getExecutor());
+                dto.setExecuteTime(cdicFile.getExecuteDateTime() == null ? "" : sdf.format(cdicFile.getExecuteDateTime()));
+                dto.setFileDesc(cdicFile.getFileDesc());
                 batchMap.put(batchId, dto);
             }
 

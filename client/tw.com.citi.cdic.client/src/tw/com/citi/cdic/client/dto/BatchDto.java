@@ -13,6 +13,9 @@ public class BatchDto {
     private String sourceReady;
     private String sourceNotReady;
     private boolean hasGroup;
+    private String executor;
+    private String executeTime;
+    private String fileDesc;
 
     public void setAllowExecution(boolean allowExecution) {
         this.allowExecution = allowExecution;
@@ -76,5 +79,29 @@ public class BatchDto {
 
     public String getSourceNotReady() {
         return sourceNotReady;
+    }
+
+    public void setExecutor(String executor) {
+        this.executor = executor;
+    }
+
+    public String getExecutor() {
+        return executor;
+    }
+
+    public void setExecuteTime(String executeTime) {
+        this.executeTime = executeTime;
+    }
+
+    public String getExecuteTime() {
+        return executeTime;
+    }
+
+    public void setFileDesc(String fileDesc) {
+        this.fileDesc = fileDesc;
+    }
+
+    public String getFileDesc() {
+        return fileDesc;
     }
 }

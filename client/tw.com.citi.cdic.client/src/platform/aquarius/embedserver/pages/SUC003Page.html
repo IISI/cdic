@@ -40,6 +40,7 @@
                         width: 70,
                         align: 'center'
                     }, {
+                        title: false,
                         colHeader: 'FileName',
                         name: 'name',
                         width: 70,
@@ -104,6 +105,7 @@
                                 var batchName = hostFileList.getCell(ids[i], "batchName");
                                 status == '檔案不存在' ? checkBox.attr("disabled", true) : checkBox.attr("disabled", false);
                                 status == '1' && hostFileList.setCell(ids[i], "status", "檔案已複製");
+                                $('#' + ids[i], hostFileList[3]).attr('title', data[i].fileDesc);
                             }
                         },
                         "error": function(xhr, status, error){

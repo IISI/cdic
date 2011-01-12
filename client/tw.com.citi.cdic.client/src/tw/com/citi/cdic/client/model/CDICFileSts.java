@@ -24,6 +24,12 @@ public class CDICFileSts {
 
     private Date confirmDateTime;
 
+    private String executor;
+
+    private Date executeDateTime;
+
+    private String fileDesc;
+
     public String getFileNo() {
         return fileNo;
     }
@@ -86,6 +92,30 @@ public class CDICFileSts {
 
     public String getFileGroup() {
         return fileGroup;
+    }
+
+    public void setFileDesc(String fileDesc) {
+        this.fileDesc = fileDesc;
+    }
+
+    public String getFileDesc() {
+        return fileDesc;
+    }
+
+    public void setExecutor(String executor) {
+        this.executor = executor;
+    }
+
+    public String getExecutor() {
+        return executor;
+    }
+
+    public void setExecuteDateTime(Date executeDateTime) {
+        this.executeDateTime = executeDateTime;
+    }
+
+    public Date getExecuteDateTime() {
+        return executeDateTime;
     }
 
 }

@@ -57,6 +57,7 @@
                         align: 'center',
                         width: 50
                     }, {
+                        title: false,
                         colHeader: 'FileName',
                         name: 'fileSet',
                         sortable: false,
@@ -160,6 +161,7 @@
                                         checkBox.attr("disabled", true);
                                     }
                                 }
+                                $('#' + ids[i], batchStatusList[1]).attr('title', data[i].fileDesc);
                             }
                         },
                         "error": function(xhr, status, error){

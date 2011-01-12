@@ -31,6 +31,7 @@
                         align: 'center',
                         width: 50
                     }, {
+                        title: false,
                         colHeader: 'FileName',
                         name: 'fileSet',
                         width: 100
@@ -60,6 +61,10 @@
                         "data": payload,
                         "success": function(data){
                             confirmList.addGridData(data);
+                            var ids = confirmList.getDataIDs();
+                            for (var i = 0; i < ids.length; i++) {
+                                $('#' + ids[i], confirmList[1]).attr('title', data[i].fileDesc);
+                            }
                         },
                         "error": function(xhr, status, error){
                             var resp = JSON.parse(xhr.responseText);

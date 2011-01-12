@@ -102,7 +102,7 @@
                         "F99": false
                     }
                     var ids = batchList.getDataIDs();
-                    if(name == 'All') { // 若是 check/uncheck All，先處理所有核取方塊
+                    if (name == 'All') { // 若是 check/uncheck All，先處理所有核取方塊
                         for (var i = 0; i < ids.length; i++) {
                             var batchName = $.trim(batchList.getCell(ids[i], "batchName"));
                             var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
@@ -199,6 +199,7 @@
                         width: 20,
                         align: 'center'
                     }, {
+                        title: false,
                         colHeader: '群組/檔案',
                         name: 'batchName',
                         sortable: false,
@@ -211,11 +212,22 @@
                     }, {
                         colHeader: '已備妥來源檔案',
                         name: 'sourceReady',
-                        sortable: false
+                        sortable: false,
+                        hidden: true
                     }, {
                         colHeader: '未備妥來源檔案',
                         name: 'sourceNotReady',
                         sortable: false
+                    }, {
+                        colHeader: '執行人員',
+                        name: 'executor',
+                        sortable: false,
+                        width: 50
+                    }, {
+                        colHeader: '執行時間',
+                        name: 'executeTime',
+                        sortable: false,
+                        width: 100
                     }, {
                         colHeader: ' ',
                         name: 'process',
@@ -275,7 +287,7 @@
                                 var sourceReady = batchList.getCell(ids[i], "sourceReady");
                                 var sourceNotReady = batchList.getCell(ids[i], "sourceNotReady");
                                 if (sourceReady != '' || sourceNotReady != '') {
-                                    be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='check(" + ids[i] + ");'>檢視來源檔案</a>";
+                                    be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='check(" + ids[i] + ");'>檢視來源</a>";
                                     batchList.setRowData(ids[i], {
                                         process: be
                                     })
@@ -305,6 +317,7 @@
                                             break;
                                     }
                                 }
+                                $('#' + ids[i], batchList[1]).attr('title', data[i].fileDesc);
                             }
                             checkRelation('', false);
                         },
