@@ -19,6 +19,12 @@ public class CDICFileStatusDaoImpl extends SimpleJdbcDaoSupport implements
         CDICFileStatusDao {
 
     @Override
+    public CDICFileStatus findByFileNo(String fileNo) {
+        List<CDICFileStatus> results = super.getSimpleJdbcTemplate().query("SELECT * FROM CDICFILESTS WHERE FILENO = ?", new CDICFileStatusMapper(), fileNo);
+        return DataAccessUtils.singleResult(results);
+    }
+    
+    @Override
     public CDICFileStatus findByFileNo(FileStep fileStep) {
         List<CDICFileStatus> results = super.getSimpleJdbcTemplate().query("SELECT * FROM CDICFILESTS WHERE FILENO = ?", new CDICFileStatusMapper(), fileStep.name());
         return DataAccessUtils.singleResult(results);

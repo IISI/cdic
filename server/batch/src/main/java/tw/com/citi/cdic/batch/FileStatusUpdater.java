@@ -51,7 +51,8 @@ public class FileStatusUpdater {
         }
 
         Set<String> failGroup = new HashSet<String>();
-        
+        Set<String> failFile = new HashSet<String>();
+
         for (Map.Entry<String, ExitStatus> entry : stepResults.entrySet()) {
             FileStep fileStep = FileStep.valueOf(entry.getKey());
             CDICFileStatus fileStatus = this.CDICFileStatusDao.findByFileNo(fileStep);
@@ -59,6 +60,7 @@ public class FileStatusUpdater {
                 fileStatus.setStatus("2");
             } else {
                 fileStatus.setStatus("5");
+                failFile.add(fileStatus.getFileNo());
                 String group = fileStatus.getFileGroup();
                 if (group != null && !"".equals(group.trim())) {
                     failGroup.add(group);
@@ -72,6 +74,24 @@ public class FileStatusUpdater {
                 List<CDICFileStatus> files = this.CDICFileStatusDao.findByGroup(group);
                 for (CDICFileStatus file : files) {
                     file.setStatus("5");
+                    this.CDICFileStatusDao.update(file);
+                }
+            }
+            // 若非 F99 失敗，則 F99 狀態設為 '0'；若非 F07, F18, F99 失敗，則 F07, F18, F99 狀態設為
+            // '0'
+            if (!failFile.isEmpty()) {
+                if (!failFile.contains("F99")) {
+                    CDICFileStatus file = this.CDICFileStatusDao.findByFileNo("F99");
+                    file.setStatus("0");
+                    this.CDICFileStatusDao.update(file);
+                } else if (!failFile.contains("F07")) {
+                    CDICFileStatus file = this.CDICFileStatusDao.findByFileNo("F07");
+                    file.setStatus("0");
+                    this.CDICFileStatusDao.update(file);
+                }
+                if (!failFile.contains("F18")) {
+                    CDICFileStatus file = this.CDICFileStatusDao.findByFileNo("F18");
+                    file.setStatus("0");
                     this.CDICFileStatusDao.update(file);
                 }
             }
