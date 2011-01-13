@@ -20,6 +20,8 @@ public class LocalFileSts {
 
     private boolean exist;
 
+    private String fileDesc;
+
     public String getName() {
         return name;
     }
@@ -66,6 +68,14 @@ public class LocalFileSts {
 
     public int getColumnCount() {
         return columnCount;
+    }
+
+    public void setFileDesc(String fileDesc) {
+        this.fileDesc = fileDesc;
+    }
+
+    public String getFileDesc() {
+        return fileDesc;
     }
 
 }

@@ -18,6 +18,10 @@ public class ConfirmDto {
 
     private String confirmDateTime;
 
+    private String fileDesc;
+
+    private String statusShow;
+
     public String getGroup() {
         return group;
     }
@@ -64,6 +68,22 @@ public class ConfirmDto {
 
     public String getConfirmDateTime() {
         return confirmDateTime;
+    }
+
+    public void setFileDesc(String fileDesc) {
+        this.fileDesc = fileDesc;
+    }
+
+    public String getFileDesc() {
+        return fileDesc;
+    }
+
+    public void setStatusShow(String statusShow) {
+        this.statusShow = statusShow;
+    }
+
+    public String getStatusShow() {
+        return statusShow;
     }
 
 }

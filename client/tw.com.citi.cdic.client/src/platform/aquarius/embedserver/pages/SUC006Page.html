@@ -57,13 +57,14 @@
                         align: 'center',
                         width: 50
                     }, {
+                        title: false,
                         colHeader: 'FileName',
                         name: 'fileSet',
                         sortable: false,
                         width: 100
                     }, {
                         colHeader: 'Status',
-                        name: 'status',
+                        name: 'statusShow',
                         sortable: false,
                         align: 'center',
                         width: 100
@@ -95,6 +96,9 @@
                         sortable: false
                     }, {
                         name: 'fileNo',
+                        hidden: true
+                    }, {
+                        name: 'status',
                         hidden: true
                     }]
                 }).delegate("td[aria-describedby$=confirm] :checkbox", "click", function(){
@@ -145,7 +149,7 @@
                                 checkBox.attr("disabled", true);
                                 var status = batchStatusList.getCell(ids[i], "status");
                                 var fileNo = batchStatusList.getCell(ids[i], "fileNo");
-                                if (status == "已確認" || status == "已完成") {
+                                if (status == "3" || status == "2") {
                                     var buttonCaption = fileNo == "F99" ? "下載報表" : "下載 Sample";
                                     if (fileNo.substr(0, 1) != "T") {
                                         be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='sample(" + ids[i] + ");'>" + buttonCaption + "</a>";
@@ -153,13 +157,14 @@
                                             downloadSample: be
                                         })
                                     }
-                                    if (status == "已完成") {
+                                    if (status == "2") {
                                         checkBox.attr("disabled", false);
                                     }
                                     else {
                                         checkBox.attr("disabled", true);
                                     }
                                 }
+                                $('#' + ids[i], batchStatusList[1]).attr('title', data[i].fileDesc);
                             }
                         },
                         "error": function(xhr, status, error){

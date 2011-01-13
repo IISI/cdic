@@ -59,19 +59,19 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
             throw new IllegalArgumentException(Messages.Handler_Params_Error, e);
         }
         Date now = new Date();
+        String[] args = Platform.getApplicationArgs();
+        String processUser = null;
+        for (String arg : args) {
+            String[] keyValue = arg.split("=", 2);
+            if ("userId".equalsIgnoreCase(keyValue[0])) {
+                processUser = keyValue[1];
+            }
+        }
         for (String fileNo : fileNos) {
             CDICFileSts fileSts = new CDICFileSts();
             fileSts.setFileNo(fileNo);
             fileSts.setStatus("3");
             fileSts.setConfirmDateTime(now);
-            String[] args = Platform.getApplicationArgs();
-            String processUser = null;
-            for (String arg : args) {
-                String[] keyValue = arg.split("=", 2);
-                if ("userId".equalsIgnoreCase(keyValue[0])) {
-                    processUser = keyValue[1];
-                }
-            }
             fileSts.setConfirmer(processUser);
             getDao().update("SUC006_UPD_CDICFILESTS_BY_FILENO", fileSts);
         }
@@ -122,42 +122,46 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
         List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
         if (cdicFileList != null && cdicFileList.size() > 0) {
             JsonArray result = new JsonArray();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
             for (CDICFileSts cdicFile : cdicFileList) {
                 ConfirmDto dto = new ConfirmDto();
-                dto.setConfirmer(cdicFile.getConfirmer());
                 StringBuffer fileSet = new StringBuffer();
                 fileSet = fileSet.append(cdicFile.getFileNo()).append("(")
                         .append(cdicFile.getSubFile() != null ? cdicFile.getSubFile().trim() : "").append(")");
                 dto.setFileSet(fileSet.toString());
                 dto.setGroup(cdicFile.getFileGroup());
                 dto.setFileNo(cdicFile.getFileNo());
-                dto.setConfirmDateTime(cdicFile.getConfirmDateTime() == null ? "" : sdf.format(cdicFile
-                        .getConfirmDateTime()));
                 if (cdicFile.getStatus() != null) {
-                    String status = null;
+                    String statusShow = null;
+                    String color = "red";
                     switch (Integer.parseInt(cdicFile.getStatus())) {
                     case 0:
-                        status = Messages.STATUS_0;
+                        statusShow = Messages.STATUS_0;
                         break;
                     case 1:
-                        status = Messages.STATUS_1;
+                        statusShow = Messages.STATUS_1;
                         break;
                     case 2:
-                        status = Messages.STATUS_2;
+                        statusShow = Messages.STATUS_2;
                         break;
                     case 3:
-                        status = Messages.STATUS_3;
+                        color = "green";
+                        statusShow = Messages.STATUS_3;
+                        dto.setConfirmer(cdicFile.getConfirmer());
+                        dto.setConfirmDateTime(cdicFile.getConfirmDateTime() == null ? "" : sdf.format(cdicFile
+                                .getConfirmDateTime()));
                         break;
                     case 4:
-                        status = Messages.STATUS_4;
+                        statusShow = Messages.STATUS_4;
                         break;
                     case 5:
-                        status = Messages.STATUS_5;
+                        statusShow = Messages.STATUS_5;
                         break;
                     }
-                    dto.setStatus(status);
+                    dto.setStatus(cdicFile.getStatus());
+                    dto.setStatusShow("<font color='" + color + "'>" + statusShow + "</font>");
                 }
+                dto.setFileDesc(cdicFile.getFileDesc());
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.create();
                 result.add(gson.toJsonTree(dto, ConfirmDto.class));

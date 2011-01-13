@@ -52,7 +52,7 @@
             var upload = function(row){
                 var fileName = localFileList.getCell(row, 'name');
                 uploadDialog.find("#fileName").text(fileName);
-				uploadDialog.find("#file").val("");
+                uploadDialog.find("#file").val("");
                 uploadDialog.dialog("open");
             };
             
@@ -78,9 +78,9 @@
             var download = function(row){
                 var fileName = localFileList.getCell(row, 'name');
                 var path = callJava("platform.aquarius.embedserver", "", "platform.aquarius.embedserver.handler.SelectFilePathHandler");
-				if(path == null || path == '') {
-					return;
-				}
+                if (path == null || path == '') {
+                    return;
+                }
                 var payload = {};
                 payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
                 payload[AJAX_HANDLER] = "tw.com.citi.cdic.client.handler.SUC004Handler";
@@ -119,10 +119,10 @@
                 var ids = localFileList.getDataIDs();
                 for (var i = 0; i < ids.length; i++) {
                     var exist = data[i].exist;
-                    se = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='upload(" + ids[i] + ");'>上傳</a>";
+                    se = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='upload(" + ids[i] + ");'>上傳＆確認</a>";
                     if (exist) {
                         be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='download(" + ids[i] + ");'>下載</a>";
-                        ce = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='confirm(" + ids[i] + ");'>確認</a>";
+                        ce = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='confirm(" + ids[i] + ");'>現有檔案確認</a>";
                     }
                     else {
                         be = "";
@@ -130,11 +130,13 @@
                     }
                     localFileList.setRowData(ids[i], {
                         download: be,
-                        process: se + ce,
+                        upload: se,
+                        confirm: ce,
                         uploadDateTime: exist ? data[i].uploadDateTime : "",
                         processUser: exist ? data[i].processUser : "",
-                        status: data[i].status == "1" ? "已確認" : exist ? "未確認" : "檔案不存在"
+                        status: data[i].status == "1" ? "<font color='green'>已確認</font>" : exist ? "<font color='red'>未確認</font>" : "<font color='red'>檔案不存在</font>"
                     })
+                    $('#' + ids[i], localFileList[0]).attr('title', data[i].fileDesc);
                 }
             };
             
@@ -168,6 +170,7 @@
                     needPager: false,
                     sortname: 'name',
                     colModel: [{
+                        title: false,
                         colHeader: 'FileName',
                         name: 'name',
                         sortable: false,
@@ -194,8 +197,14 @@
                         width: 50,
                         align: 'center'
                     }, {
-                        colHeader: 'Process',
-                        name: 'process',
+                        colHeader: 'Upload',
+                        name: 'upload',
+                        sortable: false,
+                        width: 100,
+                        align: 'center'
+                    }, {
+                        colHeader: 'Confirm',
+                        name: 'confirm',
                         sortable: false,
                         width: 100,
                         align: 'center'

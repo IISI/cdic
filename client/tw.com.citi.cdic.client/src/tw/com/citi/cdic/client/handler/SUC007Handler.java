@@ -47,7 +47,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
         List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object());
         if (tableFlowList != null && tableFlowList.size() > 0) {
             tableFlow = tableFlowList.get(0);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
             custDate = sdf.format(tableFlow.getCustDate());
         }
         if (custDate != null) {
@@ -96,30 +96,40 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
             JsonArray result = new JsonArray();
             for (CDICFileSts cdicFile : cdicFileList) {
                 ConfirmDto dto = new ConfirmDto();
-                dto.setConfirmer(cdicFile.getConfirmer());
                 StringBuffer fileSet = new StringBuffer();
                 fileSet = fileSet.append(cdicFile.getFileNo()).append("(")
                         .append(cdicFile.getSubFile() == null ? "" : cdicFile.getSubFile().trim()).append(")");
                 dto.setFileSet(fileSet.toString());
                 dto.setGroup(cdicFile.getFileGroup());
                 if (cdicFile.getStatus() != null) {
-                    String status = null;
+                    String statusShow = null;
+                    String color = "red";
                     switch (Integer.parseInt(cdicFile.getStatus())) {
                     case 0:
-                        status = Messages.STATUS_0;
+                        statusShow = Messages.STATUS_0;
                         break;
                     case 1:
-                        status = Messages.STATUS_1;
+                        statusShow = Messages.STATUS_1;
                         break;
                     case 2:
-                        status = Messages.STATUS_2;
+                        statusShow = Messages.STATUS_2;
                         break;
                     case 3:
-                        status = Messages.STATUS_3;
+                        color = "green";
+                        statusShow = Messages.STATUS_3;
+                        dto.setConfirmer(cdicFile.getConfirmer());
+                        break;
+                    case 4:
+                        statusShow = Messages.STATUS_4;
+                        break;
+                    case 5:
+                        statusShow = Messages.STATUS_5;
                         break;
                     }
-                    dto.setStatus(status);
+                    dto.setStatus(cdicFile.getStatus());
+                    dto.setStatusShow("<font color='" + color + "'>" + statusShow + "</font>");
                 }
+                dto.setFileDesc(cdicFile.getFileDesc());
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.create();
                 result.add(gson.toJsonTree(dto, ConfirmDto.class));

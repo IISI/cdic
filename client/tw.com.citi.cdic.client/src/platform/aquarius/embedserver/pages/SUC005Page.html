@@ -23,14 +23,11 @@
             
             var infoGrid;
             
-            var deps = {
+            var dependencies = {
+                "Group1": false,
                 "F01": false,
-                "F02": false,
-                "F03": false,
-                "F04": false,
                 "F05": false,
                 "F07": false,
-                "F08": false,
                 "F10": false,
                 "F12": false,
                 "F24": false
@@ -84,67 +81,62 @@
             
             $(function(){
                 var checkRelation = function(name, checked){
-                    deps = {
-                        "F01": false,
-                        "F02": false,
-                        "F03": false,
-                        "F04": false,
-                        "F05": false,
-                        "F07": false,
-                        "F08": false,
-                        "F10": false,
-                        "F12": false,
-                        "F24": false
-                    };
-                    checkDep = {
-                        "F07": false,
-                        "F18": false,
-                        "F99": false
-                    }
                     var ids = batchList.getDataIDs();
-                    if(name == 'All') { // 若是 check/uncheck All，先處理所有核取方塊
-                        for (var i = 0; i < ids.length; i++) {
-                            var batchName = $.trim(batchList.getCell(ids[i], "batchName"));
-                            var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
-                            if (batchName != 'All') {
-								checkBox.attr("disabled", checked) && checkBox.attr("checked", checked);
-							}
-                        }
-                    }
-                    for (var i = 0; i < ids.length; i++) {
-                        var batchName = $.trim(batchList.getCell(ids[i], "batchName"));
-                        if (batchName == 'F01' || batchName == 'F02' || batchName == 'F03' || batchName == 'F04' || batchName == 'F05' || batchName == 'F07' || batchName == 'F08' || batchName == 'F10' || batchName == 'F12' || batchName == 'F24') {
-                            var batchChecked = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox").attr("checked");
-                            var batchStatus = batchList.getCell(ids[i], "status");
-                            // status 為已完成或已確認者或是有被勾選，batchChecked 視為 true
-                            if (batchStatus == '2' || batchStatus == '3' || batchChecked) {
-                                batchChecked = true;
-                            }
-                            else {
-                                batchChecked = false;
-                            }
-                            deps[batchName] = batchChecked;
-                        }
-                    }
-                    // 設定是否開放勾選
-                    checkDep["F07"] = deps["F02"] && deps["F03"] && deps["F04"] && deps["F08"];
-                    checkDep["F18"] = deps["F01"] && deps["F02"] && deps["F03"] && deps["F04"] && deps["F05"] && deps["F08"];
-                    checkDep["F99"] = deps["F02"] && deps["F03"] && deps["F04"] && deps["F05"] && deps["F07"] && deps["F08"] && deps["F10"] && deps["F12"] && deps["F24"];
-                    // 設定 deps
+                    // 設定 dependencies
                     if (name == 'All') {
+                        if (checked) {
+                            dependencies = {
+                                "Group1": false,
+                                "F01": false,
+                                "F05": false,
+                                "F07": false,
+                                "F10": false,
+                                "F12": false,
+                                "F24": false
+                            };
+                            checkDep = {
+                                "F07": false,
+                                "F18": false,
+                                "F99": false
+                            }
+                        }
                         for (var i = 0; i < ids.length; i++) {
-                            var batchName = $.trim(batchList.getCell(ids[i], "batchName"));
+                            var batchName = batchList.getCell(ids[i], "batchName");
                             var batchStatus = batchList.getCell(ids[i], "status");
                             var allow = batchList.getCell(ids[i], "allowExecution");
                             var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
-                            if (!checked && (batchName == 'F07' || batchName == 'F18' || batchName == 'F99')) {
-                                allow == 'true' && batchStatus != "4" && (checkDep[batchName] || batchStatus == '2' || batchStatus == '3') ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true) && checkBox.attr("checked", false);
+                            if (batchName != 'All') {
+                                checkBox.attr("disabled", checked) && checkBox.attr("checked", checked);
+                                if (!checked && (batchName == 'F07' || batchName == 'F18' || batchName == 'F99')) {
+                                    allow == 'true' && batchStatus != "4" && (checkDep[batchName] || batchStatus == '2' || batchStatus == '3') ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true) && checkBox.attr("checked", false);
+                                }
                             }
                         }
                     }
                     else {
                         for (var i = 0; i < ids.length; i++) {
-                            var batchName = $.trim(batchList.getCell(ids[i], "batchName"));
+                            if (name == 'Group1' || name == 'F01' || name == 'F05' || name == 'F07' || name == 'F10' || name == 'F12' || name == 'F24') {
+                                var batchName = batchList.getCell(ids[i], "batchName");
+                                if (name == batchName) {
+                                    var batchChecked = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox").attr("checked");
+                                    var batchStatus = batchList.getCell(ids[i], "status");
+                                    // status 為已完成或已確認者或是有被勾選，batchChecked 視為 true
+                                    if (batchStatus == '2' || batchStatus == '3' || batchChecked) {
+                                        batchChecked = true;
+                                    }
+                                    else {
+                                        batchChecked = false;
+                                    }
+                                    dependencies[name] = batchChecked;
+                                }
+                            }
+                        }
+                        // 設定是否開放勾選
+                        checkDep["F07"] = dependencies["Group1"];
+                        checkDep["F18"] = dependencies["Group1"] && dependencies["F01"] && dependencies["F05"];
+                        checkDep["F99"] = dependencies["Group1"] && dependencies["F05"] && dependencies["F07"] && dependencies["F10"] && dependencies["F12"] && dependencies["F24"];
+                        for (var i = 0; i < ids.length; i++) {
+                            var batchName = batchList.getCell(ids[i], "batchName");
                             var batchStatus = batchList.getCell(ids[i], "status");
                             var allow = batchList.getCell(ids[i], "allowExecution");
                             var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
@@ -266,7 +258,7 @@
                                 }
                                 else {
                                     if (batchName == 'F07' || batchName == 'F18' || batchName == 'F99') {
-                                        // allow == 'true' && status != "4" && (checkDep[batchName] || status == '2' || status == '3') ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true);
+                                        allow == 'true' && status != "4" && (checkDep[batchName] || status == '2' || status == '3') ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true);
                                     }
                                     else {
                                         allow == 'true' && status != "4" ? checkBox.attr("disabled", false) : checkBox.attr("disabled", true);
@@ -306,7 +298,6 @@
                                     }
                                 }
                             }
-                            checkRelation('', false);
                         },
                         "error": function(xhr, status, error){
                             var resp = JSON.parse(xhr.responseText);

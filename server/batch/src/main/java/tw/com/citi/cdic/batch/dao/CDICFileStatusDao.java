@@ -11,6 +11,8 @@ import tw.com.citi.cdic.batch.model.CDICFileStatus;
  */
 public interface CDICFileStatusDao {
 
+    CDICFileStatus findByFileNo(String fileNo);
+    
     CDICFileStatus findByFileNo(FileStep fileStep);
     
     List<CDICFileStatus> findByGroup(String group);

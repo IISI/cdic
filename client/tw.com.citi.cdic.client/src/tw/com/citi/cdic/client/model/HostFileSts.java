@@ -27,6 +27,8 @@ public class HostFileSts {
     private int size;
     
     private int record;
+    
+    private String fileDesc;
 
     public String getName() {
         return name;
@@ -106,6 +108,14 @@ public class HostFileSts {
 
     public int getRecord() {
         return record;
+    }
+
+    public void setFileDesc(String fileDesc) {
+        this.fileDesc = fileDesc;
+    }
+
+    public String getFileDesc() {
+        return fileDesc;
     }
 
 }

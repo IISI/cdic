@@ -35,11 +35,12 @@
                         align: 'center'
                     }, {
                         colHeader: 'Status',
-                        name: 'status',
+                        name: 'statusShow',
                         sortable: false,
                         width: 70,
                         align: 'center'
                     }, {
+                        title: false,
                         colHeader: 'FileName',
                         name: 'name',
                         width: 70,
@@ -79,6 +80,9 @@
                         name: 'processUser',
                         width: 80,
                         sortable: false
+                    }, {
+                        name: 'status',
+                        hidden: true
                     }]
                 });
                 $(window).bind('resize', function(){
@@ -102,8 +106,22 @@
                                 var status = hostFileList.getCell(ids[i], "status");
                                 var checkBox = $("#" + ids[i]).find("td[aria-describedby$=copy] :checkbox");
                                 var batchName = hostFileList.getCell(ids[i], "batchName");
-                                status == '檔案不存在' ? checkBox.attr("disabled", true) : checkBox.attr("disabled", false);
-                                status == '1' && hostFileList.setCell(ids[i], "status", "檔案已複製");
+                                var statusShow;
+                                if (status == '6') {
+                                    checkBox.attr("disabled", true);
+                                    statusShow = "<font color='red'>檔案不存在</font>";
+                                }
+                                else {
+                                    checkBox.attr("disabled", false);
+                                    if (status == '1') {
+                                        statusShow = "<font color='green'>檔案已複製</font>";
+                                    }
+                                    else {
+                                        statusShow = "<font color='red'>檔案未複製</font>";
+                                    }
+                                }
+                                hostFileList.setCell(ids[i], "statusShow", statusShow);
+                                $('#' + ids[i], hostFileList[3]).attr('title', data[i].fileDesc);
                             }
                         },
                         "error": function(xhr, status, error){
