@@ -37,7 +37,7 @@ DELETE FROM TABLEFLOW;
 INSERT TABLEFLOW (CDICFILESTATUS, CUSTDATE, STARTER, INITUSERID, INITDATETIME, INITSTATUS) VALUES (:CDICFileStatus, :custDate, :starter, :initUserId, :initDateTime, :initStatus);
 </entry>
 <entry key="SUC002_UPD_CDICFILESTS">
-UPDATE CDICFILESTS SET STATUS = :status, CONFIRMER = :confirmer, CONFIRMDATETIME = :confirmDateTime;
+UPDATE CDICFILESTS SET STATUS = :status, CONFIRMER = :confirmer, CONFIRMDATETIME = :confirmDateTime, EXECUTOR = :executor, EXECUTEDATETIME = :executeDateTime;
 </entry>
 <entry key="SUC002_UPD_HOSTFILESTS">
 UPDATE HOSTFILESTS SET HOSTDATETIME = :hostDateTime, COPYDATETIME = :copyDateTime, PROCESSUSER = :processUser, STATUS = :status;
