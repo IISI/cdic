@@ -47,7 +47,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
         List<TableFlow> tableFlowList = getDao().query("SUC002_QRY_TABLEFLOW", TableFlow.class, new Object());
         if (tableFlowList != null && tableFlowList.size() > 0) {
             tableFlow = tableFlowList.get(0);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             custDate = sdf.format(tableFlow.getCustDate());
         }
         if (custDate != null) {
