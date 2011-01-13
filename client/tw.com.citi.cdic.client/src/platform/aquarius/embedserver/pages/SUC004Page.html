@@ -134,7 +134,7 @@
                         confirm: ce,
                         uploadDateTime: exist ? data[i].uploadDateTime : "",
                         processUser: exist ? data[i].processUser : "",
-                        status: data[i].status == "1" ? "已確認" : exist ? "未確認" : "檔案不存在"
+                        status: data[i].status == "1" ? "<font color='green'>已確認</font>" : exist ? "<font color='red'>未確認</font>" : "<font color='red'>檔案不存在</font>"
                     })
                     $('#' + ids[i], localFileList[0]).attr('title', data[i].fileDesc);
                 }

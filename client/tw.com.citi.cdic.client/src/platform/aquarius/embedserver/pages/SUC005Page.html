@@ -54,7 +54,7 @@
             });
             
             var check = function(row){
-                var fileNo = batchList.getCell(row, 'batchName');
+                var fileNo = batchList.getCell(row, 'fileNo');
                 $('#fileNo').text(fileNo);
                 var payload = {};
                 payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";
@@ -85,6 +85,7 @@
             $(function(){
                 var checkRelation = function(name, checked){
                     deps = {
+                        "Group1": false,
                         "F01": false,
                         "F02": false,
                         "F03": false,
@@ -104,7 +105,7 @@
                     var ids = batchList.getDataIDs();
                     if (name == 'All') { // 若是 check/uncheck All，先處理所有核取方塊
                         for (var i = 0; i < ids.length; i++) {
-                            var batchName = $.trim(batchList.getCell(ids[i], "batchName"));
+                            var batchName = $.trim(batchList.getCell(ids[i], "fileNo"));
                             var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
                             if (batchName != 'All') {
                                 checkBox.attr("disabled", checked) && checkBox.attr("checked", checked);
@@ -112,8 +113,8 @@
                         }
                     }
                     for (var i = 0; i < ids.length; i++) {
-                        var batchName = $.trim(batchList.getCell(ids[i], "batchName"));
-                        if (batchName == 'F01' || batchName == 'F02' || batchName == 'F03' || batchName == 'F04' || batchName == 'F05' || batchName == 'F07' || batchName == 'F08' || batchName == 'F10' || batchName == 'F12' || batchName == 'F24') {
+                        var batchName = $.trim(batchList.getCell(ids[i], "fileNo"));
+                        if (batchName == 'Group1' || batchName == 'F01' || batchName == 'F02' || batchName == 'F03' || batchName == 'F04' || batchName == 'F05' || batchName == 'F07' || batchName == 'F08' || batchName == 'F10' || batchName == 'F12' || batchName == 'F24') {
                             var batchChecked = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox").attr("checked");
                             var batchStatus = batchList.getCell(ids[i], "status");
                             // status 為已完成或已確認者或是有被勾選，batchChecked 視為 true
@@ -127,13 +128,13 @@
                         }
                     }
                     // 設定是否開放勾選
-                    checkDep["F07"] = deps["F02"] && deps["F03"] && deps["F04"] && deps["F08"];
-                    checkDep["F18"] = deps["F01"] && deps["F02"] && deps["F03"] && deps["F04"] && deps["F05"] && deps["F08"];
-                    checkDep["F99"] = deps["F02"] && deps["F03"] && deps["F04"] && deps["F05"] && deps["F07"] && deps["F08"] && deps["F10"] && deps["F12"] && deps["F24"];
+                    checkDep["F07"] = deps["Group1"] || (deps["F02"] && deps["F03"] && deps["F04"] && deps["F08"]);
+                    checkDep["F18"] = deps["F01"] && (deps["Group1"] || (deps["F02"] && deps["F03"] && deps["F04"] && deps["F08"])) && deps["F05"];
+                    checkDep["F99"] = (deps["Group1"] || (deps["F02"] && deps["F03"] && deps["F04"] && deps["F08"])) && deps["F05"] && deps["F07"] && deps["F10"] && deps["F12"] && deps["F24"];
                     // 設定 deps
                     if (name == 'All') {
                         for (var i = 0; i < ids.length; i++) {
-                            var batchName = $.trim(batchList.getCell(ids[i], "batchName"));
+                            var batchName = $.trim(batchList.getCell(ids[i], "fileNo"));
                             var batchStatus = batchList.getCell(ids[i], "status");
                             var allow = batchList.getCell(ids[i], "allowExecution");
                             var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
@@ -144,7 +145,7 @@
                     }
                     else {
                         for (var i = 0; i < ids.length; i++) {
-                            var batchName = $.trim(batchList.getCell(ids[i], "batchName"));
+                            var batchName = $.trim(batchList.getCell(ids[i], "fileNo"));
                             var batchStatus = batchList.getCell(ids[i], "status");
                             var allow = batchList.getCell(ids[i], "allowExecution");
                             var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
@@ -210,6 +211,10 @@
                         sortable: false,
                         width: 50
                     }, {
+                        colHeader: '來源檔案(紅色為未備妥)',
+                        name: 'source',
+                        sortable: false
+                    }, {
                         colHeader: '已備妥來源檔案',
                         name: 'sourceReady',
                         sortable: false,
@@ -217,7 +222,8 @@
                     }, {
                         colHeader: '未備妥來源檔案',
                         name: 'sourceNotReady',
-                        sortable: false
+                        sortable: false,
+                        hidden: true
                     }, {
                         colHeader: '執行人員',
                         name: 'executor',
@@ -243,10 +249,13 @@
                     }, {
                         name: 'status',
                         hidden: true
+                    }, {
+                        name: 'fileNo',
+                        hidden: true
                     }]
                 }).delegate("td[aria-describedby$=batchList_execute] :checkbox", "click", function(){
                     var $this = $(this);
-                    var name = $this.parents("td:first").siblings("td[aria-describedby$=batchList_batchName]").attr("title");
+                    var name = $this.parents("td:first").siblings("td[aria-describedby$=batchList_fileNo]").attr("title");
                     checkRelation(name, $this.attr("checked"));
                 });
                 $(window).bind('resize', function(){
@@ -271,6 +280,7 @@
                                 var allow = batchList.getCell(ids[i], "allowExecution");
                                 var checkBox = $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox");
                                 var batchName = batchList.getCell(ids[i], "batchName");
+                                batchList.setCell(ids[i], "fileNo", batchName);
                                 var status = data[i].status;
                                 if (hasGroup == 'true') {
                                     checkBox.remove();
@@ -286,6 +296,7 @@
                                 }
                                 var sourceReady = batchList.getCell(ids[i], "sourceReady");
                                 var sourceNotReady = batchList.getCell(ids[i], "sourceNotReady");
+                                batchList.setCell(ids[i], "source", "<B>" + sourceReady + "</B><font color='red'><I>" + sourceNotReady + "</I></font>");
                                 if (sourceReady != '' || sourceNotReady != '') {
                                     be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='check(" + ids[i] + ");'>檢視來源</a>";
                                     batchList.setRowData(ids[i], {
@@ -335,7 +346,7 @@
                     var data = new Array();
                     var ids = batchList.getDataIDs();
                     for (var i = 0; i < ids.length; i++) {
-                        $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox").attr("checked") && data.push(batchList.getCell(ids[i], "batchName"));
+                        $("#" + ids[i]).find("td[aria-describedby$=execute] :checkbox").attr("checked") && data.push(batchList.getCell(ids[i], "fileNo"));
                     }
                     var payload = {};
                     payload[AJAX_HANDLER_BUNDLE] = "tw.com.citi.cdic.client";

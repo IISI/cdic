@@ -104,7 +104,7 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
                     // +2 為 0x0D 0x0A 換行字元
                     hostFile.setRecord(hostFile.getSize() / (hostFile.getRecLen() + 2));
                 } catch (Exception e) {
-                    hostFile.setStatus(Messages.STATUS_6);
+                    hostFile.setStatus("6");
                 }
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.create();

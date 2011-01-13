@@ -125,38 +125,41 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
             for (CDICFileSts cdicFile : cdicFileList) {
                 ConfirmDto dto = new ConfirmDto();
-                dto.setConfirmer(cdicFile.getConfirmer());
                 StringBuffer fileSet = new StringBuffer();
                 fileSet = fileSet.append(cdicFile.getFileNo()).append("(")
                         .append(cdicFile.getSubFile() != null ? cdicFile.getSubFile().trim() : "").append(")");
                 dto.setFileSet(fileSet.toString());
                 dto.setGroup(cdicFile.getFileGroup());
                 dto.setFileNo(cdicFile.getFileNo());
-                dto.setConfirmDateTime(cdicFile.getConfirmDateTime() == null ? "" : sdf.format(cdicFile
-                        .getConfirmDateTime()));
                 if (cdicFile.getStatus() != null) {
-                    String status = null;
+                    String statusShow = null;
+                    String color = "red";
                     switch (Integer.parseInt(cdicFile.getStatus())) {
                     case 0:
-                        status = Messages.STATUS_0;
+                        statusShow = Messages.STATUS_0;
                         break;
                     case 1:
-                        status = Messages.STATUS_1;
+                        statusShow = Messages.STATUS_1;
                         break;
                     case 2:
-                        status = Messages.STATUS_2;
+                        statusShow = Messages.STATUS_2;
                         break;
                     case 3:
-                        status = Messages.STATUS_3;
+                        color = "green";
+                        statusShow = Messages.STATUS_3;
+                        dto.setConfirmer(cdicFile.getConfirmer());
+                        dto.setConfirmDateTime(cdicFile.getConfirmDateTime() == null ? "" : sdf.format(cdicFile
+                                .getConfirmDateTime()));
                         break;
                     case 4:
-                        status = Messages.STATUS_4;
+                        statusShow = Messages.STATUS_4;
                         break;
                     case 5:
-                        status = Messages.STATUS_5;
+                        statusShow = Messages.STATUS_5;
                         break;
                     }
-                    dto.setStatus(status);
+                    dto.setStatus(cdicFile.getStatus());
+                    dto.setStatusShow("<font color='" + color + "'>" + statusShow + "</font>");
                 }
                 dto.setFileDesc(cdicFile.getFileDesc());
                 GsonBuilder gsonBuilder = new GsonBuilder();

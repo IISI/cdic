@@ -68,6 +68,16 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
             e.printStackTrace();
             throw new IllegalArgumentException(Messages.Handler_Params_Error, e);
         }
+        try {
+            if (jobOperator == null) {
+                BundleContext bundleContext = Platform.getBundle(Activator.PLUGIN_ID).getBundleContext();
+                ServiceReference ref = bundleContext
+                        .getServiceReference("org.springframework.batch.core.launch.JobOperator");
+                jobOperator = (JobOperator) bundleContext.getService(ref);
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(Messages.SUC002Handler_BatchServiceNotAvaliable, e);
+        }
         List<String> batches = new ArrayList<String>();
         Date now = new Date();
         String[] args = Platform.getApplicationArgs();
@@ -128,12 +138,6 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
             }
         }
         if (batches.size() > 0) {
-            if (jobOperator == null) {
-                BundleContext bundleContext = Platform.getBundle(Activator.PLUGIN_ID).getBundleContext();
-                ServiceReference ref = bundleContext
-                        .getServiceReference("org.springframework.batch.core.launch.JobOperator");
-                jobOperator = (JobOperator) bundleContext.getService(ref);
-            }
             try {
                 jobOperator.start("convertJob", "schedule.timestamp(long)=" + new Date().getTime());
             } catch (Exception e) {
@@ -359,7 +363,8 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
                 }
                 dto.setStatus(cdicFile.getStatus());
                 dto.setExecutor(cdicFile.getExecutor());
-                dto.setExecuteTime(cdicFile.getExecuteDateTime() == null ? "" : sdf.format(cdicFile.getExecuteDateTime()));
+                dto.setExecuteTime(cdicFile.getExecuteDateTime() == null ? "" : sdf.format(cdicFile
+                        .getExecuteDateTime()));
                 dto.setFileDesc(cdicFile.getFileDesc());
                 batchMap.put(batchId, dto);
             }

@@ -37,12 +37,15 @@
                         width: 100
                     }, {
                         colHeader: 'Status',
-                        name: 'status',
+                        name: 'statusShow',
                         align: 'center',
                         width: 100
                     }, {
                         colHeader: '最後確認者',
                         name: 'confirmer'
+                    }, {
+                        name: 'status',
+                        hidden: true
                     }]
                 });
                 $(window).bind('resize', function(){
@@ -120,7 +123,7 @@
                     var ids = confirmList.getDataIDs();
                     for (var i = 0; i < ids.length; i++) {
                         var status = confirmList.getCell(ids[i], "status");
-                        if (status != "已確認") {
+                        if (status != "3") {
                             allConfirm = false;
                             break;
                         }
@@ -129,7 +132,7 @@
                         $("#msg").text("確認將檔案傳送至 ICG 目錄？");
                     }
                     else {
-                        $("#msg").text("有檔案未完成或未確認，將傳送空檔，認定傳送？");
+                        $("#msg").text("有檔案未確認，將傳送空檔，認定傳送？");
                     }
                     confirmDialog.dialog("open");
                 });

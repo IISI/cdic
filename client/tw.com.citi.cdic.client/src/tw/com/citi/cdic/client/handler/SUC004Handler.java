@@ -121,7 +121,11 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
             throw new IllegalArgumentException("Cannot find params.", e);
         }
         try {
-            FileUtil.copyFile(FolderType.PROCESS, savePath, new String[] { fileName });
+            String tail = ".csv";
+            if ("CDICF20".equalsIgnoreCase(fileName) || "FMBCDWN4".equalsIgnoreCase(fileName)) {
+                tail = ".txt";
+            }
+            FileUtil.copyFile(FolderType.PROCESS, savePath, "", tail, new String[] { fileName });
         } catch (FileSystemException e) {
             e.printStackTrace();
             throw new SecurityException(Messages.bind(Messages.Access_Host_File_Error, new Object[] { fileName }), e);
