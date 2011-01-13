@@ -77,20 +77,28 @@ public class FileStatusUpdater {
                     this.CDICFileStatusDao.update(file);
                 }
             }
-            // 若非 F99 失敗，則 F99 狀態設為 '0'；若非 F07, F18, F99 失敗，則 F07, F18, F99 狀態設為
-            // '0'
-            if (!failFile.isEmpty()) {
-                if (!failFile.contains("F99")) {
-                    CDICFileStatus file = this.CDICFileStatusDao.findByFileNo("F99");
-                    file.setStatus("0");
-                    this.CDICFileStatusDao.update(file);
-                } else if (!failFile.contains("F07")) {
-                    CDICFileStatus file = this.CDICFileStatusDao.findByFileNo("F07");
-                    file.setStatus("0");
-                    this.CDICFileStatusDao.update(file);
-                }
-                if (!failFile.contains("F18")) {
-                    CDICFileStatus file = this.CDICFileStatusDao.findByFileNo("F18");
+            boolean group1Fail = failFile.contains("F02") || failFile.contains("F03") || failFile.contains("F04")
+                    || failFile.contains("F08");
+            Set<String> resetStatus = new HashSet<String>();
+            // 1. 若 Group1 fail，且 F07 沒有 fail，reset F07's Status 為 '0'
+            if (group1Fail && !failFile.contains("F07")) {
+                resetStatus.add("F07");
+            }
+            // 2. 若 Group1 fail or F01 fail or F05 fail，且 F18 沒有 fail，reset
+            // F18's Status 為 '0'
+            if ((group1Fail || failFile.contains("F01") || failFile.contains("F05")) && !failFile.contains("F18")) {
+                resetStatus.add("F18");
+            }
+            // 3. 若 Group1 fail or F05 fail or F07 fail or F10 fail or F12 fail
+            // or F24 fail，且 F99 沒有 fail，reset F99's Status 為 '0'
+            if ((group1Fail || failFile.contains("F05") || failFile.contains("F07") || failFile.contains("F10")
+                    || failFile.contains("F12") || failFile.contains("F24"))
+                    && !failFile.contains("F99")) {
+                resetStatus.add("F99");
+            }
+            if (!resetStatus.isEmpty()) {
+                for (String reset : resetStatus) {
+                    CDICFileStatus file = this.CDICFileStatusDao.findByFileNo(reset);
                     file.setStatus("0");
                     this.CDICFileStatusDao.update(file);
                 }
