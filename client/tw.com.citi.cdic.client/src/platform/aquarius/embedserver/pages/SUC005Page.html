@@ -297,11 +297,11 @@
                                 var sourceReady = batchList.getCell(ids[i], "sourceReady");
                                 var sourceNotReady = batchList.getCell(ids[i], "sourceNotReady");
 								var source = "<B>" + sourceReady + "</B><font color='red'><I>" + sourceNotReady + "</I></font>";
-								batchName == 'F01' && (source = source + "<br><font color='gray'>(BUS)</font></br>");
-                                batchName == 'F05' && (source = source + "<br><font color='gray'>(LUS)</font></br>");
+                                batchName == 'F01' && (source = source + "<br><font color='gray'>(BUS)</font></br>");
+                                batchName == 'F05' && (source = source + "<font color='gray'>(LUS)</font>");
                                 batchName == 'F07' && (source = source + "<br><font color='gray'>(F02, F03, F04)</font></br>");
                                 batchName == 'F18' && (source = source + "<br><font color='gray'>(F01, F02, F03, F04, F05)</font></br>");
-                                batchName == 'F99' && (source = source + "<br><font color='gray'>(F02, F03, F04, F05, F07, F10, F12, F24)</font></br>");
+                                batchName == 'F99' && (source = source + "<font color='gray'>(F02, F03, F04, F05, F07, F10, F12, F24)</font>");
                                 batchList.setCell(ids[i], "source", source);
                                 if (sourceReady != '' || sourceNotReady != '') {
                                     be = "<a class='fg-button ui-state-default ui-corner-all' style='float:none;' onclick='check(" + ids[i] + ");'>檢視來源</a>";
