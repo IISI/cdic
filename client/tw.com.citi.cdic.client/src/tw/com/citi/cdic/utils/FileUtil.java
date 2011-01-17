@@ -1,5 +1,6 @@
 package tw.com.citi.cdic.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +19,7 @@ import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileSystemOptions;
 import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemConfigBuilder;
+import org.apache.commons.vfs.provider.local.LocalFileSystem;
 import org.eclipse.core.runtime.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +28,9 @@ import platform.aquarius.embedserver.conf.PasswordUtil;
 import tw.com.citi.cdic.client.vfs.OSGiFileSystemManager;
 
 public class FileUtil {
-    
+
     final static Logger logger = LoggerFactory.getLogger(FileUtil.class);
-    
+
     public static enum FolderType {
         HOST("host"), ICG("icg"), PROCESS("process"), PROCESS_OUT("processout");
         private String key;
@@ -86,14 +88,14 @@ public class FileUtil {
     }
 
     public static void copyFile(FileObject source, FileObject target, String prefix, String suffix,
-            String[] sorceFileNames) throws FileSystemException {
+            String[] sourceFileNames) throws FileSystemException {
         List<FileObject> files = new ArrayList<FileObject>();
-        if (sorceFileNames == null || sorceFileNames.length == 0) {
+        if (sourceFileNames == null || sourceFileNames.length == 0) {
             // 全部複製
             FileObject[] objects = source.getChildren();
             files.addAll(Arrays.asList(objects));
         } else {
-            for (String fileName : sorceFileNames) {
+            for (String fileName : sourceFileNames) {
                 FileObject file = fsManager.resolveFile(source, fileName);
                 if (file != null) {
                     files.add(file);
@@ -117,38 +119,63 @@ public class FileUtil {
             });
             target.copyFrom(source, ffs);
             if (prefix != null || suffix != null) {
-                List<FileObject> targetFiles = new ArrayList<FileObject>();
-                for (String fileName : sorceFileNames) {
-                    FileObject file = fsManager.resolveFile(target, fileName);
-                    if (file != null) {
-                        targetFiles.add(file);
+                // 修改檔名
+                if (target.getFileSystem() instanceof LocalFileSystem) {
+                    List<File> targetFiles = new ArrayList<File>();
+                    for (String fileName : sourceFileNames) {
+                        File file = new File(target.getURL().getFile() + "/" + fileName);
+                        if (file != null && file.exists()) {
+                            targetFiles.add(file);
+                        }
                     }
-                }
-                if (targetFiles != null || targetFiles.size() > 0) {
-                    for (FileObject file : targetFiles) {
-                        String baseName = file.getName().getBaseName();
-                        String extensions = baseName.indexOf(".") > 0 ? baseName.substring(baseName.indexOf(".")) : "";
-                        String fileName = baseName.indexOf(".") > 0 ? baseName.substring(0, baseName.indexOf(".") - 1)
-                                : baseName;
-                        StringBuffer newName = new StringBuffer();
-                        newName = newName.append(prefix == null ? "" : prefix).append(fileName)
-                                .append(suffix == null ? "" : suffix).append(extensions);
-                        FileObject temp = fsManager.resolveFile(target, newName.toString());
-                        temp.createFile();
-                        file.moveTo(temp);
+                    if (targetFiles != null || targetFiles.size() > 0) {
+                        for (File file : targetFiles) {
+                            String baseName = file.getName();
+                            String extensions = baseName.indexOf(".") > 0 ? baseName.substring(baseName.indexOf("."))
+                                    : "";
+                            String fileName = baseName.indexOf(".") > 0 ? baseName.substring(0,
+                                    baseName.indexOf(".") - 1) : baseName;
+                            StringBuffer newName = new StringBuffer();
+                            newName = newName.append(prefix == null ? "" : prefix).append(fileName)
+                                    .append(suffix == null ? "" : suffix).append(extensions);
+                            file.renameTo(new File(target.getURL().getFile() + "/" + newName.toString()));
+                        }
+                    }
+                } else {
+                    List<FileObject> targetFiles = new ArrayList<FileObject>();
+                    for (String fileName : sourceFileNames) {
+                        FileObject file = fsManager.resolveFile(target, fileName);
+                        if (file != null) {
+                            targetFiles.add(file);
+                        }
+                    }
+                    if (targetFiles != null || targetFiles.size() > 0) {
+                        for (FileObject file : targetFiles) {
+                            String baseName = file.getName().getBaseName();
+                            String extensions = baseName.indexOf(".") > 0 ? baseName.substring(baseName.indexOf("."))
+                                    : "";
+                            String fileName = baseName.indexOf(".") > 0 ? baseName.substring(0,
+                                    baseName.indexOf(".") - 1) : baseName;
+                            StringBuffer newName = new StringBuffer();
+                            newName = newName.append(prefix == null ? "" : prefix).append(fileName)
+                                    .append(suffix == null ? "" : suffix).append(extensions);
+                            FileObject temp = fsManager.resolveFile(target, newName.toString());
+                            temp.createFile();
+                            file.moveTo(temp);
+                        }
                     }
                 }
             }
         }
     }
 
-    public static void copyFile(FileObject source, FileObject target, String[] sorceFileNames)
+    public static void copyFile(FileObject source, FileObject target, String[] sourceFileNames)
             throws FileSystemException {
-        copyFile(source, target, null, null, sorceFileNames);
+        copyFile(source, target, null, null, sourceFileNames);
     }
 
     public static void copyFile(FolderType sourceFolder, String localPath, String prefix, String suffix,
-            String[] sorceFileNames) throws FileSystemException {
+            String[] sourceFileNames) throws FileSystemException {
         if (sourceFolder == null) {
             throw new IllegalArgumentException("input source folder is invalid.");
         }
@@ -157,17 +184,17 @@ public class FileUtil {
         }
         FileObject source = fsManager.resolveFile("smb://" + config.getProperty(sourceFolder.getKey() + ".host")
                 + config.getProperty(sourceFolder.getKey() + ".path"), opts);
-        FileObject target = fsManager.resolveFile("file://" + localPath);
-        copyFile(source, target, prefix, suffix, sorceFileNames);
+        FileObject target = fsManager.resolveFile(localPath);
+        copyFile(source, target, prefix, suffix, sourceFileNames);
     }
 
-    public static void copyFile(FolderType sourceFolder, String localPath, String[] sorceFileNames)
+    public static void copyFile(FolderType sourceFolder, String localPath, String[] sourceFileNames)
             throws FileSystemException {
-        copyFile(sourceFolder, localPath, null, null, sorceFileNames);
+        copyFile(sourceFolder, localPath, null, null, sourceFileNames);
     }
 
     public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String prefix, String suffix,
-            String[] sorceFileNames) throws FileSystemException {
+            String[] sourceFileNames) throws FileSystemException {
         if (sourceFolder == null) {
             throw new IllegalArgumentException("input source folder is invalid.");
         }
@@ -178,12 +205,12 @@ public class FileUtil {
                 + config.getProperty(sourceFolder.getKey() + ".path"), opts);
         FileObject target = fsManager.resolveFile("smb://" + config.getProperty(targetFolder.getKey() + ".host")
                 + config.getProperty(targetFolder.getKey() + ".path"), opts);
-        copyFile(source, target, prefix, suffix, sorceFileNames);
+        copyFile(source, target, prefix, suffix, sourceFileNames);
     }
 
-    public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String[] sorceFileNames)
+    public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String[] sourceFileNames)
             throws FileSystemException {
-        copyFile(sourceFolder, targetFolder, null, null, sorceFileNames);
+        copyFile(sourceFolder, targetFolder, null, null, sourceFileNames);
     }
 
     public static void uploadFile(InputStream in, FolderType target, String fileName) throws IOException {
