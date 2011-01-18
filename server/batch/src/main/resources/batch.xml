@@ -40,8 +40,6 @@
 
     <beans:import resource="SBF22.xml" />
 
-    <beans:import resource="SBF23.xml" />
-
     <beans:import resource="SBF24.xml" />
 
     <beans:import resource="SBF25.xml" />
@@ -513,27 +511,6 @@
                     <description>把 A74 db 資料寫至 A74 file</description>
                     <tasklet>
                         <chunk reader="a74DbReader" processor="f22Processor" writer="f22Writer" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-            </flow>
-            <flow>
-                <decision id="f23Decision" decider="f23Decider">
-                    <next on="EXECUTE" to="f23-sample" />
-                    <end on="SKIP" />
-                </decision>
-                <step id="f23-sample" next="f23-copy">
-                    <description>產生 f23 sample file</description>
-                    <tasklet>
-                        <chunk reader="cdicF23FileReader" processor="f23SampleProcessor" writer="a75SampleFileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="f23-copy">
-                    <description>把 host file CDICF23 的資料複製至 A75 file</description>
-                    <tasklet>
-                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF23"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A75"></beans:property>
-                        </beans:bean>
                     </tasklet>
                 </step>
             </flow>
