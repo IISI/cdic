@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Aquarius.EmbedServer
 Bundle-SymbolicName: platform.aquarius.embedserver;singleton:=true
-Bundle-Version: 1.0.0.alpha
+Bundle-Version: 1.0.0
 Bundle-Activator: platform.aquarius.embedserver.Activator
 Bundle-Vendor: Hsien Chih Wang
 Require-Bundle: org.eclipse.core.runtime,
