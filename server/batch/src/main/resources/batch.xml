@@ -814,34 +814,46 @@
                                         DELETE FROM A26 WHERE EXISTS (
                                             SELECT *
                                             FROM (
-                                                SELECT OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
                                                 FROM A26
                                                 WHERE OTPAYSAV >= 0
-                                                GROUP BY OTCOMPCODE, OTRCCODE, OTREFNO
+                                                GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
                                             ) T
-                                            WHERE T.C > 1 AND A26.OTCOMPCODE = T.OTCOMPCODE AND A26.OTRCCODE = T.OTRCCODE AND A26.OTREFNO = T.OTREFNO
+                                            WHERE T.C > 1
+                                                AND A26.OTAPNO = T.OTAPNO
+                                                AND A26.OTCOMPCODE = T.OTCOMPCODE
+                                                AND A26.OTRCCODE = T.OTRCCODE
+                                                AND A26.OTREFNO = T.OTREFNO
                                         );
                                         
                                         DELETE FROM B26 WHERE EXISTS (
                                             SELECT *
                                             FROM (
-                                                SELECT OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
                                                 FROM B26
                                                 WHERE OTPAYSAV >= 0
-                                                GROUP BY OTCOMPCODE, OTRCCODE, OTREFNO
+                                                GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
                                             ) T
-                                            WHERE T.C > 1 AND B26.OTCOMPCODE = T.OTCOMPCODE AND B26.OTRCCODE = T.OTRCCODE AND B26.OTREFNO = T.OTREFNO
+                                            WHERE T.C > 1
+                                                AND B26.OTAPNO = T.OTAPNO
+                                                AND B26.OTCOMPCODE = T.OTCOMPCODE
+                                                AND B26.OTRCCODE = T.OTRCCODE
+                                                AND B26.OTREFNO = T.OTREFNO
                                         );
                                         
                                         DELETE FROM C26 WHERE EXISTS (
                                             SELECT *
                                             FROM (
-                                                SELECT OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
                                                 FROM C26
                                                 WHERE OTPAYSAV >= 0
-                                                GROUP BY OTCOMPCODE, OTRCCODE, OTREFNO
+                                                GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
                                             ) T
-                                            WHERE T.C > 1 AND C26.OTCOMPCODE = T.OTCOMPCODE AND C26.OTRCCODE = T.OTRCCODE AND C26.OTREFNO = T.OTREFNO
+                                            WHERE T.C > 1
+                                                AND C26.OTAPNO = T.OTAPNO
+                                                AND C26.OTCOMPCODE = T.OTCOMPCODE
+                                                AND C26.OTRCCODE = T.OTRCCODE
+                                                AND C26.OTREFNO = T.OTREFNO
                                         );
                                     ]]>
                                 </beans:value>
@@ -860,13 +872,17 @@
                                         UPDATE A26 SET OTPAYSAV = (
                                             SELECT SUM(OTPAYSAV)
                                             FROM A26 B
-                                            WHERE A26.OTCOMPCODE = B.OTCOMPCODE AND A26.OTRCCODE = B.OTRCCODE AND A26.OTREFNO = B.OTREFNO
-                                            GROUP BY B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
+                                            WHERE A26.OTAPNO = B.OTAPNO
+                                                AND A26.OTCOMPCODE = B.OTCOMPCODE
+                                                AND A26.OTRCCODE = B.OTRCCODE
+                                                AND A26.OTREFNO = B.OTREFNO
+                                            GROUP BY B.OTAPNO, B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
                                         )
                                         WHERE EXISTS (
                                             SELECT *
                                             FROM A26 B
-                                            WHERE A26.OTCOMPCODE = B.OTCOMPCODE
+                                            WHERE A26.OTAPNO = B.OTAPNO
+                                                AND A26.OTCOMPCODE = B.OTCOMPCODE
                                                 AND A26.OTRCCODE = B.OTRCCODE
                                                 AND A26.OTREFNO = B.OTREFNO
                                                 AND A26.OTPAYSAV >= 0
@@ -875,13 +891,17 @@
                                         UPDATE B26 SET OTPAYSAV = (
                                             SELECT SUM(OTPAYSAV)
                                             FROM B26 B
-                                            WHERE B26.OTCOMPCODE = B.OTCOMPCODE AND B26.OTRCCODE = B.OTRCCODE AND B26.OTREFNO = B.OTREFNO
-                                            GROUP BY B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
+                                            WHERE B26.OTAPNO = B.OTAPNO
+                                                AND B26.OTCOMPCODE = B.OTCOMPCODE
+                                                AND B26.OTRCCODE = B.OTRCCODE
+                                                AND B26.OTREFNO = B.OTREFNO
+                                            GROUP BY B.OTAPNO, B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
                                         )
                                         WHERE EXISTS (
                                             SELECT *
                                             FROM B26 B
-                                            WHERE B26.OTCOMPCODE = B.OTCOMPCODE
+                                            WHERE B26.OTAPNO = B.OTAPNO
+                                                AND B26.OTCOMPCODE = B.OTCOMPCODE
                                                 AND B26.OTRCCODE = B.OTRCCODE
                                                 AND B26.OTREFNO = B.OTREFNO
                                                 AND B26.OTPAYSAV >= 0
@@ -890,13 +910,17 @@
                                         UPDATE C26 SET OTPAYSAV = (
                                             SELECT SUM(OTPAYSAV)
                                             FROM C26 B
-                                            WHERE C26.OTCOMPCODE = B.OTCOMPCODE AND C26.OTRCCODE = B.OTRCCODE AND C26.OTREFNO = B.OTREFNO
-                                            GROUP BY B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
+                                            WHERE C26.OTAPNO = B.OTAPNO
+                                                AND C26.OTCOMPCODE = B.OTCOMPCODE
+                                                AND C26.OTRCCODE = B.OTRCCODE
+                                                AND C26.OTREFNO = B.OTREFNO
+                                            GROUP BY B.OTAPNO, B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
                                         )
                                         WHERE EXISTS (
                                             SELECT *
                                             FROM C26 B
-                                            WHERE C26.OTCOMPCODE = B.OTCOMPCODE
+                                            WHERE C26.OTAPNO = B.OTAPNO
+                                                AND C26.OTCOMPCODE = B.OTCOMPCODE
                                                 AND C26.OTRCCODE = B.OTRCCODE
                                                 AND C26.OTREFNO = B.OTREFNO
                                                 AND C26.OTPAYSAV >= 0
