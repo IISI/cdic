@@ -2,7 +2,7 @@
 <feature
       id="tw.com.citi.cdic.client.app"
       label="App"
-      version="1.0.0.qualifier"
+      version="1.0.0.v20110124-1008"
       provider-name="IISI">
 
    <description url="http://www.example.com/description">
