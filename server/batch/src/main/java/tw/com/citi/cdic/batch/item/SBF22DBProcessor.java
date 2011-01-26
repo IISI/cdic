@@ -97,10 +97,10 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
             if ("D".equals(item.getRecType())) {
                 if ("CHPS".equals(item.getProdCode()) || "OHPS".equals(item.getProdCode())) {
                     A74 a74 = generateBaseA74(item);
-                    a74.setRate(Double.parseDouble(item.getTierRate0())
-                            + Double.parseDouble(item.getTierRateFraction0()) / 1000000);
-                    largeMax = Double.parseDouble(item.getTierMinAmt0())
-                            + Double.parseDouble(item.getTierMinAmtFraction0()) / 100;
+                    a74.setRate(Double.parseDouble(item.getTierRate1())
+                            + Double.parseDouble(item.getTierRateFraction1()) / 1000000);
+                    largeMax = Double.parseDouble(item.getTierMinAmt1())
+                            + Double.parseDouble(item.getTierMinAmtFraction1()) / 100;
                     // 若為台幣則以百萬為單位，XAU 百元為單位，其他取到整數位。
                     if ("TWD".equalsIgnoreCase(a74.getCurrencyCode())) {
                         a74.setLargeMax((int) (largeMax / 1000000));
