@@ -243,7 +243,7 @@
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
                             <beans:property name="dataSource" ref="dataSource" />
-                            <beans:property name="sql" value="UPDATE A11 SET CUSTHEADID = (SELECT CIF.JOINT_ID FROM CIF WHERE A11.CUSTID = CIF.CUST_NUMB) WHERE EXISTS (SELECT CIF.JOINT_ID FROM CIF WHERE A11.CUSTID = CIF.CUST_NUMB)" />
+                            <beans:property name="sql" value="UPDATE A11 SET CUSTHEADID = (SELECT SUBSTRING(CIF.JOINT_ID, 1, 11) FROM CIF WHERE A11.CUSTID = CIF.CUST_NUMB) WHERE EXISTS (SELECT CIF.JOINT_ID FROM CIF WHERE A11.CUSTID = CIF.CUST_NUMB)" />
                         </beans:bean>
                     </tasklet>
                 </step>
