@@ -959,7 +959,7 @@
                 </step>
             </flow>
         </split>
-        <split id="import-f07-f18" next="f99Decision" task-executor="asyncTaskExecutor">
+        <split id="import-f07-f18" task-executor="asyncTaskExecutor">
             <flow>
                 <decision id="f07Decision" decider="f07Decider">
                     <next on="EXECUTE" to="f07-init" />
