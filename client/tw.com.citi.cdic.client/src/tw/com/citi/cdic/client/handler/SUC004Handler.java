@@ -128,7 +128,7 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
             FileUtil.copyFile(FolderType.PROCESS, savePath, "", tail, new String[] { fileName });
         } catch (FileSystemException e) {
             e.printStackTrace();
-            throw new SecurityException(Messages.bind(Messages.Access_Host_File_Error, new Object[] { fileName }), e);
+            throw new SecurityException(Messages.bind(Messages.Download_Local_File_Error, new Object[] { fileName }), e);
         }
         return "";
     }

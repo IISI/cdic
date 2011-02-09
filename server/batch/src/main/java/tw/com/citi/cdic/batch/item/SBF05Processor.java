@@ -17,12 +17,15 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
         a24.setUnit("021");
         a24.setBranchNo("0000");
         a24.setSrNo(item.getAcctNo());
+        a24.setApNo("2200119000");
         a24.setCharCode(item.getProdName());
-        a24.setRateType(item.getProdName());
         a24.setCustomerId(item.getUnino());
         a24.setCustomerName(new String(item.getName().getBytes("ms950"), "ms950"));
         a24.setCustomerBusinessCode(item.getNewBCode());
+        a24.setCustomerType("000");
+        a24.setCurrencyCode("TWD");
         a24.setBalance(item.getBalance());
+        a24.setRateType(item.getProdName());
         a24.setIntPayable(item.getInterest());
         String address = "";
         if (item.getCommAdr() != null && item.getCommAdr().length() > 6) {

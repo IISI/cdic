@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Aquarius.Platform
 Bundle-SymbolicName: platform.aquarius; singleton:=true
-Bundle-Version: 1.0.0.alpha
+Bundle-Version: 1.0.0
 Bundle-Activator: aquarius.Activator
 Bundle-Vendor: Hsien Chih Wang
 Require-Bundle: org.eclipse.ui,
@@ -18,3 +18,4 @@ Bundle-ClassPath: libs/MozillaGlue.jar,
  .
 Export-Package: org.mozilla.interfaces,
  org.mozilla.xpcom
+Import-Package: org.eclipselabs.p2.rcpupdate.utils

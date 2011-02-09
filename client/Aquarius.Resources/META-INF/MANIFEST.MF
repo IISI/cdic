@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Aquarius.Resources
 Bundle-SymbolicName: platform.aquarius.resources
-Bundle-Version: 1.0.0.alpha
+Bundle-Version: 1.0.0
 Bundle-Vendor: Hsien Chih Wang

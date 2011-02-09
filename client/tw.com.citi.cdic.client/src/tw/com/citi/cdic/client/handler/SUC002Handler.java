@@ -100,6 +100,8 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
         fileSts.setStatus("0"); //$NON-NLS-1$
         fileSts.setConfirmer(null);
         fileSts.setConfirmDateTime(null);
+        fileSts.setExecuteDateTime(null);
+        fileSts.setExecutor(null);
 
         HostFileSts hostFileSts = new HostFileSts();
         hostFileSts.setHostDateTime(null);

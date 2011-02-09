@@ -40,8 +40,6 @@
 
     <beans:import resource="SBF22.xml" />
 
-    <beans:import resource="SBF23.xml" />
-
     <beans:import resource="SBF24.xml" />
 
     <beans:import resource="SBF25.xml" />
@@ -150,12 +148,18 @@
                             <beans:property name="dataSource" ref="dataSource" />
                             <beans:property name="sql" value="DELETE FROM A11" />
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f01-db" next="f01-del-joint-account">
                     <description>把 bus view 的資料 export 至 A11 table</description>
                     <tasklet>
                         <chunk reader="busDbReader" processor="f01Processor" writer="a11DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f01-del-joint-account" next="f01-copy-joint-account">
@@ -165,12 +169,18 @@
                             <beans:property name="dataSource" ref="dataSource" />
                             <beans:property name="sql" value="DELETE FROM JOINT_ACCOUNT" />
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f01-copy-joint-account" next="f01-del-cif">
                     <description>把 Joint Account 檔案的資料寫入 table 中</description>
                     <tasklet>
                         <chunk reader="jointAcclistFileReader" writer="jointAccountDbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f01-del-cif" next="f01-gen-cif">
@@ -180,6 +190,9 @@
                             <beans:property name="dataSource" ref="dataSource" />
                             <beans:property name="sql" value="DELETE FROM CIF" />
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f01-gen-cif" next="f01-update-a11">
@@ -238,6 +251,9 @@
                                 </beans:value>
                             </beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f01-update-a11" next="f01-copy-non-joint-data">
@@ -245,8 +261,11 @@
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
                             <beans:property name="dataSource" ref="dataSource" />
-                            <beans:property name="sql" value="UPDATE A11 SET CUSTHEADID = (SELECT CIF.JOINT_ID FROM CIF WHERE A11.CUSTID = CIF.CUST_NUMB) WHERE EXISTS (SELECT CIF.JOINT_ID FROM CIF WHERE A11.CUSTID = CIF.CUST_NUMB)" />
+                            <beans:property name="sql" value="UPDATE A11 SET CUSTHEADID = (SELECT SUBSTRING(CIF.JOINT_ID, 1, 11) FROM CIF WHERE A11.CUSTID = CIF.CUST_NUMB) WHERE EXISTS (SELECT CIF.JOINT_ID FROM CIF WHERE A11.CUSTID = CIF.CUST_NUMB)" />
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f01-copy-non-joint-data" next="f01-file">
@@ -283,12 +302,18 @@
                                 </beans:value>
                             </beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f01-file">
                     <description>把 A11 table 的資料 copy 至 A11 file</description>
                     <tasklet>
                         <chunk reader="a11DbReader" processor="f01SampleCountProcessor" writer="a11Writer" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -309,12 +334,18 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM A24"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f05">
                     <description>讀取 LUS view 的資料，然後產生 A24 table 及 file。</description>
                     <tasklet>
                         <chunk reader="lusDbReader" processor="f05Processor" writer="a24Writer" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -327,6 +358,9 @@
                     <description>產生 f10 sample file</description>
                     <tasklet>
                         <chunk reader="cdicF10FileReader" processor="f10SampleProcessor" writer="a34SampleFileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f10-copy" next="f10db-init">
@@ -336,6 +370,9 @@
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF10"></beans:property>
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A34"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f10db-init" next="f10-a34db">
@@ -345,12 +382,18 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM A34"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f10-a34db">
                     <description>CDICF10 寫入 A34</description>
                     <tasklet>
                         <chunk reader="cdicF10FileReader" writer="a34DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -363,6 +406,9 @@
                     <description>把 local file CDICF11 資料寫至 A35 file</description>
                     <tasklet>
                         <chunk reader="cdicF11FileReader" processor="SBF11Processor" writer="f11Writer" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -375,6 +421,9 @@
                     <description>產生 f12 sample file</description>
                     <tasklet>
                         <chunk reader="cdicF12FileReader" processor="f12SampleProcessor" writer="a41SampleFileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f12-copy" next="f12db-init">
@@ -384,6 +433,9 @@
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF12"></beans:property>
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A41"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f12db-init" next="f12-a41db">
@@ -393,12 +445,18 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM A41"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f12-a41db">
                     <description>CDICF12 寫入 A41</description>
                     <tasklet>
                         <chunk reader="cdicF12FileReader" writer="a41DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -411,6 +469,9 @@
                     <description>產生 f14 sample file</description>
                     <tasklet>
                         <chunk reader="cdicF14FileReader" processor="f14SampleProcessor" writer="a43SampleFileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f14-copy">
@@ -420,6 +481,9 @@
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF14"></beans:property>
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A43"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -432,6 +496,9 @@
                     <description>產生 f15 sample file</description>
                     <tasklet>
                         <chunk reader="cdicF15FileReader" processor="f15SampleProcessor" writer="a44SampleFileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f15-copy">
@@ -441,6 +508,9 @@
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF15"></beans:property>
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A44"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -456,24 +526,36 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM A73"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f21i-a73db" next="f21r">
                     <description>把 host file CDICF21I 的資料寫入 A73 table</description>
                     <tasklet>
                         <chunk reader="cdicF21IFileReader" writer="a73DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f21r" next="f21-a73db-a73file">
                     <description>把 host file CDICF21R 的資料寫入 A73 table, B73 file, C73 file</description>
                     <tasklet>
                         <chunk reader="cdicF21RFileReader" processor="f21Processor" writer="f21Writer1" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f21-a73db-a73file">
                     <description>把  A73 table 的資料寫入  A73 file, C73 file</description>
                     <tasklet>
                         <chunk reader="a73DbReader" processor="f21a73Processor" writer="f21Writer2" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -489,51 +571,45 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM A74"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f22i-a74db" next="f22a-a74db">
                     <description>CDIC22I 寫入 A74</description>
                     <tasklet>
                         <chunk reader="cdicF22IFileReader" writer="a74DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f22a-a74db" next="f22r-a74db">
                     <description>CDIC22A 寫入 A74</description>
                     <tasklet>
                         <chunk reader="cdicF22AFileReader" writer="a74DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f22r-a74db" next="f22">
                     <description>CDIC22R 寫入 A74</description>
                     <tasklet>
                         <chunk reader="cdicF22RFileReader" processor="f22dbProcessor" writer="a74ListDbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f22">
                     <description>把 A74 db 資料寫至 A74 file</description>
                     <tasklet>
                         <chunk reader="a74DbReader" processor="f22Processor" writer="f22Writer" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-            </flow>
-            <flow>
-                <decision id="f23Decision" decider="f23Decider">
-                    <next on="EXECUTE" to="f23-sample" />
-                    <end on="SKIP" />
-                </decision>
-                <step id="f23-sample" next="f23-copy">
-                    <description>產生 f23 sample file</description>
-                    <tasklet>
-                        <chunk reader="cdicF23FileReader" processor="f23SampleProcessor" writer="a75SampleFileWriter" commit-interval="500"></chunk>
-                    </tasklet>
-                </step>
-                <step id="f23-copy">
-                    <description>把 host file CDICF23 的資料複製至 A75 file</description>
-                    <tasklet>
-                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF23"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A75"></beans:property>
-                        </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -546,6 +622,9 @@
                     <description>產生 f24 sample file</description>
                     <tasklet>
                         <chunk reader="cdicF24FileReader" processor="f24SampleProcessor" writer="a76SampleFileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f24-copy" next="f24db-init">
@@ -555,6 +634,9 @@
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF24"></beans:property>
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A76"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f24db-init" next="f24-a76db">
@@ -564,12 +646,18 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM A76"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f24-a76db">
                     <description>CDICF24 寫入 A76</description>
                     <tasklet>
                         <chunk reader="cdicF24FileReader" writer="a76DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -582,6 +670,9 @@
                     <description>產生 f25 sample file</description>
                     <tasklet>
                         <chunk reader="cdicF25FileReader" processor="f25SampleProcessor" writer="a77SampleFileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f25-copy">
@@ -591,6 +682,9 @@
                             <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF25"></beans:property>
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A77"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -606,18 +700,27 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM T02"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="t02-table" next="t02-t02">
                     <description>把 FMBCDWN4 的資料 insert 至 T02 table</description>
                     <tasklet>
                         <chunk reader="fmbcdwn4FileReader" processor="t02Processor" writer="t02DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="t02-t02">
                     <description>把 T02 Table 的資料 import 至 T02 file</description>
                     <tasklet>
                         <chunk reader="t02DbReader" writer="t02FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -630,12 +733,18 @@
                     <description>把 CDICT03G 的資料 import 至 T03 file</description>
                     <tasklet>
                         <chunk reader="cdicT03GFileReader" processor="t03Processor" writer="t03FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="t12">
                     <description>把 CDICT03G 的資料 import 至 T12 file</description>
                     <tasklet>
                         <chunk reader="cdicT03GFileReader" processor="t12Processor" writer="t12FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -651,24 +760,36 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM T06"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="t06" next="t06-t03">
                     <description>把 CDICT06 的資料 import 至 T06 file</description>
                     <tasklet>
                         <chunk reader="cdicT06FileReader" processor="t06Processor" writer="t06DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="t06-t03" next="t06-file">
                     <description>把 CDICT03G 的資料 import 至 T06 file</description>
                     <tasklet>
                         <chunk reader="cdicT03GFileReader" processor="t03t06Processor" writer="t06DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="t06-file">
                     <description>把 CDICT03G 的資料 import 至 T06 file</description>
                     <tasklet>
                         <chunk reader="t06DbReader" writer="t06FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -681,6 +802,9 @@
                     <description>把 local file CDICT04 資料寫至 T04 file</description>
                     <tasklet>
                         <chunk reader="cdicT04FileReader" writer="t04FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -693,6 +817,9 @@
                     <description>把 local file CDICT08 資料寫至 T08 file</description>
                     <tasklet>
                         <chunk reader="cdicT08FileReader" writer="t08FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -705,6 +832,9 @@
                     <description>把 local file CDICT09 資料寫至 T09 file</description>
                     <tasklet>
                         <chunk reader="cdicT09FileReader" writer="t09FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -717,6 +847,9 @@
                     <description>把 local file CDICT10 資料寫至 T10 file</description>
                     <tasklet>
                         <chunk reader="cdicT10FileReader" writer="t10FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -729,6 +862,9 @@
                     <description>把 local file CDICT11 資料寫至 T11 file</description>
                     <tasklet>
                         <chunk reader="cdicT11FileReader" writer="t11FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -741,6 +877,9 @@
                     <description>把 local file CDICT13 資料寫至 T13 file</description>
                     <tasklet>
                         <chunk reader="cdicT13FileReader" writer="t13FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -753,6 +892,9 @@
                     <description>把 local file CDICT14 資料寫至 T14 file</description>
                     <tasklet>
                         <chunk reader="cdicT14FileReader" writer="t14FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -765,6 +907,9 @@
                     <description>把 local file CDICT18 資料寫至 T18 file</description>
                     <tasklet>
                         <chunk reader="cdicT18FileReader" writer="t18FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -777,6 +922,9 @@
                     <description>把 local file CDICT20 資料寫至 T20 file</description>
                     <tasklet>
                         <chunk reader="cdicT20FileReader" writer="t20FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -789,6 +937,9 @@
                     <description>把 local file CDICT21 資料寫至 T21 file</description>
                     <tasklet>
                         <chunk reader="cdicT21FileReader" writer="t21FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -801,15 +952,18 @@
                     <description>把 CDICT27H 的資料 import 至 T27 file</description>
                     <tasklet>
                         <chunk reader="cdicT27FileReader" processor="t27Processor" writer="t27FileWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
         </split>
-        <split id="import-f07-f18" next="f99Decision" task-executor="asyncTaskExecutor">
+        <split id="import-f07-f18" task-executor="asyncTaskExecutor">
             <flow>
                 <decision id="f07Decision" decider="f07Decider">
                     <next on="EXECUTE" to="f07-init" />
-                    <end on="SKIP" />
+                    <next on="SKIP" to="f99Decision" />
                 </decision>
                 <step id="f07-init" next="f07-split">
                     <description>清空 table A26, B26, C26 的資料</description>
@@ -818,12 +972,18 @@
                             <beans:property name="dataSource" ref="dataSource" />
                             <beans:property name="sql" value="DELETE FROM A26; DELETE FROM B26; DELETE FROM C26;" />
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f07-split" next="f07-delete">
                     <description>把 CDICF07H 的資料分檔並套上客戶資料，然後 copy 至 A26, B26, C26 table</description>
                     <tasklet>
                         <chunk reader="cdicF07FileReader" processor="f07Processor" writer="f07DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f07-delete" next="f07-sum">
@@ -837,39 +997,54 @@
                                         DELETE FROM A26 WHERE EXISTS (
                                             SELECT *
                                             FROM (
-                                                SELECT OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
                                                 FROM A26
                                                 WHERE OTPAYSAV >= 0
-                                                GROUP BY OTCOMPCODE, OTRCCODE, OTREFNO
+                                                GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
                                             ) T
-                                            WHERE T.C > 1 AND A26.OTCOMPCODE = T.OTCOMPCODE AND A26.OTRCCODE = T.OTRCCODE AND A26.OTREFNO = T.OTREFNO
+                                            WHERE T.C > 1
+                                                AND A26.OTAPNO = T.OTAPNO
+                                                AND A26.OTCOMPCODE = T.OTCOMPCODE
+                                                AND A26.OTRCCODE = T.OTRCCODE
+                                                AND A26.OTREFNO = T.OTREFNO
                                         );
                                         
                                         DELETE FROM B26 WHERE EXISTS (
                                             SELECT *
                                             FROM (
-                                                SELECT OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
                                                 FROM B26
                                                 WHERE OTPAYSAV >= 0
-                                                GROUP BY OTCOMPCODE, OTRCCODE, OTREFNO
+                                                GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
                                             ) T
-                                            WHERE T.C > 1 AND B26.OTCOMPCODE = T.OTCOMPCODE AND B26.OTRCCODE = T.OTRCCODE AND B26.OTREFNO = T.OTREFNO
+                                            WHERE T.C > 1
+                                                AND B26.OTAPNO = T.OTAPNO
+                                                AND B26.OTCOMPCODE = T.OTCOMPCODE
+                                                AND B26.OTRCCODE = T.OTRCCODE
+                                                AND B26.OTREFNO = T.OTREFNO
                                         );
                                         
                                         DELETE FROM C26 WHERE EXISTS (
                                             SELECT *
                                             FROM (
-                                                SELECT OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
                                                 FROM C26
                                                 WHERE OTPAYSAV >= 0
-                                                GROUP BY OTCOMPCODE, OTRCCODE, OTREFNO
+                                                GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
                                             ) T
-                                            WHERE T.C > 1 AND C26.OTCOMPCODE = T.OTCOMPCODE AND C26.OTRCCODE = T.OTRCCODE AND C26.OTREFNO = T.OTREFNO
+                                            WHERE T.C > 1
+                                                AND C26.OTAPNO = T.OTAPNO
+                                                AND C26.OTCOMPCODE = T.OTCOMPCODE
+                                                AND C26.OTRCCODE = T.OTRCCODE
+                                                AND C26.OTREFNO = T.OTREFNO
                                         );
                                     ]]>
                                 </beans:value>
                             </beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f07-sum" next="f07-del-neg">
@@ -883,13 +1058,17 @@
                                         UPDATE A26 SET OTPAYSAV = (
                                             SELECT SUM(OTPAYSAV)
                                             FROM A26 B
-                                            WHERE A26.OTCOMPCODE = B.OTCOMPCODE AND A26.OTRCCODE = B.OTRCCODE AND A26.OTREFNO = B.OTREFNO
-                                            GROUP BY B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
+                                            WHERE A26.OTAPNO = B.OTAPNO
+                                                AND A26.OTCOMPCODE = B.OTCOMPCODE
+                                                AND A26.OTRCCODE = B.OTRCCODE
+                                                AND A26.OTREFNO = B.OTREFNO
+                                            GROUP BY B.OTAPNO, B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
                                         )
                                         WHERE EXISTS (
                                             SELECT *
                                             FROM A26 B
-                                            WHERE A26.OTCOMPCODE = B.OTCOMPCODE
+                                            WHERE A26.OTAPNO = B.OTAPNO
+                                                AND A26.OTCOMPCODE = B.OTCOMPCODE
                                                 AND A26.OTRCCODE = B.OTRCCODE
                                                 AND A26.OTREFNO = B.OTREFNO
                                                 AND A26.OTPAYSAV >= 0
@@ -898,13 +1077,17 @@
                                         UPDATE B26 SET OTPAYSAV = (
                                             SELECT SUM(OTPAYSAV)
                                             FROM B26 B
-                                            WHERE B26.OTCOMPCODE = B.OTCOMPCODE AND B26.OTRCCODE = B.OTRCCODE AND B26.OTREFNO = B.OTREFNO
-                                            GROUP BY B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
+                                            WHERE B26.OTAPNO = B.OTAPNO
+                                                AND B26.OTCOMPCODE = B.OTCOMPCODE
+                                                AND B26.OTRCCODE = B.OTRCCODE
+                                                AND B26.OTREFNO = B.OTREFNO
+                                            GROUP BY B.OTAPNO, B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
                                         )
                                         WHERE EXISTS (
                                             SELECT *
                                             FROM B26 B
-                                            WHERE B26.OTCOMPCODE = B.OTCOMPCODE
+                                            WHERE B26.OTAPNO = B.OTAPNO
+                                                AND B26.OTCOMPCODE = B.OTCOMPCODE
                                                 AND B26.OTRCCODE = B.OTRCCODE
                                                 AND B26.OTREFNO = B.OTREFNO
                                                 AND B26.OTPAYSAV >= 0
@@ -913,13 +1096,17 @@
                                         UPDATE C26 SET OTPAYSAV = (
                                             SELECT SUM(OTPAYSAV)
                                             FROM C26 B
-                                            WHERE C26.OTCOMPCODE = B.OTCOMPCODE AND C26.OTRCCODE = B.OTRCCODE AND C26.OTREFNO = B.OTREFNO
-                                            GROUP BY B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
+                                            WHERE C26.OTAPNO = B.OTAPNO
+                                                AND C26.OTCOMPCODE = B.OTCOMPCODE
+                                                AND C26.OTRCCODE = B.OTRCCODE
+                                                AND C26.OTREFNO = B.OTREFNO
+                                            GROUP BY B.OTAPNO, B.OTCOMPCODE, B.OTRCCODE, B.OTREFNO
                                         )
                                         WHERE EXISTS (
                                             SELECT *
                                             FROM C26 B
-                                            WHERE C26.OTCOMPCODE = B.OTCOMPCODE
+                                            WHERE C26.OTAPNO = B.OTAPNO
+                                                AND C26.OTCOMPCODE = B.OTCOMPCODE
                                                 AND C26.OTRCCODE = B.OTRCCODE
                                                 AND C26.OTREFNO = B.OTREFNO
                                                 AND C26.OTPAYSAV >= 0
@@ -928,6 +1115,9 @@
                                 </beans:value>
                             </beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f07-del-neg" next="f07-a26-export">
@@ -937,24 +1127,56 @@
                             <beans:property name="dataSource" ref="dataSource" />
                             <beans:property name="sql" value="DELETE FROM A26 WHERE OTPAYSAV &lt;= 0; DELETE FROM C26 WHERE OTPAYSAV &lt;= 0; DELETE FROM C26 WHERE OTPAYSAV &lt;= 0;" />
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f07-a26-export" next="f07-b26-export">
                     <description>把 A26 的資料匯出至檔案</description>
                     <tasklet>
                         <chunk reader="a26DbReader" processor="a26Processor" writer="a26Writer" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f07-b26-export" next="f07-c26-export">
                     <description>把 A26 的資料匯出至檔案</description>
                     <tasklet>
                         <chunk reader="b26DbReader" processor="b26Processor" writer="b26Writer" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
-                <step id="f07-c26-export">
+                <step id="f07-c26-export" next="f99Decision">
                     <description>把 A26 的資料匯出至檔案</description>
                     <tasklet>
                         <chunk reader="c26DbReader" processor="c26Processor" writer="c26Writer" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <decision id="f99Decision" decider="f99Decider">
+                    <next on="EXECUTE" to="f99-genReport" />
+                    <end on="SKIP" />
+                </decision>
+                <step id="f99-genReport">
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.GenerateReportTasklet">
+                            <beans:property name="resource">
+                                <beans:bean class="org.springframework.core.io.FileSystemResource">
+                                    <beans:constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/report.xls"></beans:constructor-arg>
+                                </beans:bean>
+                            </beans:property>
+                            <beans:property name="tableFlowDao" ref="tableFlowDao"></beans:property>
+                            <beans:property name="reportDao" ref="reportDao"></beans:property>
+                        </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
@@ -970,47 +1192,39 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM CDICF20"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f18-copy-currency" next="f18">
                     <description>Copy CDICF20 至 table</description>
                     <tasklet>
                         <chunk reader="cdicF20FileReader" writer="cdicF20DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f18">
                     <description>Summarise BUS view 的資料，產生 A61</description>
                     <tasklet task-executor="asyncTaskExecutor" throttle-limit="20">
                         <chunk reader="cifDbReader" processor="SBF18Processor" writer="f18Writer" commit-interval="200"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
             </flow>
         </split>
-        <decision id="f99Decision" decider="f99Decider">
-            <next on="EXECUTE" to="f99-genReport" />
-            <end on="SKIP" />
-        </decision>
-        <step id="f99-genReport">
-            <tasklet>
-                <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.GenerateReportTasklet">
-                    <beans:property name="resource">
-                        <beans:bean class="org.springframework.core.io.FileSystemResource">
-                            <beans:constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/report.xls"></beans:constructor-arg>
-                        </beans:bean>
-                    </beans:property>
-                    <beans:property name="tableFlowDao" ref="tableFlowDao"></beans:property>
-                    <beans:property name="reportDao" ref="reportDao"></beans:property>
-                </beans:bean>
-            </tasklet>
-        </step>
         <listeners>
-            <listener>
-                <beans:bean class="tw.com.citi.cdic.batch.FileStatusUpdater">
-                    <beans:property name="CDICFileStatusDao" ref="CDICFileStatusDao"></beans:property>
-                </beans:bean>
-            </listener>
+            <listener ref="stepListener" />
         </listeners>
     </job>
+
+    <beans:bean id="stepListener" class="tw.com.citi.cdic.batch.FileStatusUpdater">
+        <beans:property name="CDICFileStatusDao" ref="CDICFileStatusDao"></beans:property>
+    </beans:bean>
 
     <beans:bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry"></beans:bean>
 
