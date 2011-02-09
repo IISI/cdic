@@ -1,31 +1,27 @@
 package tw.com.citi.cdic.utils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.vfs.FileFilter;
-import org.apache.commons.vfs.FileFilterSelector;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSelectInfo;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.FileSystemOptions;
-import org.apache.commons.vfs.auth.StaticUserAuthenticator;
-import org.apache.commons.vfs.impl.DefaultFileSystemConfigBuilder;
-import org.apache.commons.vfs.provider.local.LocalFileSystem;
+import jcifs.smb.SmbException;
+import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileFilter;
+import jcifs.smb.SmbFileInputStream;
+import jcifs.smb.SmbFileOutputStream;
+
 import org.eclipse.core.runtime.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import platform.aquarius.embedserver.conf.PasswordUtil;
-import tw.com.citi.cdic.client.vfs.OSGiFileSystemManager;
 
 public class FileUtil {
 
@@ -49,25 +45,17 @@ public class FileUtil {
     }
 
     private static Properties config;
-    private static FileSystemManager fsManager;
-    private static FileSystemOptions opts;
     private static final int BUFF_SIZE = 100000;
     private static final byte[] buffer = new byte[BUFF_SIZE];
     private static boolean init = false;
+    private static String uriStringPrefix;
 
     static {
         config = new Properties();
         try {
             URL url = Platform.getBundle("tw.com.citi.cdic.client.resources").getResource("folders.properties");
             config.load(url.openStream());
-            logger.info(config.getProperty("functionalId"));
-            logger.info(getPassword("functionalPwd"));
-            StaticUserAuthenticator auth = new StaticUserAuthenticator("APAC", config.getProperty("functionalId"),
-                    getPassword("functionalPwd"));
-            opts = new FileSystemOptions();
-            DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(opts, auth);
-            fsManager = new OSGiFileSystemManager();
-            ((OSGiFileSystemManager) fsManager).init();
+            uriStringPrefix = "smb://" + config.getProperty("functionalId") + ":" + getPassword("functionalPwd") + "@";
             init = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,24 +67,27 @@ public class FileUtil {
         return PasswordUtil.decodePwd(config.getProperty(propertyKey));
     }
 
-    public static FileObject getHostFileByName(String fileName) throws FileSystemException {
-        FileObject folder = fsManager.resolveFile(
-                "smb://" + config.getProperty("host.host") + config.getProperty("host.path"), opts);
-        FileObject file = fsManager.resolveFile(folder, fileName);
-        fsManager.closeFileSystem(folder.getFileSystem());
+    private static String getURI(FolderType folderType, String fileName) {
+        return uriStringPrefix + config.getProperty(folderType.getKey() + ".host")
+                + config.getProperty(folderType.getKey() + ".path") + "/" + fileName;
+    }
+
+    public static SmbFile getHostFileByName(String fileName) throws MalformedURLException {
+        String fileStr = getURI(FolderType.HOST, fileName);
+        SmbFile file = new SmbFile(fileStr);
         return file;
     }
 
-    public static void copyFile(FileObject source, FileObject target, String prefix, String suffix,
-            String[] sourceFileNames) throws FileSystemException {
-        List<FileObject> files = new ArrayList<FileObject>();
+    private static void copyFile(SmbFile source, SmbFile target, String prefix, String suffix, String[] sourceFileNames)
+            throws SmbException, MalformedURLException {
+        List<SmbFile> files = new ArrayList<SmbFile>();
         if (sourceFileNames == null || sourceFileNames.length == 0) {
             // 全部複製
-            FileObject[] objects = source.getChildren();
+            SmbFile[] objects = source.listFiles();
             files.addAll(Arrays.asList(objects));
         } else {
             for (String fileName : sourceFileNames) {
-                FileObject file = fsManager.resolveFile(source, fileName);
+                SmbFile file = new SmbFile(source.getPath() + "/" + fileName);
                 if (file != null) {
                     files.add(file);
                 }
@@ -104,124 +95,173 @@ public class FileUtil {
         }
         if (files != null && files.size() != 0) {
             final List<String> accept = new ArrayList<String>();
-            for (FileObject file : files) {
-                accept.add(file.getName().getBaseName());
+            for (SmbFile file : files) {
+                accept.add(file.getName());
             }
-            FileFilterSelector ffs = new FileFilterSelector(new FileFilter() {
+            SmbFileFilter filter = new SmbFileFilter() {
                 @Override
-                public boolean accept(FileSelectInfo info) {
-                    if (accept.contains(info.getFile().getName().getBaseName())) {
+                public boolean accept(SmbFile info) {
+                    if (accept.contains(info.getName())) {
                         return true;
                     } else {
                         return false;
                     }
                 }
-            });
-            target.copyFrom(source, ffs);
+            };
+            SmbFile[] filesToCopy = source.listFiles(filter);
+            for (SmbFile file : filesToCopy) {
+                file.copyTo(new SmbFile(target.getPath() + "/" + file.getName()));
+            }
             if (prefix != null || suffix != null) {
                 // 修改檔名
-                if (target.getFileSystem() instanceof LocalFileSystem) {
-                    List<File> targetFiles = new ArrayList<File>();
-                    for (String fileName : sourceFileNames) {
-                        File file = new File(target.getURL().getFile() + "/" + fileName);
-                        if (file != null && file.exists()) {
-                            targetFiles.add(file);
-                        }
+                List<SmbFile> targetFiles = new ArrayList<SmbFile>();
+                for (String fileName : sourceFileNames) {
+                    SmbFile file = new SmbFile(target.getPath() + "/" + fileName);
+                    if (file != null && file.exists()) {
+                        targetFiles.add(file);
                     }
-                    if (targetFiles != null || targetFiles.size() > 0) {
-                        for (File file : targetFiles) {
-                            String baseName = file.getName();
-                            String extensions = baseName.indexOf(".") > 0 ? baseName.substring(baseName.indexOf("."))
-                                    : "";
-                            String fileName = baseName.indexOf(".") > 0 ? baseName.substring(0,
-                                    baseName.indexOf(".") - 1) : baseName;
-                            StringBuffer newName = new StringBuffer();
-                            newName = newName.append(prefix == null ? "" : prefix).append(fileName)
-                                    .append(suffix == null ? "" : suffix).append(extensions);
-                            file.renameTo(new File(target.getURL().getFile() + "/" + newName.toString()));
-                        }
-                    }
-                } else {
-                    List<FileObject> targetFiles = new ArrayList<FileObject>();
-                    for (String fileName : sourceFileNames) {
-                        FileObject file = fsManager.resolveFile(target, fileName);
-                        if (file != null) {
-                            targetFiles.add(file);
-                        }
-                    }
-                    if (targetFiles != null || targetFiles.size() > 0) {
-                        for (FileObject file : targetFiles) {
-                            String baseName = file.getName().getBaseName();
-                            String extensions = baseName.indexOf(".") > 0 ? baseName.substring(baseName.indexOf("."))
-                                    : "";
-                            String fileName = baseName.indexOf(".") > 0 ? baseName.substring(0,
-                                    baseName.indexOf(".") - 1) : baseName;
-                            StringBuffer newName = new StringBuffer();
-                            newName = newName.append(prefix == null ? "" : prefix).append(fileName)
-                                    .append(suffix == null ? "" : suffix).append(extensions);
-                            FileObject temp = fsManager.resolveFile(target, newName.toString());
-                            temp.createFile();
-                            file.moveTo(temp);
-                        }
+                }
+                if (targetFiles != null || targetFiles.size() > 0) {
+                    for (SmbFile file : targetFiles) {
+                        String baseName = file.getName();
+                        String extensions = baseName.indexOf(".") > 0 ? baseName.substring(baseName.indexOf(".")) : "";
+                        String fileName = baseName.indexOf(".") > 0 ? baseName.substring(0, baseName.indexOf(".") - 1)
+                                : baseName;
+                        StringBuffer newName = new StringBuffer();
+                        newName = newName.append(prefix == null ? "" : prefix).append(fileName)
+                                .append(suffix == null ? "" : suffix).append(extensions);
+                        file.renameTo(new SmbFile(target.getPath() + "/" + newName.toString()));
                     }
                 }
             }
         }
     }
 
-    public static void copyFile(FileObject source, FileObject target, String[] sourceFileNames)
-            throws FileSystemException {
+    private static void copyFileToLocal(SmbFile source, String target, String prefix, String suffix,
+            String[] sourceFileNames) throws IOException {
+        List<SmbFile> files = new ArrayList<SmbFile>();
+        if (sourceFileNames == null || sourceFileNames.length == 0) {
+            // 全部複製
+            SmbFile[] objects = source.listFiles();
+            files.addAll(Arrays.asList(objects));
+        } else {
+            for (String fileName : sourceFileNames) {
+                SmbFile file = new SmbFile(source.getPath() + "/" + fileName);
+                if (file != null) {
+                    files.add(file);
+                }
+            }
+        }
+        if (files != null && files.size() != 0) {
+            final List<String> accept = new ArrayList<String>();
+            for (SmbFile file : files) {
+                accept.add(file.getName());
+            }
+            SmbFileFilter filter = new SmbFileFilter() {
+                @Override
+                public boolean accept(SmbFile info) {
+                    if (accept.contains(info.getName())) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            };
+            SmbFile[] filesToCopy = source.listFiles(filter);
+            for (SmbFile file : filesToCopy) {
+                SmbFileInputStream in = new SmbFileInputStream(file);
+                FileOutputStream out = null;
+                try {
+                    out = new FileOutputStream(new File(target + "/" + file.getName()));
+                    byte[] buffer = new byte[1024];
+                    int len = 0;
+                    while ((len = in.read(buffer)) > 0) {
+                        out.write(buffer, 0, len);
+                    }
+                } finally {
+                    if (out != null) {
+                        try {
+                            out.close();
+                        } catch (IOException e) {
+                        }
+                    }
+                }
+
+            }
+            if (prefix != null || suffix != null) {
+                // 修改檔名
+                List<File> targetFiles = new ArrayList<File>();
+                for (String fileName : sourceFileNames) {
+                    File file = new File(target + "/" + fileName);
+                    if (file != null && file.exists()) {
+                        targetFiles.add(file);
+                    }
+                }
+                if (targetFiles != null || targetFiles.size() > 0) {
+                    for (File file : targetFiles) {
+                        String baseName = file.getName();
+                        String extensions = baseName.indexOf(".") > 0 ? baseName.substring(baseName.indexOf(".")) : "";
+                        String fileName = baseName.indexOf(".") > 0 ? baseName.substring(0, baseName.indexOf(".") - 1)
+                                : baseName;
+                        StringBuffer newName = new StringBuffer();
+                        newName = newName.append(prefix == null ? "" : prefix).append(fileName)
+                                .append(suffix == null ? "" : suffix).append(extensions);
+                        file.renameTo(new File(target + "/" + newName.toString()));
+                    }
+                }
+            }
+        }
+    }
+
+    public static void copyFile(SmbFile source, SmbFile target, String[] sourceFileNames) throws SmbException,
+            MalformedURLException {
         copyFile(source, target, null, null, sourceFileNames);
     }
 
-    public static void copyFile(FolderType sourceFolder, String localPath, String prefix, String suffix,
-            String[] sourceFileNames) throws FileSystemException {
+    public static void copyFileToLocal(FolderType sourceFolder, String localPath, String prefix, String suffix,
+            String[] sourceFileNames) throws IOException {
         if (sourceFolder == null) {
             throw new IllegalArgumentException("input source folder is invalid.");
         }
         if (localPath == null || "".equals(localPath.trim())) {
             throw new IllegalArgumentException("input local path is invalid.");
         }
-        FileObject source = fsManager.resolveFile("smb://" + config.getProperty(sourceFolder.getKey() + ".host")
-                + config.getProperty(sourceFolder.getKey() + ".path"), opts);
-        FileObject target = fsManager.resolveFile(localPath);
-        copyFile(source, target, prefix, suffix, sourceFileNames);
+        SmbFile source = new SmbFile(getURI(sourceFolder, ""));
+        copyFileToLocal(source, localPath, prefix, suffix, sourceFileNames);
     }
 
-    public static void copyFile(FolderType sourceFolder, String localPath, String[] sourceFileNames)
-            throws FileSystemException {
-        copyFile(sourceFolder, localPath, null, null, sourceFileNames);
+    public static void copyFileToLocal(FolderType sourceFolder, String localPath, String[] sourceFileNames)
+            throws IOException {
+        copyFileToLocal(sourceFolder, localPath, null, null, sourceFileNames);
     }
 
     public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String prefix, String suffix,
-            String[] sourceFileNames) throws FileSystemException {
+            String[] sourceFileNames) throws MalformedURLException, SmbException {
         if (sourceFolder == null) {
             throw new IllegalArgumentException("input source folder is invalid.");
         }
         if (targetFolder == null) {
             throw new IllegalArgumentException("input target folder is invalid.");
         }
-        FileObject source = fsManager.resolveFile("smb://" + config.getProperty(sourceFolder.getKey() + ".host")
-                + config.getProperty(sourceFolder.getKey() + ".path"), opts);
-        FileObject target = fsManager.resolveFile("smb://" + config.getProperty(targetFolder.getKey() + ".host")
-                + config.getProperty(targetFolder.getKey() + ".path"), opts);
+        SmbFile source = new SmbFile(getURI(sourceFolder, ""));
+        SmbFile target = new SmbFile(getURI(targetFolder, ""));
         copyFile(source, target, prefix, suffix, sourceFileNames);
     }
 
     public static void copyFile(FolderType sourceFolder, FolderType targetFolder, String[] sourceFileNames)
-            throws FileSystemException {
+            throws MalformedURLException, SmbException {
         copyFile(sourceFolder, targetFolder, null, null, sourceFileNames);
     }
 
     public static void uploadFile(InputStream in, FolderType target, String fileName) throws IOException {
-        FileObject folder = fsManager.resolveFile(
-                "smb://" + config.getProperty(target.getKey() + ".host")
-                        + config.getProperty(target.getKey() + ".path"), opts);
-        FileObject file = fsManager.resolveFile(folder, fileName);
-        file.createFile();
-        OutputStream out = null;
+        SmbFile file = new SmbFile(getURI(target, fileName));
+        if (file.exists()) {
+            file.delete();
+        }
+        file.createNewFile();
+        SmbFileOutputStream out = null;
         try {
-            out = file.getContent().getOutputStream(false);
+            out = new SmbFileOutputStream(file, false);
             while (true) {
                 synchronized (buffer) {
                     int amountRead = in.read(buffer);
@@ -241,27 +281,21 @@ public class FileUtil {
         }
     }
 
-    public static boolean exist(FolderType target, String fileName) throws FileSystemException {
+    public static boolean exist(FolderType target, String fileName) throws MalformedURLException, SmbException {
         boolean tf = false;
         if (fileName != null) {
-            FileObject folder = fsManager.resolveFile(
-                    "smb://" + config.getProperty(target.getKey() + ".host")
-                            + config.getProperty(target.getKey() + ".path"), opts);
-            FileObject file = fsManager.resolveFile(folder, fileName);
+            SmbFile file = new SmbFile(getURI(target, fileName));
             tf = file.exists();
         }
         return tf;
     }
 
-    public static void createFile(FolderType target, String fileName) throws FileSystemException {
-        FileObject folder = fsManager.resolveFile(
-                "smb://" + config.getProperty(target.getKey() + ".host")
-                        + config.getProperty(target.getKey() + ".path"), opts);
-        FileObject file = fsManager.resolveFile(folder, fileName);
+    public static void createFile(FolderType target, String fileName) throws MalformedURLException, SmbException {
+        SmbFile file = new SmbFile(getURI(target, fileName));
         if (exist(target, fileName)) {
             file.delete();
         }
-        file.createFile();
+        file.createNewFile();
     }
 
     public static void setInit(boolean init) {

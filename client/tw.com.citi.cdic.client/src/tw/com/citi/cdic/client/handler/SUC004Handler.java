@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.vfs.FileSystemException;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
 import org.apache.wicket.util.upload.FileItem;
@@ -125,8 +124,8 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
             if ("CDICF20".equalsIgnoreCase(fileName) || "FMBCDWN4".equalsIgnoreCase(fileName)) {
                 tail = ".txt";
             }
-            FileUtil.copyFile(FolderType.PROCESS, savePath, "", tail, new String[] { fileName });
-        } catch (FileSystemException e) {
+            FileUtil.copyFileToLocal(FolderType.PROCESS, savePath, "", tail, new String[] { fileName });
+        } catch (Exception e) {
             e.printStackTrace();
             throw new SecurityException(Messages.bind(Messages.Download_Local_File_Error, new Object[] { fileName }), e);
         }
@@ -164,7 +163,7 @@ public class SUC004Handler extends AquariusAjaxDaoHandler {
                     if (!exist) {
                         localFile.setStatus("0");
                     }
-                } catch (FileSystemException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     throw new SecurityException(Messages.bind(Messages.Get_Local_File_Info_Error,
                             new Object[] { localFile.getName() }), e);
