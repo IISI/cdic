@@ -169,9 +169,10 @@ public class FileUtil {
             };
             SmbFile[] filesToCopy = source.listFiles(filter);
             for (SmbFile file : filesToCopy) {
-                SmbFileInputStream in = new SmbFileInputStream(file);
+                SmbFileInputStream in = null;
                 FileOutputStream out = null;
                 try {
+                    in = new SmbFileInputStream(file);
                     out = new FileOutputStream(new File(target + "/" + file.getName()));
                     byte[] buffer = new byte[1024];
                     int len = 0;
@@ -179,11 +180,14 @@ public class FileUtil {
                         out.write(buffer, 0, len);
                     }
                 } finally {
-                    if (out != null) {
-                        try {
+                    try {
+                        if (out != null) {
                             out.close();
-                        } catch (IOException e) {
                         }
+                        if (in != null) {
+                            in.close();
+                        }
+                    } catch (IOException e) {
                     }
                 }
 
