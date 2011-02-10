@@ -126,7 +126,7 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
     @Override
     public A26 process(CDICF07H item) throws Exception {
         if (item.getRefNo() == null || item.getRefNo().trim().length() == 0) {
-            logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}]", new Object[] { item.getGl(), item.getCompany(), item.getRefNo() });
+            logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}], [RC code = {}]", new Object[] { item.getGl(), item.getCompany(), item.getRefNo(), item.getRc() });
             return null;
         }
         
@@ -138,7 +138,7 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setType(Type.A);
                 createA26(item, a26);
             } else {
-                logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}]", new Object[] { item.getGl(), item.getCompany(), item.getRefNo() });
+                logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}], [RC code = {}]", new Object[] { item.getGl(), item.getCompany(), item.getRefNo(), item.getRc() });
                 return null;
             }
         } else if (item.getCompany().startsWith("86")) {
@@ -151,7 +151,7 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setType(Type.C);
                 createA26(item, a26);
             } else {
-                logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}]", new Object[] { item.getGl(), item.getCompany(), item.getRefNo() });
+                logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}], [RC code = {}]", new Object[] { item.getGl(), item.getCompany(), item.getRefNo(), item.getRc() });
                 return null;
             }
         } else if (item.getCompany().startsWith("69")) {
@@ -159,7 +159,7 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
             a26.setType(Type.C);
             createA26(item, a26);
         } else {
-            logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}]", new Object[] { item.getGl(), item.getCompany(), item.getRefNo() });
+            logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}], [RC code = {}]", new Object[] { item.getGl(), item.getCompany(), item.getRefNo(), item.getRc() });
             return null;
         }
         
