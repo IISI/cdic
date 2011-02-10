@@ -814,46 +814,55 @@
                                         DELETE FROM A26 WHERE EXISTS (
                                             SELECT *
                                             FROM (
-                                                SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
-                                                FROM A26
-                                                WHERE OTPAYSAV >= 0
-                                                GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
-                                            ) T
-                                            WHERE T.C > 1
-                                                AND A26.OTAPNO = T.OTAPNO
-                                                AND A26.OTCOMPCODE = T.OTCOMPCODE
-                                                AND A26.OTRCCODE = T.OTRCCODE
-                                                AND A26.OTREFNO = T.OTREFNO
+                                                SELECT *
+                                                FROM (
+                                                    SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                    FROM A26
+                                                    WHERE OTPAYSAV >= 0
+                                                    GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
+                                                ) T
+                                                WHERE T.C > 1
+                                            ) T2
+                                            WHERE A26.OTAPNO = T2.OTAPNO
+                                                AND A26.OTCOMPCODE = T2.OTCOMPCODE
+                                                AND A26.OTRCCODE = T2.OTRCCODE
+                                                AND A26.OTREFNO = T2.OTREFNO
                                         );
                                         
                                         DELETE FROM B26 WHERE EXISTS (
                                             SELECT *
                                             FROM (
-                                                SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
-                                                FROM B26
-                                                WHERE OTPAYSAV >= 0
-                                                GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
-                                            ) T
-                                            WHERE T.C > 1
-                                                AND B26.OTAPNO = T.OTAPNO
-                                                AND B26.OTCOMPCODE = T.OTCOMPCODE
-                                                AND B26.OTRCCODE = T.OTRCCODE
-                                                AND B26.OTREFNO = T.OTREFNO
+                                                SELECT *
+                                                FROM (
+                                                    SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                    FROM B26
+                                                    WHERE OTPAYSAV >= 0
+                                                    GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
+                                                ) T
+                                                WHERE T.C > 1
+                                            ) T2
+                                            WHERE B26.OTAPNO = T2.OTAPNO
+                                                AND B26.OTCOMPCODE = T2.OTCOMPCODE
+                                                AND B26.OTRCCODE = T2.OTRCCODE
+                                                AND B26.OTREFNO = T2.OTREFNO
                                         );
                                         
                                         DELETE FROM C26 WHERE EXISTS (
                                             SELECT *
                                             FROM (
-                                                SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
-                                                FROM C26
-                                                WHERE OTPAYSAV >= 0
-                                                GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
-                                            ) T
-                                            WHERE T.C > 1
-                                                AND C26.OTAPNO = T.OTAPNO
-                                                AND C26.OTCOMPCODE = T.OTCOMPCODE
-                                                AND C26.OTRCCODE = T.OTRCCODE
-                                                AND C26.OTREFNO = T.OTREFNO
+                                                SELECT *
+                                                FROM (
+                                                    SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO, COUNT(*) C
+                                                    FROM C26
+                                                    WHERE OTPAYSAV >= 0
+                                                    GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
+                                                ) T
+                                                WHERE T.C > 1
+                                            ) T2
+                                            WHERE C26.OTAPNO = T2.OTAPNO
+                                                AND C26.OTCOMPCODE = T2.OTCOMPCODE
+                                                AND C26.OTRCCODE = T2.OTRCCODE
+                                                AND C26.OTREFNO = T2.OTREFNO
                                         );
                                     ]]>
                                 </beans:value>
