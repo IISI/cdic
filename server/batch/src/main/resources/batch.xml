@@ -956,13 +956,13 @@
                     </tasklet>
                 </step>
                 <step id="f07-b26-export" next="f07-c26-export">
-                    <description>把 A26 的資料匯出至檔案</description>
+                    <description>把 B26 的資料匯出至檔案</description>
                     <tasklet>
                         <chunk reader="b26DbReader" processor="b26Processor" writer="b26Writer" commit-interval="500"></chunk>
                     </tasklet>
                 </step>
                 <step id="f07-c26-export">
-                    <description>把 A26 的資料匯出至檔案</description>
+                    <description>把 C26 的資料匯出至檔案</description>
                     <tasklet>
                         <chunk reader="c26DbReader" processor="c26Processor" writer="c26Writer" commit-interval="500"></chunk>
                     </tasklet>
