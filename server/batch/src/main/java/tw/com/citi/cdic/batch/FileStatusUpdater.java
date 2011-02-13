@@ -13,6 +13,7 @@ import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.AfterJob;
+import org.springframework.batch.core.annotation.AfterStep;
 
 import tw.com.citi.cdic.batch.dao.CDICFileStatusDao;
 import tw.com.citi.cdic.batch.model.CDICFileStatus;
@@ -28,6 +29,30 @@ public class FileStatusUpdater {
     protected static final Logger logger = LoggerFactory.getLogger(FileStatusUpdater.class);
 
     private CDICFileStatusDao CDICFileStatusDao;
+
+    @AfterStep
+    public void updateStatus(StepExecution stepExecution) {
+        String stepName = stepExecution.getStepName();
+        stepName = stepName.toUpperCase().substring(0, 3);
+        if (stepName.startsWith("F") || stepName.startsWith("T")) {
+            ExitStatus status = stepExecution.getExitStatus();
+            if (status == null) {
+                logger.debug("record step status, step name = {}, status = {}", stepName, stepExecution.getExitStatus()
+                        .getExitCode());
+            } else {
+                logger.debug("record step status, step name = {}, status = {}", stepName, stepExecution.getExitStatus()
+                        .and(status).getExitCode());
+            }
+            CDICFileStatus fileStatus = this.CDICFileStatusDao.findByFileNo(stepName);
+            if (ExitStatus.COMPLETED.compareTo(status) == 0) {
+                fileStatus.setStatus("2");
+            } else {
+                fileStatus.setStatus("5");
+            }
+            this.CDICFileStatusDao.update(fileStatus);
+            logger.debug("update step status, step name = {}, status = {}", stepName, status.getExitCode());
+        }
+    }
 
     @AfterJob
     public void updateStatus(JobExecution jobExecution) {
