@@ -34,7 +34,11 @@
         <property name="type" value="1"></property>
     </bean>
 
-    <bean id="a31FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+    <bean id="a31FileWriter" class="tw.com.citi.cdic.batch.item.file.A31FileWriter">
+        <property name="delegator" ref="a31FileWriterDelegator"></property>
+    </bean>
+
+    <bean id="a31FileWriterDelegator" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A31"></constructor-arg>
@@ -54,6 +58,10 @@
     </bean>
 
     <bean id="a31SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A31SampleFileWriter">
+        <property name="delegator" ref="a31SampleFileWriterDelegator"></property>
+    </bean>
+
+    <bean id="a31SampleFileWriterDelegator" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A31_sample.csv"></constructor-arg>
@@ -89,7 +97,11 @@
         <property name="type" value="2"></property>
     </bean>
 
-    <bean id="b31FileWriter" parent="a31FileWriter">
+    <bean id="b31FileWriter" class="tw.com.citi.cdic.batch.item.file.A31FileWriter">
+        <property name="delegator" ref="b31FileWriterDelegator"></property>
+    </bean>
+
+    <bean id="b31FileWriterDelegator" parent="a31FileWriterDelegator">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B31"></constructor-arg>
@@ -97,7 +109,11 @@
         </property>
     </bean>
 
-    <bean id="b31SampleFileWriter" parent="a31SampleFileWriter">
+    <bean id="b31SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A31SampleFileWriter">
+        <property name="delegator" ref="b31SampleFileWriterDelegator"></property>
+    </bean>
+
+    <bean id="b31SampleFileWriterDelegator" parent="a31SampleFileWriterDelegator">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B31_sample.csv"></constructor-arg>
