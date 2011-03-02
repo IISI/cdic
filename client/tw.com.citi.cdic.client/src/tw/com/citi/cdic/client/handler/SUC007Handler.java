@@ -62,7 +62,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                             if ("3".equals(cdicFile.getStatus())) {
                                 try {
                                     // copy file to icg folder
-                                    FileUtil.copyFile(FolderType.PROCESS_OUT, FolderType.ICG, "", "-" + custDate,
+                                    FileUtil.copyFile(FolderType.PROCESS_OUT, FolderType.ICG, "0210000", "." + custDate,
                                             new String[] { file });
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -72,7 +72,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                             } else {
                                 // 狀態不是已確認的，在 icg folder 產生一個空檔。
                                 try {
-                                    FileUtil.createFile(FolderType.ICG, file + "-" + custDate);
+                                    FileUtil.createFile(FolderType.ICG, "0210000" + file + "." + custDate);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     throw new SecurityException(Messages.bind(Messages.COPY_CDIC_File_Error,
