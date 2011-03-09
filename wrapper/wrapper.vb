@@ -57,8 +57,10 @@
         strComLine = Mid(strComLine, intGRPIDLEN + 1)
         'Console.WriteLine(gstrGrpID)
 
-        gstrUsrName = Trim(MidB(strComLine, 1, intUSRNAME))
-        strComLine = Mid(strComLine, intUSRNAME + 1 - (intUSRNAME - Len(MidB(strComLine, 1, intUSRNAME))))
+        'gstrUsrName = Trim(MidB(strComLine, 1, intUSRNAME))
+        'strComLine = Mid(strComLine, intUSRNAME + 1 - (intUSRNAME - Len(MidB(strComLine, 1, intUSRNAME))))
+        gstrUsrName = Trim(Mid(strComLine, 1, intUSRNAME))
+        strComLine = Mid(strComLine, intUSRNAME + 1)
         'Console.WriteLine(gstrUsrName)
 
         gstrIP = Trim(Mid(strComLine, 1, intIP))
