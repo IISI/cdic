@@ -105,9 +105,9 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
                     if ("TWD".equalsIgnoreCase(a74.getCurrencyCode())) {
                         a74.setLargeMax((int) (largeMax / 1000000));
                     } else if ("XAU".equalsIgnoreCase(a74.getCurrencyCode())) {
-                        a74.setLargeMax((int) (largeMax));
-                    } else {
                         a74.setLargeMax((int) (largeMax / 100));
+                    } else {
+                        a74.setLargeMax((int) (largeMax));
                     }
                     a74List.addAll(generateOtherData(item, a74));
                 } else {
@@ -179,9 +179,9 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
                         if ("TWD".equalsIgnoreCase(a74.getCurrencyCode())) {
                             a74.setLargeMax((int) (largeMax / 1000000));
                         } else if ("XAU".equalsIgnoreCase(a74.getCurrencyCode())) {
-                            a74.setLargeMax((int) (largeMax));
-                        } else {
                             a74.setLargeMax((int) (largeMax / 100));
+                        } else {
+                            a74.setLargeMax((int) (largeMax));
                         }
                         a74List.addAll(generateOtherData(item, a74));
                     }
