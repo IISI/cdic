@@ -1,8 +1,8 @@
 package tw.com.citi.cdic.batch.item;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 
 import tw.com.citi.cdic.batch.dao.FMBCDWN4Dao;
@@ -15,9 +15,9 @@ import tw.com.citi.cdic.batch.model.T02;
  */
 public class SBT02Processor implements ItemProcessor<FMBCDWN4, T02> {
 
-    private FMBCDWN4Dao dao;
+    private StepExecution stepExecution;
 
-    private Set<String> tempKeySet = new HashSet<String>();
+    private FMBCDWN4Dao dao;
 
     @Override
     public T02 process(FMBCDWN4 item) throws Exception {
@@ -31,12 +31,14 @@ public class SBT02Processor implements ItemProcessor<FMBCDWN4, T02> {
                 FMBCDWN4 exist = dao.findByAcctAndIBCode(acct, code);
                 // table 中無資料，且此次批次處理過程中也無相同的 acct or code 時，新增一筆
                 if (exist == null) {
-                    if (!tempKeySet.contains(acct)) {
+                    ExecutionContext stepContext = stepExecution.getExecutionContext();
+                    String temp = stepContext.getString(acct, null);
+                    if (temp == null) {
                         t02 = new T02();
                         t02.setAcct(item.getAcct());
                         t02.setIBCode(item.getIBCode());
                         t02.setDescription(item.getDescription());
-                        tempKeySet.add(acct);
+                        stepContext.putString(acct, acct);
                     }
                 }
             }
@@ -52,11 +54,8 @@ public class SBT02Processor implements ItemProcessor<FMBCDWN4, T02> {
         return dao;
     }
 
-    public void setTempKeySet(Set<String> tempKeySet) {
-        this.tempKeySet = tempKeySet;
-    }
-
-    public Set<String> getTempKeySet() {
-        return tempKeySet;
+    @BeforeStep
+    public void saveStepExecution(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
     }
 }

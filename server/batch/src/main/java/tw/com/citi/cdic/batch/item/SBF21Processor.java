@@ -1,5 +1,8 @@
 package tw.com.citi.cdic.batch.item;
 
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 
 import tw.com.citi.cdic.batch.model.A73;
@@ -11,11 +14,9 @@ import tw.com.citi.cdic.batch.model.SBF21Output;
  */
 public class SBF21Processor implements ItemProcessor<A73, SBF21Output> {
 
+    private StepExecution stepExecution;
+
     private int writeSampleFrequency = 1000;
-
-    private int b73Count = 0;
-
-    private int c73Count = 0;
 
     @Override
     public SBF21Output process(A73 item) throws Exception {
@@ -46,6 +47,8 @@ public class SBF21Processor implements ItemProcessor<A73, SBF21Output> {
     }
 
     private SBF21Output createB73(A73 item) {
+        ExecutionContext stepContext = stepExecution.getExecutionContext();
+        long b73Count = stepContext.getLong("B73Count", 0);
         SBF21Output out = new SBF21Output();
         out.setType(SBF21Output.TYPE.B73);
         out.setRecord(item);
@@ -59,6 +62,8 @@ public class SBF21Processor implements ItemProcessor<A73, SBF21Output> {
     }
 
     private SBF21Output createC73(A73 item) {
+        ExecutionContext stepContext = stepExecution.getExecutionContext();
+        long c73Count = stepContext.getLong("C73Count", 0);
         SBF21Output out = new SBF21Output();
         out.setType(SBF21Output.TYPE.C73);
         out.setRecord(item);
@@ -71,4 +76,8 @@ public class SBF21Processor implements ItemProcessor<A73, SBF21Output> {
         return out;
     }
 
+    @BeforeStep
+    public void saveStepExecution(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
+    }
 }
