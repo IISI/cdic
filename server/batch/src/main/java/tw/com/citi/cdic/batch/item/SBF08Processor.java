@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 
 import tw.com.citi.cdic.batch.dao.A21Dao;
@@ -30,19 +33,29 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, List<A31>> {
 
     private int type;
 
-    private long processCount;
+    private StepExecution stepExecution;
 
     private int writeSampleFrequency = 1000;
 
-    private Set<String> grbSet = new HashSet<String>();
-
     @Override
     public List<A31> process(JointAcclist item) throws Exception {
+        ExecutionContext stepContext = stepExecution.getExecutionContext();
+        
+        Set<String> grbSet;
+        Object grbSetObj = stepContext.get("GRB_SET");
+        if (grbSetObj != null && grbSetObj instanceof Set) {
+            grbSet = (Set<String>) grbSetObj;
+        } else {
+            grbSet = new HashSet<String>();
+        }
         if (grbSet.contains(item.getGRB())) {
             return null;
         } else {
             grbSet.add(item.getGRB());
         }
+        stepContext.put("GRB_SET", grbSet);
+        
+        long processCount = stepContext.getLong("PROCESS_COUNT", 0);
         
         List<A31> results = new ArrayList<A31>();
         
@@ -150,6 +163,8 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, List<A31>> {
             }
         }
         
+        stepContext.putLong("PROCESS_COUNT", processCount);
+        
         return results.isEmpty() ? null : results;
     }
 
@@ -172,6 +187,11 @@ public class SBF08Processor implements ItemProcessor<JointAcclist, List<A31>> {
      */
     public void setType(int type) {
         this.type = type;
+    }
+
+    @BeforeStep
+    public void saveStepExecution(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
     }
 
 }
