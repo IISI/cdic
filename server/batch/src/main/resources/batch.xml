@@ -1111,19 +1111,19 @@
                                         SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
                                         FROM A26
                                         GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
-                                        HAVING SUM(OTPAYSAV) &lt;= 0;
+                                        HAVING SUM(OTPAYSAV) <= 0;
                                         
                                         INSERT INTO B26_FO (OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO)
                                         SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
                                         FROM B26
                                         GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
-                                        HAVING SUM(OTPAYSAV) &lt;= 0;
+                                        HAVING SUM(OTPAYSAV) <= 0;
                                         
                                         INSERT INTO C26_FO (OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO)
                                         SELECT OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
                                         FROM C26
                                         GROUP BY OTAPNO, OTCOMPCODE, OTRCCODE, OTREFNO
-                                        HAVING SUM(OTPAYSAV) &lt;= 0;
+                                        HAVING SUM(OTPAYSAV) <= 0;
                                     ]]>
                                 </beans:value>
                             </beans:property>
