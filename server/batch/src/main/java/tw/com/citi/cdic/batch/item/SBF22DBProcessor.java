@@ -101,13 +101,13 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
                             + Double.parseDouble(item.getTierRateFraction1()) / 1000000);
                     largeMax = Double.parseDouble(item.getTierMinAmt1())
                             + Double.parseDouble(item.getTierMinAmtFraction1()) / 100;
-                    // 若為台幣則以百萬為單位，XAU 百元為單位，其他取到整數位。
+                    // 若為台幣則以百萬為單位，XAU 取到整數位，其他百元為單位。
                     if ("TWD".equalsIgnoreCase(a74.getCurrencyCode())) {
                         a74.setLargeMax((int) (largeMax / 1000000));
                     } else if ("XAU".equalsIgnoreCase(a74.getCurrencyCode())) {
-                        a74.setLargeMax((int) (largeMax / 100));
-                    } else {
                         a74.setLargeMax((int) (largeMax));
+                    } else {
+                        a74.setLargeMax((int) (largeMax / 100));
                     }
                     a74List.addAll(generateOtherData(item, a74));
                 } else {
@@ -175,13 +175,13 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
                                     + Double.parseDouble(item.getTierMinAmtFraction9()) / 100;
                             break;
                         }
-                        // 若為台幣則以百萬為單位，XAU 百元為單位，其他取到整數位。
+                        // 若為台幣則以百萬為單位，XAU 取到整數位，其他百元為單位。
                         if ("TWD".equalsIgnoreCase(a74.getCurrencyCode())) {
                             a74.setLargeMax((int) (largeMax / 1000000));
                         } else if ("XAU".equalsIgnoreCase(a74.getCurrencyCode())) {
-                            a74.setLargeMax((int) (largeMax / 100));
-                        } else {
                             a74.setLargeMax((int) (largeMax));
+                        } else {
+                            a74.setLargeMax((int) (largeMax / 100));
                         }
                         a74List.addAll(generateOtherData(item, a74));
                     }
