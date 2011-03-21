@@ -1,6 +1,5 @@
 package tw.com.citi.cdic.batch;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,11 +30,6 @@ public class FileStatusUpdater {
 
     private CDICFileStatusDao CDICFileStatusDao;
 
-    private String[] lastStepIds = new String[] { "f01-file", "f02B-copy-b21", "f03B-copy-b22", "f04B-copy", "f05",
-            "f07-c26-export", "f08-b31", "f10-a34db", "f11", "f12-a41db", "f14-copy", "f15-copy", "f18",
-            "f21-a73db-a73file", "f22", "f24-a76db", "f25-copy", "t02-t02", "t03-t03", "t04", "t06-file", "t08", "t09",
-            "t10", "t11", "t12", "t13", "t14", "t18", "t20", "t21", "t27", "f99-genReport" };
-
     @AfterStep
     public void updateStatus(StepExecution stepExecution) {
         String stepName = stepExecution.getStepName();
@@ -50,20 +44,13 @@ public class FileStatusUpdater {
                         .and(status).getExitCode());
             }
             CDICFileStatus fileStatus = this.CDICFileStatusDao.findByFileNo(stepName);
-            boolean update = true;
             if (ExitStatus.COMPLETED.compareTo(status) == 0) {
-                if (Arrays.asList(lastStepIds).contains(stepName)) {
-                    fileStatus.setStatus("2");
-                } else {
-                    update = false;
-                }
+                fileStatus.setStatus("2");
             } else {
                 fileStatus.setStatus("5");
             }
-            if (update) {
-                this.CDICFileStatusDao.update(fileStatus);
-                logger.debug("update step status, step name = {}, status = {}", stepName, status.getExitCode());
-            }
+            this.CDICFileStatusDao.update(fileStatus);
+            logger.debug("update step status, step name = {}, status = {}", stepName, status.getExitCode());
         }
     }
 
