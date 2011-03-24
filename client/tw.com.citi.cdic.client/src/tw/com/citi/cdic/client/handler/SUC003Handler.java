@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import jcifs.smb.SmbFile;
-
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.wicket.PageParameters;
 import org.eclipse.core.runtime.Platform;
 import org.json.JSONObject;
@@ -63,15 +63,15 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
         for (String name : names) {
             try {
                 HostFileSts fileSts = new HostFileSts();
-                SmbFile file = FileUtil.getHostFileByName(name);
-                fileSts.setHostDateTime(new Date(file.getLastModified()));
+                FileObject file = FileUtil.getHostFileByName(name);
+                fileSts.setHostDateTime(new Date(file.getContent().getLastModifiedTime()));
                 fileSts.setCopyDateTime(new Date());
                 fileSts.setProcessUser(processUser);
                 fileSts.setStatus("1");
                 fileSts.setName(name);
                 getDao().update("SUC003_UPD_HOSTFILESTS_BY_NAME", fileSts);
                 FileUtil.copyFile(FolderType.HOST, FolderType.PROCESS, new String[] { name });
-            } catch (Exception e) {
+            } catch (FileSystemException e) {
                 e.printStackTrace();
                 // 前端只能接到 RuntimeException
                 throw new SecurityException(Messages.bind(Messages.Access_Host_File_Error, new Object[] { name }), e);
@@ -96,11 +96,11 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
             for (HostFileSts hostFile : hostFileList) {
                 try {
-                    SmbFile file = FileUtil.getHostFileByName(hostFile.getName());
-                    hostFile.setHostDateTimeFmt(sdf.format(new Date(file.getLastModified())));
+                    FileObject file = FileUtil.getHostFileByName(hostFile.getName());
+                    hostFile.setHostDateTimeFmt(sdf.format(new Date(file.getContent().getLastModifiedTime())));
                     hostFile.setCopyDateTimeFmt(hostFile.getCopyDateTime() == null ? null : sdf.format(hostFile
                             .getCopyDateTime()));
-                    hostFile.setSize((int) file.length());
+                    hostFile.setSize((int) file.getContent().getSize());
                     // +2 為 0x0D 0x0A 換行字元
                     hostFile.setRecord(hostFile.getSize() / (hostFile.getRecLen() + 2));
                 } catch (Exception e) {

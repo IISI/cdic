@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.wicket.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +65,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                                     // copy file to icg folder
                                     FileUtil.copyFile(FolderType.PROCESS_OUT, FolderType.ICG, "0210000", "." + custDate,
                                             new String[] { file });
-                                } catch (Exception e) {
+                                } catch (FileSystemException e) {
                                     e.printStackTrace();
                                     throw new SecurityException(Messages.bind(Messages.COPY_CDIC_File_Error,
                                             new Object[] { file }), e);
@@ -73,7 +74,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                                 // 狀態不是已確認的，在 icg folder 產生一個空檔。
                                 try {
                                     FileUtil.createFile(FolderType.ICG, "0210000" + file + "." + custDate);
-                                } catch (Exception e) {
+                                } catch (FileSystemException e) {
                                     e.printStackTrace();
                                     throw new SecurityException(Messages.bind(Messages.COPY_CDIC_File_Error,
                                             new Object[] { file }), e);
