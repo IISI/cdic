@@ -62,6 +62,7 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
         }
         for (String name : names) {
             try {
+                FileUtil.copyFile(FolderType.HOST, FolderType.PROCESS, new String[] { name });
                 HostFileSts fileSts = new HostFileSts();
                 FileObject file = FileUtil.getHostFileByName(name);
                 fileSts.setHostDateTime(new Date(file.getContent().getLastModifiedTime()));
@@ -70,7 +71,6 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
                 fileSts.setStatus("1");
                 fileSts.setName(name);
                 getDao().update("SUC003_UPD_HOSTFILESTS_BY_NAME", fileSts);
-                FileUtil.copyFile(FolderType.HOST, FolderType.PROCESS, new String[] { name });
             } catch (FileSystemException e) {
                 e.printStackTrace();
                 // 前端只能接到 RuntimeException
