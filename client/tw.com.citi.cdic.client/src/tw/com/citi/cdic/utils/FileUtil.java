@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import org.apache.commons.vfs.FileFilter;
 import org.apache.commons.vfs.FileFilterSelector;
@@ -21,15 +22,11 @@ import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.local.LocalFileSystem;
 import org.eclipse.core.runtime.Platform;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import platform.aquarius.embedserver.conf.PasswordUtil;
 import tw.com.citi.cdic.client.vfs.OSGiFileSystemManager;
 
 public class FileUtil {
-
-    final static Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
     public static enum FolderType {
         HOST("host"), ICG("icg"), PROCESS("process"), PROCESS_OUT("processout");
@@ -60,10 +57,18 @@ public class FileUtil {
         try {
             URL url = Platform.getBundle("tw.com.citi.cdic.client.resources").getResource("folders.properties");
             config.load(url.openStream());
-            logger.info(config.getProperty("functionalId"));
-            logger.info(getPassword("functionalPwd"));
-            StaticUserAuthenticator auth = new StaticUserAuthenticator("APAC", config.getProperty("functionalId"),
-                    getPassword("functionalPwd"));
+            String functionalId = config.getProperty("functionalId");
+            StringTokenizer st = new StringTokenizer(functionalId, ";");
+            String domain = "";
+            String id = "";
+            if (st.countTokens() == 2) {
+                // 代表有domain
+                domain = st.nextToken();
+                id = st.nextToken();
+            } else {
+                id = st.nextToken();
+            }
+            StaticUserAuthenticator auth = new StaticUserAuthenticator(domain, id, getPassword("functionalPwd"));
             opts = new FileSystemOptions();
             DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(opts, auth);
             fsManager = new OSGiFileSystemManager();
