@@ -59,7 +59,7 @@ public class FileUtil {
             config.load(url.openStream());
             String functionalId = config.getProperty("functionalId");
             StringTokenizer st = new StringTokenizer(functionalId, ";");
-            String domain = "";
+            String domain = null;
             String id = "";
             if (st.countTokens() == 2) {
                 // 代表有domain
