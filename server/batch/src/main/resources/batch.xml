@@ -312,7 +312,7 @@
                     <tasklet>
                         <chunk reader="a11DbReader" processor="f01SampleCountProcessor" writer="a11Writer" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -344,7 +344,7 @@
                     <tasklet>
                         <chunk reader="lusDbReader" processor="f05Processor" writer="a24Writer" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -392,7 +392,7 @@
                     <tasklet>
                         <chunk reader="cdicF10FileReader" writer="a34DbWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -407,7 +407,7 @@
                     <tasklet>
                         <chunk reader="cdicF11FileReader" processor="SBF11Processor" writer="f11Writer" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -455,7 +455,7 @@
                     <tasklet>
                         <chunk reader="cdicF12FileReader" writer="a41DbWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -482,7 +482,7 @@
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A43"></beans:property>
                         </beans:bean>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -509,7 +509,7 @@
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A44"></beans:property>
                         </beans:bean>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -554,7 +554,7 @@
                     <tasklet>
                         <chunk reader="a73DbReader" processor="f21a73Processor" writer="f21Writer2" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -608,7 +608,7 @@
                     <tasklet>
                         <chunk reader="a74DbReader" processor="f22Processor" writer="f22Writer" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -656,7 +656,7 @@
                     <tasklet>
                         <chunk reader="cdicF24FileReader" writer="a76DbWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -683,7 +683,7 @@
                             <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A77"></beans:property>
                         </beans:bean>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -719,7 +719,7 @@
                     <tasklet>
                         <chunk reader="t02DbReader" writer="t02FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -734,7 +734,7 @@
                     <tasklet>
                         <chunk reader="cdicT03GFileReader" processor="t03Processor" writer="t03FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -743,7 +743,7 @@
                     <tasklet>
                         <chunk reader="cdicT03GFileReader" processor="t12Processor" writer="t12FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -788,7 +788,7 @@
                     <tasklet>
                         <chunk reader="t06DbReader" writer="t06FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -803,7 +803,7 @@
                     <tasklet>
                         <chunk reader="cdicT04FileReader" writer="t04FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -818,7 +818,7 @@
                     <tasklet>
                         <chunk reader="cdicT08FileReader" writer="t08FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -833,7 +833,7 @@
                     <tasklet>
                         <chunk reader="cdicT09FileReader" writer="t09FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -848,7 +848,7 @@
                     <tasklet>
                         <chunk reader="cdicT10FileReader" writer="t10FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -863,7 +863,7 @@
                     <tasklet>
                         <chunk reader="cdicT11FileReader" writer="t11FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -878,7 +878,7 @@
                     <tasklet>
                         <chunk reader="cdicT13FileReader" writer="t13FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -893,7 +893,7 @@
                     <tasklet>
                         <chunk reader="cdicT14FileReader" writer="t14FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -908,7 +908,7 @@
                     <tasklet>
                         <chunk reader="cdicT18FileReader" writer="t18FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -923,7 +923,7 @@
                     <tasklet>
                         <chunk reader="cdicT20FileReader" writer="t20FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -938,7 +938,7 @@
                     <tasklet>
                         <chunk reader="cdicT21FileReader" writer="t21FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -953,7 +953,7 @@
                     <tasklet>
                         <chunk reader="cdicT27FileReader" processor="t27Processor" writer="t27FileWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -1238,7 +1238,7 @@
                     <tasklet>
                         <chunk reader="c26DbReader" processor="c26Processor" writer="c26Writer" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -1258,7 +1258,7 @@
                             <beans:property name="reportDao" ref="reportDao"></beans:property>
                         </beans:bean>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
@@ -1294,18 +1294,22 @@
                     <tasklet task-executor="asyncTaskExecutor" throttle-limit="20">
                         <chunk reader="cifDbReader" processor="SBF18Processor" writer="f18Writer" commit-interval="200"></chunk>
                         <listeners>
-                            <listener ref="stepListener" />
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>
             </flow>
         </split>
         <listeners>
-            <listener ref="stepListener" />
+            <listener ref="lastStepListener" />
         </listeners>
     </job>
 
-    <beans:bean id="stepListener" class="tw.com.citi.cdic.batch.FileStatusUpdater">
+    <beans:bean id="lastStepListener" class="tw.com.citi.cdic.batch.FileStatusUpdater">
+        <beans:property name="CDICFileStatusDao" ref="CDICFileStatusDao"></beans:property>
+    </beans:bean>
+
+    <beans:bean id="stepListener" class="tw.com.citi.cdic.batch.FileStatusUpdaterInProcess">
         <beans:property name="CDICFileStatusDao" ref="CDICFileStatusDao"></beans:property>
     </beans:bean>
 

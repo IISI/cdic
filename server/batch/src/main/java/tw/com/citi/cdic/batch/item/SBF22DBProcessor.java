@@ -2,12 +2,13 @@ package tw.com.citi.cdic.batch.item;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.BeanUtils;
 
@@ -22,7 +23,7 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
 
     protected static final Logger logger = LoggerFactory.getLogger(SBF22DBProcessor.class);
 
-    private Set<String> pKeySet = new HashSet<String>();
+    private StepExecution stepExecution;
 
     private A74 generateBaseA74(CDICF22R item) {
         A74 a74 = new A74();
@@ -79,12 +80,14 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
     }
 
     private boolean checkA74(A74 a74) {
+        ExecutionContext stepContext = stepExecution.getExecutionContext();
+        String key = stepContext.getString(a74.getKey(), null);
         boolean tf = true;
-        if (pKeySet.contains(a74.getKey())) {
+        if (key == null) {
+            stepContext.putString(a74.getKey(), a74.getKey());
+        } else {
             tf = false;
             logger.error(a74.getKey() + ", unique violation");
-        } else {
-            pKeySet.add(a74.getKey());
         }
         return tf;
     }
@@ -189,5 +192,10 @@ public class SBF22DBProcessor implements ItemProcessor<CDICF22R, List<A74>> {
             }
         }
         return a74List.size() == 0 ? null : a74List;
+    }
+
+    @BeforeStep
+    public void saveStepExecution(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
     }
 }

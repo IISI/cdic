@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.wicket.PageParameters;
 import org.eclipse.core.runtime.Platform;
 import org.json.JSONException;
@@ -106,8 +107,8 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
             if (files != null && files.size() > 0) {
                 String[] temp = new String[files.size()];
                 try {
-                    FileUtil.copyFileToLocal(FolderType.PROCESS_OUT, savePath, files.toArray(temp));
-                } catch (Exception e) {
+                    FileUtil.copyFile(FolderType.PROCESS_OUT, savePath, files.toArray(temp));
+                } catch (FileSystemException e) {
                     e.printStackTrace();
                     throw new SecurityException(Messages.bind(Messages.Download_Sample_File_Error,
                             new Object[] { fileNo }), e);
