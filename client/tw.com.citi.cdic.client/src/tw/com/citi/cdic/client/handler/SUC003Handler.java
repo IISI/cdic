@@ -62,14 +62,16 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
         }
         for (String name : names) {
             try {
-                FileUtil.copyFile(FolderType.HOST, FolderType.PROCESS, new String[] { name });
                 HostFileSts fileSts = new HostFileSts();
                 FileObject file = FileUtil.getHostFileByName(name);
                 fileSts.setHostDateTime(new Date(file.getContent().getLastModifiedTime()));
                 fileSts.setCopyDateTime(new Date());
                 fileSts.setProcessUser(processUser);
-                fileSts.setStatus("1");
+                fileSts.setStatus("0");
                 fileSts.setName(name);
+                getDao().update("SUC003_UPD_HOSTFILESTS_BY_NAME", fileSts);
+                FileUtil.copyFile(FolderType.HOST, FolderType.PROCESS, new String[] { name });
+                fileSts.setStatus("1");
                 getDao().update("SUC003_UPD_HOSTFILESTS_BY_NAME", fileSts);
             } catch (FileSystemException e) {
                 e.printStackTrace();
@@ -105,6 +107,10 @@ public class SUC003Handler extends AquariusAjaxDaoHandler {
                     hostFile.setRecord(hostFile.getSize() / (hostFile.getRecLen() + 2));
                 } catch (Exception e) {
                     hostFile.setStatus("6");
+                    e.printStackTrace();
+                    // 前端只能接到 RuntimeException
+                    throw new SecurityException(Messages.bind(Messages.Access_Host_File_Error,
+                            new Object[] { hostFile.getName() }), e);
                 }
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.create();
