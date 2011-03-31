@@ -20,7 +20,11 @@ public class SBF01Processor implements ItemProcessor<Bus, A11> {
         a11.setIdNo("");
         a11.setHeadId(item.getNatnidRegnnumb());
         a11.setCName(new String(item.getCustTitlLine1().getBytes("ms950"), "ms950"));
-        a11.setBirthDate(item.getBirthday());
+        String birthday = item.getBirthday();
+        if (birthday == null || birthday.trim().isEmpty()) {
+            birthday = "00000000";
+        }
+        a11.setBirthDate(birthday);
         a11.setCeoCode(item.getCustAssnnatid());
         a11.setCeoName(item.getCustAssnname());
         a11.setStatusCode(item.getCustStat());
