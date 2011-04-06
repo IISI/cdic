@@ -120,7 +120,7 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
         
         a26.setSrNo("");
         a26.setCustomerId("");
-        a26.setBranchNo("0000");
+        a26.setBranchNo("0018");
     }
 
     @Override
