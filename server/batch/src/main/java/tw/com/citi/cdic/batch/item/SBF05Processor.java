@@ -15,7 +15,7 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
     public A24 process(Lus item) throws Exception {
         A24 a24 = new A24();
         a24.setUnit("021");
-        a24.setBranchNo("0000");
+        a24.setBranchNo("0018");
         a24.setSrNo(item.getAcctNo());
         a24.setApNo("2200119000");
         a24.setCharCode(item.getProdName());
