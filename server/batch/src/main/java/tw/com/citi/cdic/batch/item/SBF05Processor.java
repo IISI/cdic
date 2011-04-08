@@ -21,7 +21,7 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
         a24.setCharCode(item.getProdName());
         a24.setCustomerId(item.getUnino());
         a24.setCustomerName(new String(item.getName().getBytes("ms950"), "ms950"));
-        a24.setCustomerBusinessCode(item.getNewBCode());
+        a24.setCustomerBusinessCode("000000".equals(item.getNewBCode()) ? "060000" : "014699");
         a24.setCustomerType("000");
         a24.setCurrencyCode("TWD");
         a24.setBalance(item.getBalance());
