@@ -184,7 +184,7 @@
                     </tasklet>
                 </step>
                 <step id="f01-del-cif" next="f01-gen-cif">
-                    <description>把 Joint Account table 的資料清空</description>
+                    <description>把 CIF table 的資料清空</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
                             <beans:property name="dataSource" ref="dataSource" />
@@ -257,7 +257,7 @@
                     </tasklet>
                 </step>
                 <step id="f01-update-a11" next="f01-copy-non-joint-data">
-                    <description>把 A11 table 的 natnid_regnnumb 欄位資料更新 CIF table 裏的 joint_id 欄位值</description>
+                    <description>把 A11 table 的 natnid_regnnumb 欄位資料更新成 CIF table 裏的 joint_id 欄位值</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
                             <beans:property name="dataSource" ref="dataSource" />
