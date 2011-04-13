@@ -280,9 +280,9 @@
                                         SELECT
                                             '021' CUSTUNIT,
                                             '0000' CUSTBRNO,
-                                            CIF.JOINT_ID CUSTID,
+                                            LTRIM(RTRIM(SUBSTRING(CIF.JOINT_ID, 1, 11))) CUSTID,
                                             '' CUSTIDNO,
-                                            CIF.JOINT_ID CUSTHEADID,
+                                            LTRIM(RTRIM(SUBSTRING(CIF.JOINT_ID, 1, 11))) CUSTHEADID,
                                             LB.CUST_TITL_LINE1 CUSTCNAME,
                                             LB.BIRTHDAY CUSTBIRDATE,
                                             LB.CUST_ASSNNATID CUSTCEOCODE,
