@@ -297,7 +297,7 @@
                                             '' CUSTEMAILADD
                                         FROM CIF
                                         LEFT JOIN LOCAL_BUS LB ON CIF.CUST_NUMB = LB.CUST_NUMB
-                                        WHERE CIF.CUST_NUMB = CIF.JOINT_ID;
+                                        WHERE CIF.CIF = CIF.JOINT_ID;
                                     ]]>
                                 </beans:value>
                             </beans:property>
