@@ -280,9 +280,9 @@
                                         SELECT
                                             '021' CUSTUNIT,
                                             '0000' CUSTBRNO,
-                                            LTRIM(RTRIM(SUBSTRING(CIF.JOINT_ID, 1, 11))) CUSTID,
+                                            C.JOINT_ID CUSTID,
                                             '' CUSTIDNO,
-                                            LTRIM(RTRIM(SUBSTRING(CIF.JOINT_ID, 1, 11))) CUSTHEADID,
+                                            C.JOINT_ID CUSTHEADID,
                                             LB.CUST_TITL_LINE1 CUSTCNAME,
                                             LB.BIRTHDAY CUSTBIRDATE,
                                             LB.CUST_ASSNNATID CUSTCEOCODE,
@@ -295,7 +295,11 @@
                                             '' CUSTTEL1,
                                             '' CUSTTEL2,
                                             '' CUSTEMAILADD
-                                        FROM CIF
+                                        FROM (
+                                            SELECT LTRIM(RTRIM(SUBSTRING(JOINT_ID, 1, 11))), MAX(CIF) maxC
+                                            FROM CIF GROUP BY JOINT_ID
+                                        ) C
+                                        INNER JOIN CIF ON C.JOINT_ID = CIF.JOINT_ID AND C.maxC = CIF.CIF
                                         LEFT JOIN LOCAL_BUS LB ON CIF.CUST_NUMB = LB.CUST_NUMB
                                         WHERE CIF.CIF = CIF.JOINT_ID;
                                     ]]>
