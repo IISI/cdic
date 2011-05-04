@@ -31,9 +31,7 @@ public class ReportDaoImpl extends SimpleJdbcDaoSupport implements ReportDao {
         List<Report> a26s = super.getSimpleJdbcTemplate().query("SELECT 'FILE7' 'file', OTBRNO branch, '' productCode, OTAPNO gl, SUM(OTPAYSAV) balance, 0 interest, SUM(OTPAYSAV) totalBalance FROM A26 GROUP BY OTBRNO, OTAPNO ORDER BY OTBRNO, OTAPNO", mapper);
         List<Report> b26s = super.getSimpleJdbcTemplate().query("SELECT 'FILE7' 'file', OTBRNO branch, '' productCode, OTAPNO gl, SUM(OTPAYSAV) balance, 0 interest, SUM(OTPAYSAV) totalBalance FROM B26 GROUP BY OTBRNO, OTAPNO ORDER BY OTBRNO, OTAPNO", mapper);
         List<Report> c26s = super.getSimpleJdbcTemplate().query("SELECT 'FILE7' 'file', OTBRNO branch, '' productCode, OTAPNO gl, SUM(OTPAYSAV) balance, 0 interest, SUM(OTPAYSAV) totalBalance FROM C26 GROUP BY OTBRNO, OTAPNO ORDER BY OTBRNO, OTAPNO", mapper);
-        List<Report> a34s = super.getSimpleJdbcTemplate().query("SELECT 'FILE10' 'file', BRANCH_NO branch, '' productCode, AP_NO gl, SUM(BILL_AMT) balance, 0 interest, SUM(BILL_AMT) totalBalance FROM A34 GROUP BY BRANCH_NO, AP_NO ORDER BY BRANCH_NO, AP_NO", mapper);
         List<Report> a41s = super.getSimpleJdbcTemplate().query("SELECT 'FILE12' 'file', BRANCH_NO branch, CHAR_CODE productCode, AP_NO gl, SUM(CURRENT_BALANCE) balance, SUM(INT_RECEIVABLE) interest, SUM(CURRENT_BALANCE) + SUM(INT_RECEIVABLE) totalBalance FROM A41 GROUP BY BRANCH_NO, CHAR_CODE, AP_NO ORDER BY BRANCH_NO, CHAR_CODE, AP_NO", mapper);
-        List<Report> a76s = super.getSimpleJdbcTemplate().query("SELECT 'FILE24' 'file', BRANCH_NO branch, '' productCode, AP_NO gl, SUM(AMT) balance, 0 interest, SUM(AMT) totalBalance FROM A76 GROUP BY BRANCH_NO, AP_NO ORDER BY BRANCH_NO, AP_NO", mapper);
         
         results.addAll(a21s);
         results.addAll(b21s);
@@ -46,9 +44,7 @@ public class ReportDaoImpl extends SimpleJdbcDaoSupport implements ReportDao {
         results.addAll(a26s);
         results.addAll(b26s);
         results.addAll(c26s);
-        results.addAll(a34s);
         results.addAll(a41s);
-        results.addAll(a76s);
         return results;
     }
 
