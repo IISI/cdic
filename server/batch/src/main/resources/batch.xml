@@ -296,7 +296,7 @@
                                             '' CUSTTEL2,
                                             '' CUSTEMAILADD
                                         FROM (
-                                            SELECT LTRIM(RTRIM(SUBSTRING(JOINT_ID, 1, 11))), MAX(CIF) maxC
+                                            SELECT LTRIM(RTRIM(SUBSTRING(JOINT_ID, 1, 11))) JOINT_ID, MAX(CIF) maxC
                                             FROM CIF GROUP BY JOINT_ID
                                         ) C
                                         INNER JOIN CIF ON C.JOINT_ID = CIF.JOINT_ID AND C.maxC = CIF.CIF
