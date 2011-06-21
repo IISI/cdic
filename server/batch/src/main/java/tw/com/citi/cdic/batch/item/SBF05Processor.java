@@ -17,7 +17,13 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
         a24.setUnit("021");
         a24.setBranchNo("0018");
         a24.setSrNo(item.getAcctNo());
-        a24.setApNo("2200119000");
+        if ("DESA".equals(item.getProdName())) {
+            a24.setApNo("2200119000");
+        } else if ("NRSA".equals(item.getProdName())) {
+            a24.setApNo("2200109000");
+        } else {
+            a24.setApNo("");
+        }
         a24.setCharCode(item.getProdName());
         a24.setCustomerId(item.getUnino());
         a24.setCustomerName(new String(item.getName().getBytes("ms950"), "ms950"));
