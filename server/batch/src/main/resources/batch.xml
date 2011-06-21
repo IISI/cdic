@@ -214,9 +214,9 @@
                                             SELECT
                                                 NATNID_REGNNUMB,
                                                 CUST_NUMB,
-                                                CASE(RANK() OVER(PARTITION BY NATNID_REGNNUMB ORDER BY M DESC, CUST_NUMB) - 1)
-                                                    WHEN 0 THEN NATNID_REGNNUMB
-                                                    ELSE RTRIM(NATNID_REGNNUMB) + (CONVERT(VARCHAR(3), RANK() OVER(PARTITION BY NATNID_REGNNUMB ORDER BY M DESC, CUST_NUMB) - 1))
+                                                CASE(RANK() OVER(PARTITION BY LTRIM(RTRIM(SUBSTRING(LTRIM(RTRIM(NATNID_REGNNUMB)), 1, 11))) ORDER BY M DESC, CUST_NUMB) - 1)
+                                                    WHEN 0 THEN LTRIM(RTRIM(SUBSTRING(LTRIM(RTRIM(NATNID_REGNNUMB)), 1, 11)))
+                                                    ELSE LTRIM(RTRIM(SUBSTRING(LTRIM(RTRIM(NATNID_REGNNUMB)), 1, 11))) + (CONVERT(VARCHAR(3), RANK() OVER(PARTITION BY LTRIM(RTRIM(SUBSTRING(LTRIM(RTRIM(NATNID_REGNNUMB)), 1, 11))) ORDER BY M DESC, CUST_NUMB) - 1))
                                                 END AS CIF,
                                                 CASE(M)
                                                     WHEN 'N' THEN 'N'
@@ -232,9 +232,9 @@
                                             SELECT
                                                 NATNID_REGNNUMB,
                                                 CUST_NUMB,
-                                                CASE(RANK() OVER(PARTITION BY NATNID_REGNNUMB ORDER BY M DESC, CUST_NUMB) - 1)
-                                                    WHEN 0 THEN NATNID_REGNNUMB
-                                                    ELSE RTRIM(NATNID_REGNNUMB) + (CONVERT(VARCHAR(3), RANK() OVER(PARTITION BY NATNID_REGNNUMB ORDER BY M DESC, CUST_NUMB) - 1))
+                                                CASE(RANK() OVER(PARTITION BY LTRIM(RTRIM(SUBSTRING(LTRIM(RTRIM(NATNID_REGNNUMB)), 1, 11))) ORDER BY M DESC, CUST_NUMB) - 1)
+                                                    WHEN 0 THEN LTRIM(RTRIM(SUBSTRING(LTRIM(RTRIM(NATNID_REGNNUMB)), 1, 11)))
+                                                    ELSE LTRIM(RTRIM(SUBSTRING(LTRIM(RTRIM(NATNID_REGNNUMB)), 1, 11))) + (CONVERT(VARCHAR(3), RANK() OVER(PARTITION BY LTRIM(RTRIM(SUBSTRING(LTRIM(RTRIM(NATNID_REGNNUMB)), 1, 11))) ORDER BY M DESC, CUST_NUMB) - 1))
                                                 END AS CIF,
                                                 CASE(M)
                                                     WHEN 'N' THEN 'N'
