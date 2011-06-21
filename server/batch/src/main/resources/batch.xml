@@ -291,7 +291,7 @@
                                             LB.BIZ_TYPE CUSTBUSCODE,
                                             'CUSTCRTDATE' = CASE WHEN LTRIM(RTRIM(LB.DATE_ESTB)) = '' OR LB.DATE_ESTB IS NULL THEN '00000000' ELSE REPLACE(LB.DATE_ESTB, '-', '') END,
                                             '' CUSTOADDRESS,
-                                            LTRIM(RTRIM(SUBSTRING(LB.DSCT_DESC_L, 1, 6))) CUSTADDRESS,
+                                            LTRIM(RTRIM(SUBSTRING(LB.DSCT_DESC_L, 1, 6))) + 'ＸＸ路ＸＸ巷ＸＸ號ＸＸ樓' CUSTADDRESS,
                                             '' CUSTTEL1,
                                             '' CUSTTEL2,
                                             '' CUSTEMAILADD
