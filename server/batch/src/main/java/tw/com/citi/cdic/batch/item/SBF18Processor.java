@@ -3,7 +3,9 @@ package tw.com.citi.cdic.batch.item;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,13 +67,16 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
         List<A23> a23s = new ArrayList<A23>();
         List<A24> a24s = new ArrayList<A24>();
         
+        // 根據編碼過的 id 找出相關連的 customer number
         List<String> custNumbs = cifDao.findCustNumbByJointId(jointId);
         
+        /*
+         * 利用 customer number 去串 A21, A22, A23
+         */
         for (String item : custNumbs) {
             a21s = a21Dao.findByCustomerId(item, "A21");
             a22s = a22Dao.findByCustomerId(item, "A22");
             a23s = a23Dao.findByCustomerId(item);
-            a24s = a24Dao.findByCustomerId(item);
             for (A21 a21 : a21s) {
                 if ("1".equals(a21.getJointCode())) { // 2. Summary 台幣聯名戶金額
                     temp11 += a21.getAccountBalance();
@@ -105,21 +110,41 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
                     temp7 += a23.getAccountBalance();
                 }
             }
-            for (A24 a24 : a24s) {
-                // 1. Summary 台幣要保金額
-                temp7 += a24.getBalance();
-                temp8 += a24.getIntPayable();
-                
-                // 底下兩行程式碼，是為了寫 sample file 所做的處理
-                a24.setCustomerId(MaskUtils.mask(a24.getCustomerId(), 6));
-                a24.setCustomerName(MaskUtils.mask(a24.getCustomerName(), 2));
-            }
             out.getA21List().addAll(a21s);
             out.getA22List().addAll(a22s);
             out.getA23List().addAll(a23s);
-            out.getA24List().addAll(a24s);
         }
         
+        /*
+         * 利用編碼過的 id 去串 A24
+         */
+        Set<String> processedAccount;
+        ExecutionContext stepContext = stepExecution.getExecutionContext();
+        Object obj = stepContext.get("PROCESSED_ACCOUNT");
+        if (obj == null) {
+            processedAccount = new HashSet<String>();
+        } else {
+            processedAccount = (Set<String>) obj;
+        }
+        a24s = a24Dao.findByCustomerId(jointId);
+        for (A24 a24 : a24s) {
+            // 1. Summary 台幣要保金額
+            temp7 += a24.getBalance();
+            temp8 += a24.getIntPayable();
+            
+            // 如果有串到 A24 靜止戶的資料，就把靜止戶的資料記錄下來，在下個 batch step 要把這些靜止戶給剔除
+            processedAccount.add(a24.getCustomerId());
+            
+            // 底下兩行程式碼，是為了寫 sample file 所做的處理
+            a24.setCustomerId(MaskUtils.mask(a24.getCustomerId(), 6));
+            a24.setCustomerName(MaskUtils.mask(a24.getCustomerName(), 2));
+        }
+        out.getA24List().addAll(a24s);
+        stepContext.put("PROCESSED_ACCOUNT", processedAccount);
+        
+        /*
+         * 利用 customer number 去串 B21, B22
+         */
         for (String item : custNumbs) {
             a21s = a21Dao.findByCustomerId(item, "B21");
             a22s = a22Dao.findByCustomerId(item, "B22");
@@ -155,6 +180,9 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
             out.getB22List().addAll(a22s);
         }
         
+        /*
+         * 利用 customer number 去串 C21, C22
+         */
         for (String item : custNumbs) {
             a21s = a21Dao.findByCustomerId(item, "C21");
             a22s = a22Dao.findByCustomerId(item, "C22");
@@ -200,7 +228,6 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
                 && temp11 == 0 && temp12 == 0 && temp13 == 0 && temp14 == 0
                 && temp15 == 0 && temp16 == 0 && temp17 == 0 && temp18 == 0
                 && temp19 == 0 && temp20 == 0)) {
-            ExecutionContext stepContext = stepExecution.getExecutionContext();
             long processCount = stepContext.getLong("PROCESS_COUNT", 0);
             processCount++;
             stepContext.putLong("PROCESS_COUNT", processCount);
