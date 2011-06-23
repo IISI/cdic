@@ -38,11 +38,35 @@
         </property>
     </bean>
 
+    <bean id="a24SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A24SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A24_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="ms950"></property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,controlSrNo,srNo,apNo,charCode,customerId,customerIdNo,customerName,customerBusinessCode,customerType,currencyCode,balance,rateType,intRate,intPayable,taxCode,grossInt,grossTax,originalAddress,address,tel1,tel2"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,靜止戶之統制帳戶帳號,客戶之存款帳號,會計科子目代碼,存款性質別或產品類別,客戶識別碼,保留欄位,戶名,行業別,存戶性質或組織型態,幣別,帳戶餘額,利率別,指定基準日之存款利率,應付存款利息,稅率別,本年度未開扣繳憑單已付利息,本年度未開扣繳憑單已代扣稅額,客戶戶籍地址,客戶通訊地址,電話1,電話2"></property>
+            </bean>
+        </property>
+    </bean>
+
     <bean id="a24Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
         <property name="delegates">
             <list>
                 <ref bean="a24DbWriter" />
                 <ref bean="a24FileWriter" />
+                <ref bean="a24SampleFileWriter" />
             </list>
         </property>
     </bean>

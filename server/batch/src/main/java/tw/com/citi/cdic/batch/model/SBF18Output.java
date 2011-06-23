@@ -25,8 +25,6 @@ public class SBF18Output {
 
     private List<A23> a23List = new ArrayList<A23>();
 
-    private List<A24> a24List = new ArrayList<A24>();
-
     private boolean writeSample;
 
     public A61 getA61() {
@@ -91,14 +89,6 @@ public class SBF18Output {
 
     public void setA23List(List<A23> a23List) {
         this.a23List = a23List;
-    }
-
-    public List<A24> getA24List() {
-        return a24List;
-    }
-
-    public void setA24List(List<A24> a24List) {
-        this.a24List = a24List;
     }
 
     public boolean isWriteSample() {

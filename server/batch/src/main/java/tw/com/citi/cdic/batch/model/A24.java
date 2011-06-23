@@ -52,6 +52,8 @@ public class A24 {
 
     private String tel2;
 
+    private boolean sample;
+
     public String getUnit() {
         return unit;
     }
@@ -234,6 +236,14 @@ public class A24 {
 
     public void setTel2(String tel2) {
         this.tel2 = tel2;
+    }
+
+    public boolean isSample() {
+        return sample;
+    }
+
+    public void setSample(boolean sample) {
+        this.sample = sample;
     }
 
 }

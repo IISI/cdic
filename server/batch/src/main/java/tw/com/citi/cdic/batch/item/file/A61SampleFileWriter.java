@@ -15,7 +15,7 @@ import tw.com.citi.cdic.batch.model.SBF18Output;
 public class A61SampleFileWriter extends FlatFileItemWriter<SBF18Output> {
 
     public enum Type {
-        A61, A21, B21, C21, A22, B22, C22, A23, A24
+        A61, A21, B21, C21, A22, B22, C22, A23
     }
 
     private Type type;
@@ -49,8 +49,6 @@ public class A61SampleFileWriter extends FlatFileItemWriter<SBF18Output> {
             return !CollectionUtils.isEmpty(item.getC22List());
         case A23:
             return !CollectionUtils.isEmpty(item.getA23List());
-        case A24:
-            return !CollectionUtils.isEmpty(item.getA24List());
         default:
             return false;
         }

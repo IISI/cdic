@@ -29,7 +29,6 @@ import tw.com.citi.cdic.batch.model.A61;
 import tw.com.citi.cdic.batch.model.CDICF20;
 import tw.com.citi.cdic.batch.model.SBF18Output;
 import tw.com.citi.cdic.batch.model.TableFlow;
-import tw.com.citi.cdic.batch.utils.MaskUtils;
 
 /**
  * @author Chih-Liang Chang
@@ -134,12 +133,7 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
             
             // 如果有串到 A24 靜止戶的資料，就把靜止戶的資料記錄下來，在下個 batch step 要把這些靜止戶給剔除
             processedAccount.add(a24.getCustomerId());
-            
-            // 底下兩行程式碼，是為了寫 sample file 所做的處理
-            a24.setCustomerId(MaskUtils.mask(a24.getCustomerId(), 6));
-            a24.setCustomerName(MaskUtils.mask(a24.getCustomerName(), 2));
         }
-        out.getA24List().addAll(a24s);
         stepContext.put("PROCESSED_ACCOUNT", processedAccount);
         
         /*
