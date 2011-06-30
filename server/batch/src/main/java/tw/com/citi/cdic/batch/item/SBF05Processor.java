@@ -28,6 +28,12 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
             a24.setApNo("2200119000");
         } else if ("NRSA".equals(item.getProdName())) {
             a24.setApNo("2200109000");
+        } else if ("PDSA".equals(item.getProdName())) {
+            a24.setApNo("2200109000");
+        } else if ("SESA".equals(item.getProdName())) {
+            a24.setApNo("2200119000");
+        } else if ("WESA".equals(item.getProdName())) {
+            a24.setApNo("2200119000");
         } else {
             a24.setApNo("");
         }
