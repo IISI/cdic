@@ -781,7 +781,7 @@
                 <step id="t06-t03" next="t06-file">
                     <description>把 CDICT03G 的資料 import 至 T06 file</description>
                     <tasklet>
-                        <chunk reader="cdicT03GFileReader" processor="t03t06Processor" writer="t06DbWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicT06T03GFileReader" processor="t03t06Processor" writer="t06DbWriter" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="stepListener" />
                         </listeners>
