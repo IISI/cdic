@@ -27,14 +27,13 @@ import tw.com.citi.cdic.batch.model.A23;
 import tw.com.citi.cdic.batch.model.A24;
 import tw.com.citi.cdic.batch.model.A61;
 import tw.com.citi.cdic.batch.model.CDICF20;
-import tw.com.citi.cdic.batch.model.SBF18Output;
 import tw.com.citi.cdic.batch.model.TableFlow;
 
 /**
  * @author Chih-Liang Chang
  * @since 2010/10/14
  */
-public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
+public class SBF18Processor implements ItemProcessor<String, A61> {
 
     protected static final Logger logger = LoggerFactory.getLogger(SBF18Processor.class);
 
@@ -57,9 +56,8 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
     private int writeSampleFrequency = 1000;
 
     @Override
-    public SBF18Output process(String jointId) throws Exception {
+    public A61 process(String jointId) throws Exception {
         double temp7 = 0, temp8 = 0, temp11 = 0, temp12 = 0, temp9 = 0, temp10 = 0, temp13 = 0, temp14 = 0, temp17 = 0, temp18 = 0, temp15 = 0, temp16 = 0, temp19 = 0, temp20 = 0;
-        SBF18Output out = new SBF18Output();
         
         List<A21> a21s = new ArrayList<A21>();
         List<A22> a22s = new ArrayList<A22>();
@@ -109,9 +107,6 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
                     temp7 += a23.getAccountBalance();
                 }
             }
-            out.getA21List().addAll(a21s);
-            out.getA22List().addAll(a22s);
-            out.getA23List().addAll(a23s);
         }
         
         /*
@@ -170,8 +165,6 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
                     temp14 += b22.getIntPayable() * cdicF20.getTransRate();
                 }
             }
-            out.getB21List().addAll(a21s);
-            out.getB22List().addAll(a22s);
         }
         
         /*
@@ -190,8 +183,6 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
                 temp19 += c22.getAmount() * cdicF20.getTransRate();
                 temp20 += c22.getIntPayable() * cdicF20.getTransRate();
             }
-            out.getC21List().addAll(a21s);
-            out.getC22List().addAll(a22s);
         }
         
         A61 a61 = new A61();
@@ -217,7 +208,6 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
         a61.setObuDepBalance(temp19);
         a61.setObuDepInt(temp20);
         
-        out.setA61(a61);
         if (!(temp7 == 0 && temp8 == 0 && temp9 == 0  && temp10 == 0
                 && temp11 == 0 && temp12 == 0 && temp13 == 0 && temp14 == 0
                 && temp15 == 0 && temp16 == 0 && temp17 == 0 && temp18 == 0
@@ -226,11 +216,11 @@ public class SBF18Processor implements ItemProcessor<String, SBF18Output> {
             processCount++;
             stepContext.putLong("PROCESS_COUNT", processCount);
             if (processCount % writeSampleFrequency == 1) {
-                out.setWriteSample(true);
+                a61.setSample(true);
             }
         }
         
-        return out;
+        return a61;
     }
 
     @BeforeStep

@@ -58,6 +58,8 @@ public class A21 {
 
     private String lastTxDate;
 
+    private boolean sample;
+
     public String getUnit() {
         return unit;
     }
@@ -256,6 +258,14 @@ public class A21 {
 
     public void setLastTxDate(String lastTxDate) {
         this.lastTxDate = lastTxDate;
+    }
+
+    public boolean isSample() {
+        return sample;
+    }
+
+    public void setSample(boolean sample) {
+        this.sample = sample;
     }
 
 }

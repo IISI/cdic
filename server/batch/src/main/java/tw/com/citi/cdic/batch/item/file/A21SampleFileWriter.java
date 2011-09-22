@@ -5,18 +5,18 @@ import java.util.List;
 
 import org.springframework.batch.item.file.FlatFileItemWriter;
 
-import tw.com.citi.cdic.batch.model.A61;
+import tw.com.citi.cdic.batch.model.A21;
 
 /**
  * @author Chih-Liang Chang
- * @since 2010/10/15
+ * @since 2011/9/21
  */
-public class A61SampleFileWriter extends FlatFileItemWriter<A61> {
+public class A21SampleFileWriter extends FlatFileItemWriter<A21> {
 
     @Override
-    public void write(List<? extends A61> items) throws Exception {
-        List<A61> samples = new ArrayList<A61>();
-        for (A61 item : items) {
+    public void write(List<? extends A21> items) throws Exception {
+        List<A21> samples = new ArrayList<A21>();
+        for (A21 item : items) {
             if (item.isSample()) {
                 samples.add(item);
             }

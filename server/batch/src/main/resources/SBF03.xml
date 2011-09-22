@@ -52,6 +52,17 @@
         <property name="type" value="3"></property>
     </bean>
 
+    <bean id="c22SampleCountProcessor" class="tw.com.citi.cdic.batch.item.A22SampleCountProcessor"></bean>
+
+    <bean id="compositeC22Processor" class="org.springframework.batch.item.support.CompositeItemProcessor">
+        <property name="delegates">
+            <list>
+                <ref bean="c22Processor" />
+                <ref bean="c22SampleCountProcessor" />
+            </list>
+        </property>
+    </bean>
+
     <bean id="c22DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
         <property name="sql" value="INSERT INTO C22(TDUNIT, TDBRNO, TDSRNO, TDAPNO, TDCHARCODE, TDSTATUS, TDCUSTID, TDCUSTIDNO, TDCUSTTYPE , TDSLIPNO, TDCURCODE, TDAMT, TDSTOPPAYAMT, TDBGNDATE, TDDUEDATE, TDRATETYPE, TDPERIOD, TDINTTYPE, TDNAMECODE, TDINTRATE, TDINTPAYCODE, TDAUTOPRIM, TDAUTOINTNO, TDISUEDATE, TDREISUEDATE, TDGSACTCODE, TDJOINTCODE, TDSDCASE, TDINTEDATE, TDINTPAY, TDINTPAYABLE, TDVIOLATEAMT, TDPGKIND, TDPGAMT, TDPGSETDATE, TDTAXCODE, TDGROSSINT, TDGROSSTAX, TDLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :slipNo, :currencyCode, :amount, :stopPayAmount, :beginDate, :dueDate, :rateType, :period, :intType, :nameCode, :intRate, :intPayCode, :autoPrim, :autoIntNo, :issueDate, :reIssueDate, :gsAccountCode, :jointCode, :sdCase, :intEndDate, :intPay, :intPayable, :violateAmount, :pgKind, :pgAmount, :pgSetDate, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
@@ -77,11 +88,35 @@
         </property>
     </bean>
 
+    <bean id="c22SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A22SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/C22_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="ms950"></property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,slipNo,currencyCode,amount,stopPayAmount,beginDate,dueDate,rateType,period,intType,nameCode,intRate,intPayCode,autoPrim,autoIntNo,issueDate,reIssueDate,gsAccountCode,jointCode,sdCase,intEndDate,intPay,intPayable,violateAmount,pgKind,pgAmount,pgSetDate,taxCode,grossInt,grossTax,lastTxDate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科子目代碼,存款性質別或產品類別,存款帳戶狀況碼,客戶識別碼,保留欄位,存戶性質或組織型態,存單號碼,幣別,存單金額,止付扣押總金額,起息日,到期日,利率別,適用之利率期間,計息種類,記名註記,存單利率,付息方式,自動轉期代號,自動轉息帳號,開立存單日期,補發存單日期,綜存戶存單,聯名戶及統制帳戶註記,結構型商品代號,上次付息迄日,已付存款利息,應付存款利息/預付存款利息,違約金,存單設定種類,存單設定質權金額,設定日期,稅率別,本年度未開扣繳憑單已付利息,本年度未開扣繳憑單已代扣稅額,最近交易日"></property>
+            </bean>
+        </property>
+    </bean>
+
     <bean id="c22Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
         <property name="delegates">
             <list>
                 <ref bean="c22DbWriter" />
                 <ref bean="c22FileWriter" />
+                <ref bean="c22SampleFileWriter" />
             </list>
         </property>
     </bean>
@@ -111,6 +146,8 @@
         </property>
     </bean>
 
+    <bean id="a22SampleCountProcessor" class="tw.com.citi.cdic.batch.item.A22SampleCountProcessor"></bean>
+
     <bean id="a22FileWriter" parent="c22FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
@@ -119,15 +156,51 @@
         </property>
     </bean>
 
+    <bean id="a22SampleFileWriter" parent="c22SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A22_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a22Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a22FileWriter" />
+                <ref bean="a22SampleFileWriter" />
+            </list>
+        </property>
+    </bean>
+
     <bean id="b22DbReader" parent="a22DbReader">
         <property name="sql" value="SELECT * FROM B22 ORDER BY TDSRNO"></property>
     </bean>
+
+    <bean id="b22SampleCountProcessor" class="tw.com.citi.cdic.batch.item.A22SampleCountProcessor"></bean>
 
     <bean id="b22FileWriter" parent="c22FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B22"></constructor-arg>
             </bean>
+        </property>
+    </bean>
+
+    <bean id="b22SampleFileWriter" parent="c22SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B22_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="b22Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="b22FileWriter" />
+                <ref bean="b22SampleFileWriter" />
+            </list>
         </property>
     </bean>
 
