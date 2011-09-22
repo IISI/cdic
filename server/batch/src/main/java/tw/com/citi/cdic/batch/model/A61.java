@@ -7,6 +7,7 @@ package tw.com.citi.cdic.batch.model;
  * @since 2010/10/8
  */
 public class A61 {
+
     private String unit;
     private String branchNo;
     private String custId;
@@ -27,6 +28,7 @@ public class A61 {
     private double unDepIntEx;
     private double obuDepBalance;
     private double obuDepInt;
+    private boolean sample;
 
     public void setUnit(String unit) {
         this.unit = unit;
@@ -187,4 +189,13 @@ public class A61 {
     public double getObuDepInt() {
         return obuDepInt;
     }
+
+    public boolean isSample() {
+        return sample;
+    }
+
+    public void setSample(boolean sample) {
+        this.sample = sample;
+    }
+
 }

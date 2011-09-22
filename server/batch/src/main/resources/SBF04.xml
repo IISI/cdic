@@ -50,6 +50,8 @@
         </property>
     </bean>
 
+    <bean id="a23SampleCountProcessor" class="tw.com.citi.cdic.batch.item.A23SampleCountProcessor"></bean>
+
     <bean id="a23FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
@@ -66,6 +68,38 @@
                     </bean>
                 </property>
             </bean>
+        </property>
+    </bean>
+
+    <bean id="a23SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A23SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A23_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="ms950"></property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,stopPayAmount,jointCode,overdrawStatus,lastTxDate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科子目代碼,存款性質別或產品類別,存款帳戶狀況碼,客戶識別碼,保留欄位,存戶性質或組織型態,開戶日期,幣別,帳戶餘額,止付扣押總金額,聯名戶及統制帳戶註記,透支戶註記,最近交易日"></property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a23Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a23FileWriter" />
+                <ref bean="a23SampleFileWriter" />
+            </list>
         </property>
     </bean>
 

@@ -54,6 +54,17 @@
         <property name="b21" value="false"></property>
     </bean>
 
+    <bean id="c21SampleCountProcessor" class="tw.com.citi.cdic.batch.item.A21SampleCountProcessor"></bean>
+
+    <bean id="compositeC21Processor" class="org.springframework.batch.item.support.CompositeItemProcessor">
+        <property name="delegates">
+            <list>
+                <ref bean="c21Processor" />
+                <ref bean="c21SampleCountProcessor" />
+            </list>
+        </property>
+    </bean>
+
     <bean id="c21FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
@@ -77,11 +88,35 @@
         <property name="sql" value="INSERT INTO C21(PBUNIT, PBBRNO, PBSRNO, PBAPNO, PBCHARCODE, PBSTATUS, PBCUSTID, CUSTIDNO, PBCUSTTYPE, PBOPENDATE, PBCURCODE, PBACTBAL, PBBAL, PBSTOPPAYAMT, PBCARDAMT, PBGSACTCODE, PBJOINTCODE, PBRATETYPE, PBINTRATE, PBINTPAYABLE, PBOVRSTATUS, PBTAXCODE, PBGROSSINT, PBGROSSTAX, PBLASTTXDATE) VALUES(:unit, :branchNo, :srNo, :apNo, :charCode, :status, :customerId, :customerIdNo, :customerType, :openDate, :currencyCode, :accountBalance, :balance, :stopPayAmount, :cardAmount, :gsAccountCode, :jointCode, :rateType, :intRate, :intPayable, :overdrawStatus, :taxCode, :grossInt, :grossTax, :lastTxDate)"></property>
     </bean>
 
+    <bean id="c21SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.A21SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/C21_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="ms950"></property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,apNo,charCode,status,customerId,customerIdNo,customerType,openDate,currencyCode,accountBalance,balance,stopPayAmount,cardAmount,gsAccountCode,jointCode,rateType,intRate,intPayable,overdrawStatus,taxCode,grossInt,grossTax,lastTxDate"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="headerCallback">
+            <bean class="tw.com.citi.cdic.batch.item.file.SingleLineHeaderCallback">
+                <property name="line" value="總機構代號,分支機構代號,存款帳號,會計科子目代碼,存款性質別或產品類別,存款帳戶狀況碼,客戶識別碼,保留欄位,存戶性質或組織型態,開戶日期,幣別,帳戶餘額,存摺餘額,止付扣押總金額,儲值性圈存金額,綜存戶記號,聯名戶及統制帳戶註記,利率別,指定基準日之存款利率,應付存款利息,透支戶註記,稅率別,本年度未開扣繳憑單已付利息,本年度未開扣繳憑單已代扣稅額,最近交易日"></property>
+            </bean>
+        </property>
+    </bean>
+
     <bean id="c21Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
         <property name="delegates">
             <list>
                 <ref bean="c21FileWriter" />
                 <ref bean="c21DbWriter" />
+                <ref bean="c21SampleFileWriter" />
             </list>
         </property>
     </bean>
@@ -144,6 +179,8 @@
         </property>
     </bean>
 
+    <bean id="a21SampleCountProcessor" class="tw.com.citi.cdic.batch.item.A21SampleCountProcessor"></bean>
+
     <bean id="a21FileWriter" parent="c21FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
@@ -152,15 +189,51 @@
         </property>
     </bean>
 
+    <bean id="a21SampleFileWriter" parent="c21SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A21_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a21Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a21FileWriter" />
+                <ref bean="a21SampleFileWriter" />
+            </list>
+        </property>
+    </bean>
+
     <bean id="b21DbReader" parent="a21DbReader">
         <property name="sql" value="SELECT * FROM B21 ORDER BY PBSRNO"></property>
     </bean>
+
+    <bean id="b21SampleCountProcessor" class="tw.com.citi.cdic.batch.item.A21SampleCountProcessor"></bean>
 
     <bean id="b21FileWriter" parent="c21FileWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
                 <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B21"></constructor-arg>
             </bean>
+        </property>
+    </bean>
+
+    <bean id="b21SampleFileWriter" parent="c21SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B21_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="b21Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="b21FileWriter" />
+                <ref bean="b21SampleFileWriter" />
+            </list>
         </property>
     </bean>
 

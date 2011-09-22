@@ -63,7 +63,7 @@
                 <step id="f02A-c21">
                     <description>把 CDICF02R 的資料 import 至 C21 file 及 C21 table</description>
                     <tasklet>
-                        <chunk reader="cdicF02RFileReader" processor="c21Processor" writer="c21Writer" commit-interval="500"></chunk>
+                        <chunk reader="cdicF02RFileReader" processor="compositeC21Processor" writer="c21Writer" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="stepListener" />
                         </listeners>
@@ -123,7 +123,7 @@
                 <step id="f03A-c22">
                     <description>把 CDICF03 的資料 import 至 C22 table 及 C22 file</description>
                     <tasklet>
-                        <chunk reader="cdicF03FileReader" processor="c22Processor" writer="c22Writer" commit-interval="500"></chunk>
+                        <chunk reader="cdicF03FileReader" processor="compositeC22Processor" writer="c22Writer" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="stepListener" />
                         </listeners>
@@ -200,7 +200,7 @@
                 <step id="f02B-copy-a21" next="f02B-copy-b21">
                     <description>將 tabel A21 的資料 export 至 file</description>
                     <tasklet>
-                        <chunk reader="a21DbReader" writer="a21FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="a21DbReader" processor="a21SampleCountProcessor" writer="a21Writer" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="stepListener" />
                         </listeners>
@@ -209,7 +209,7 @@
                 <step id="f02B-copy-b21">
                     <description>將 table B21 的資料 export 至 file</description>
                     <tasklet>
-                        <chunk reader="b21DbReader" writer="b21FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="b21DbReader" processor="b21SampleCountProcessor" writer="b21Writer" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="lastStepListener" />
                         </listeners>
@@ -238,7 +238,7 @@
                 <step id="f03B-copy-a22" next="f03B-copy-b22">
                     <description>將 tabel A22 的資料 export 至 file</description>
                     <tasklet>
-                        <chunk reader="a22DbReader" writer="a22FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="a22DbReader" processor="a22SampleCountProcessor" writer="a22Writer" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="stepListener" />
                         </listeners>
@@ -247,7 +247,7 @@
                 <step id="f03B-copy-b22">
                     <description>將 tabel B22 的資料 export 至 file</description>
                     <tasklet>
-                        <chunk reader="b22DbReader" writer="b22FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="b22DbReader" processor="b22SampleCountProcessor" writer="b22Writer" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="lastStepListener" />
                         </listeners>
@@ -267,7 +267,7 @@
                 <step id="f04B-copy">
                     <description>將 tabel A23 的資料 export 至 file</description>
                     <tasklet>
-                        <chunk reader="a23DbReader" writer="a23FileWriter" commit-interval="500"></chunk>
+                        <chunk reader="a23DbReader" processor="a23SampleCountProcessor" writer="a23Writer" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="lastStepListener" />
                         </listeners>
