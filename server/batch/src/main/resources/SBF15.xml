@@ -54,4 +54,98 @@
 
     <bean id="f15SampleProcessor" class="tw.com.citi.cdic.batch.item.SBF15Processor" />
 
+    <bean id="a44DbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO A44(GULNUNIT, GULNBRNO, GULNSRNO, GULNSRSUBNO, GULNCUSTID, GUARANTID, GUARANTNAME, GUCHARCODE, GURELCODE, GUCURCODE, GUAMT, GUEFFDATE) VALUES(:unit, :brNo, :srNo, :srSubNo, :custId, :arantId, :arantName, :charCode, :relCode, :curCode, :amt, :effDate)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="guarantorFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/Guarantor.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="ms950"></property>
+        <property name="strict" value="false"></property>
+        <property name="linesToSkip" value="1"></property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="tw.com.citi.cdic.batch.item.file.mapping.GuarantorFieldSetMapper"></bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <property name="names" value="custNo,collType,udf6,udf7,udf8,udf9,udf10,udf11,udf12,udf13,udf14,udf15,udf16,udf17,udf18,udf19,udf20,udf21,udf22,udf23,udf24,udf25,udf26,udf27,udf28,udf29,udf30,udf31,udf32,udf33,udf34,udf35,udf36,udf37,udf38,udf39,udf40,udf41,udf42,udf43,udf44,udf45,udf46,udf47,udf48,udf49,udf51,udf52,udf53,udf54,udf55,udf56,udf57,udf58,udf59,udf60,udf61,udf62,udf63,udf64,udf65,udf66,udf67,udf68,udf69,udf70,udf71,udf72,udf73,udf74,udf75,udf76,udf77,udf78,udf79,udf80,udf81,udf82,udf83,udf84,udf85,udf86,udf87,udf88,udf89,udf90,udf91,udf92,udf93,udf94,udf95,udf96,udf97,udf98,udf99,udf100,udf101,udf102,udf103,udf104,udf105,udf106,udf107,udf108,udf109,udf110,udf111"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="guarantorDbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql"
+            value="INSERT INTO GUARANTOR(V_CUST_NO, V_UDF_6, V_UDF_7, V_UDF_8, V_UDF_9, V_UDF_10, V_UDF_11, V_UDF_12, V_UDF_13, V_UDF_14, V_UDF_15, V_UDF_16, V_UDF_17, V_UDF_18, V_UDF_19, V_UDF_20, V_UDF_21, V_UDF_22, V_UDF_23, V_UDF_24, V_UDF_25, V_UDF_26, V_UDF_27, V_UDF_28, V_UDF_29, V_UDF_30, V_UDF_31, V_UDF_32, V_UDF_33, V_UDF_34, V_UDF_35, V_UDF_36, V_UDF_37, V_UDF_38, V_UDF_39, V_UDF_40, V_UDF_41, V_UDF_42, V_UDF_43, V_UDF_44, V_UDF_45, V_UDF_46, V_UDF_47, V_UDF_48, V_UDF_49, V_UDF_51, V_UDF_52, V_UDF_53, V_UDF_54, V_UDF_55, V_UDF_56, V_UDF_57, V_UDF_58, V_UDF_59, V_UDF_60, V_UDF_61, V_UDF_62, V_UDF_63, V_UDF_64, V_UDF_65, V_UDF_66, V_UDF_67, V_UDF_68, V_UDF_69, V_UDF_70, V_UDF_71, V_UDF_72, V_UDF_73, V_UDF_74, V_UDF_75, V_UDF_76, V_UDF_77, V_UDF_78, V_UDF_79, V_UDF_80, V_UDF_81, V_UDF_82, V_UDF_83, V_UDF_84, V_UDF_85, V_UDF_86, V_UDF_87, V_UDF_88, V_UDF_89, V_UDF_90, V_UDF_91, V_UDF_92, V_UDF_93, V_UDF_94, V_UDF_95, V_UDF_96, V_UDF_97, V_UDF_98, V_UDF_99, V_UDF_100, V_UDF_101, V_UDF_102, V_UDF_103, V_UDF_104, V_UDF_105, V_UDF_106, V_UDF_107, V_UDF_108, V_UDF_109, V_UDF_110, V_UDF_111) VALUES(:custNo, :udf6, :udf7, :udf8, :udf9, :udf10, :udf11, :udf12, :udf13, :udf14, :udf15, :udf16, :udf17, :udf18, :udf19, :udf20, :udf21, :udf22, :udf23, :udf24, :udf25, :udf26, :udf27, :udf28, :udf29, :udf30, :udf31, :udf32, :udf33, :udf34, :udf35, :udf36, :udf37, :udf38, :udf39, :udf40, :udf41, :udf42, :udf43, :udf44, :udf45, :udf46, :udf47, :udf48, :udf49, :udf51, :udf52, :udf53, :udf54, :udf55, :udf56, :udf57, :udf58, :udf59, :udf60, :udf61, :udf62, :udf63, :udf64, :udf65, :udf66, :udf67, :udf68, :udf69, :udf70, :udf71, :udf72, :udf73, :udf74, :udf75, :udf76, :udf77, :udf78, :udf79, :udf80, :udf81, :udf82, :udf83, :udf84, :udf85, :udf86, :udf87, :udf88, :udf89, :udf90, :udf91, :udf92, :udf93, :udf94, :udf95, :udf96, :udf97, :udf98, :udf99, :udf100, :udf101, :udf102, :udf103, :udf104, :udf105, :udf106, :udf107, :udf108, :udf109, :udf110, :udf111)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="f15AProcessor" class="tw.com.citi.cdic.batch.item.SBF15AProcessor">
+        <property name="guarantorDao" ref="guarantorDao"></property>
+        <property name="busDao" ref="busDao"></property>
+    </bean>
+
+    <bean id="a44ADbWriter" class="tw.com.citi.cdic.batch.item.file.A44ADbWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="INSERT INTO A44(GULNUNIT, GULNBRNO, GULNSRNO, GULNSRSUBNO, GULNCUSTID, GUARANTID, GUARANTNAME, GUCHARCODE, GURELCODE, GUCURCODE, GUAMT, GUEFFDATE) VALUES(:unit, :brNo, :srNo, :srSubNo, :custId, :arantId, :arantName, :charCode, :relCode, :curCode, :amt, :effDate)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="a44ASampleFileWriter" parent="a44SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A44A_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.RecursiveCollectionLineAggregator">
+                <property name="delegate">
+                    <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                        <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,'%s"></property>
+                        <property name="fieldExtractor">
+                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                                <property name="names" value="unit,brNo,srNo,srSubNo,custId,arantId,arantName,charCode,relCode,curCode,amt,effDate"></property>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a44Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a44ADbWriter" />
+                <ref bean="a44ASampleFileWriter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="a44DbReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="SELECT * FROM A44"></property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.A44Mapper"></bean>
+        </property>
+    </bean>
+
+    <bean id="a44FileWriter" parent="a44SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A44.csv"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
 </beans>
