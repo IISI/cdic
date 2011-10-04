@@ -64,4 +64,82 @@
 
     <bean id="f12SampleProcessor" class="tw.com.citi.cdic.batch.item.SBF12Processor" />
 
+    <bean id="provisionFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/Provision.txt"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="ms950"></property>
+        <property name="strict" value="false"></property>
+        <property name="linesToSkip" value="1"></property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.Provision"></property>
+                        <property name="strict" value="false"></property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <property name="names" value="base,contractReferenceNo,flexBranchCode,flexAccountBranch,flexCcyCd,principalGl,securedUdf,initSecuredInd,contractStatus,productMis,origCollMktVal,collMktValAssignedSecured,collMktValAssignedClean,overdueDays,overdueMths,principalAmount,interestAmount,provisionAmountSecured,provisionAmountClean,provisionTillDateSecured,provisionTillDateClean,provision2Secured,provision31Secured,provision32Secured,provision4Secured,provision5Secured,provision2Clean,provision31Clean,provision32Clean,provision4Clean,provision5Clean,provisionCheckAmount,provisionCheckAmountToDate,expensePlGlSecured,rfdiGlSecured,expensePlGlClean,rfdiGlClean,smeGteePct"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="provisionDbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql"
+            value="INSERT INTO PROVISION(CONTRACT_REFERENCE_NO,PROVISION2_SECURED,PROVISION3_1_SECURED,PROVISION3_2_SECURED,PROVISION4_SECURED,PROVISION5_SECURED,PROVISION2_CLEAN,PROVISION3_1_CLEAN,PROVISION3_2_CLEAN,PROVISION4_CLEAN,PROVISION5_CLEAN) VALUES(:contractReferenceNo,:provision2Secured,:provision31Secured,:provision32Secured,:provision4Secured,:provision5Secured,:provision2Clean,:provision31Clean,:provision32Clean,:provision4Clean,:provision5Clean)"></property>
+        <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
+    </bean>
+
+    <bean id="cdicF12AFileReader" parent="cdicF12FileReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF12A"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f12AProcessor" class="tw.com.citi.cdic.batch.item.SBF12AProcessor">
+        <property name="provisionDao" ref="provisionDao"></property>
+    </bean>
+
+    <bean id="a41ASampleFileWriter" parent="a41SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A41A_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a41AWriter" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a41DbWriter" />
+                <ref bean="a41ASampleFileWriter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="a41DbReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="sql" value="SELECT * FROM A41"></property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.A41Mapper"></bean>
+        </property>
+    </bean>
+
+    <bean id="a41FileWriter" parent="a41SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A41.csv"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
 </beans>
