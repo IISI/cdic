@@ -2,7 +2,6 @@ package tw.com.citi.cdic.batch.dao.jdbc;
 
 import java.util.List;
 
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
 
 import tw.com.citi.cdic.batch.GuarantorMapper;
@@ -17,9 +16,8 @@ public class GuarantorDaoImpl extends SimpleJdbcDaoSupport implements
         GuarantorDao {
 
     @Override
-    public Guarantor findByCustomerNo(String customerNo) {
-        List<Guarantor> guarantors = getSimpleJdbcTemplate().query("SELECT * FROM GUARANTOR WHERE V_CUST_NO = ?", new GuarantorMapper(), customerNo);
-        return DataAccessUtils.uniqueResult(guarantors);
+    public List<Guarantor> findByCustomerNo(String customerNo) {
+        return getSimpleJdbcTemplate().query("SELECT * FROM GUARANTOR WHERE V_CUST_NO = ?", new GuarantorMapper(), customerNo);
     }
 
 }

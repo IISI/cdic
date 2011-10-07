@@ -24,8 +24,17 @@ public class SBF15AProcessor implements ItemProcessor<A41, List<A44>> {
     @Override
     public List<A44> process(A41 item) throws Exception {
         List<A44> a44List = new ArrayList<A44>();
-        Guarantor guarantor = guarantorDao.findByCustomerNo(item.getCustId());
-        if (guarantor == null) return null;
+        List<Guarantor> guarantors = guarantorDao.findByCustomerNo(item.getCustId());
+        if (guarantors == null || guarantors.isEmpty()) return null;
+        for (Guarantor guarantor : guarantors) {
+            List<A44> temp = createA44s(item, guarantor);
+            a44List.addAll(temp);
+        }
+        return a44List;
+    }
+
+    private List<A44> createA44s(A41 item, Guarantor guarantor) {
+        List<A44> a44List = new ArrayList<A44>();
         if (guarantor.getUdf9() != null) {
             A44 a44 = createA44(item);
             a44.setArantId(guarantor.getUdf9());

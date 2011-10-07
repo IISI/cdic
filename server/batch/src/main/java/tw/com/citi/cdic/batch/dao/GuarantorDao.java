@@ -1,5 +1,7 @@
 package tw.com.citi.cdic.batch.dao;
 
+import java.util.List;
+
 import tw.com.citi.cdic.batch.model.Guarantor;
 
 /**
@@ -8,6 +10,6 @@ import tw.com.citi.cdic.batch.model.Guarantor;
  */
 public interface GuarantorDao {
 
-    Guarantor findByCustomerNo(String customerNo);
+    List<Guarantor> findByCustomerNo(String customerNo);
 
 }
