@@ -82,7 +82,10 @@ public class FileStatusUpdater {
             FileStep fileStep = FileStep.valueOf(entry.getKey());
             CDICFileStatus fileStatus = this.CDICFileStatusDao.findByFileNo(fileStep);
             if (ExitStatus.COMPLETED.compareTo(entry.getValue()) == 0) {
-                fileStatus.setStatus("2");
+                // 執行成功且狀態不為已確認的檔案，狀態更新為成功。
+                if(!"3".equals(fileStatus.getStatus())) {
+                    fileStatus.setStatus("2");
+                }
             } else {
                 fileStatus.setStatus("5");
                 failFile.add(fileStatus.getFileNo());
