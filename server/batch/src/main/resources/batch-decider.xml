@@ -6,6 +6,10 @@
         <property name="CDICFileStatusDao" ref="CDICFileStatusDao"></property>
     </bean>
 
+    <bean id="group1Decider" parent="skipDecider">
+        <property name="stepName" value="Group1"></property>
+    </bean>
+
     <bean id="f01Decider" parent="skipDecider">
         <property name="stepName" value="F01"></property>
     </bean>

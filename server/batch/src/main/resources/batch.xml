@@ -322,6 +322,10 @@
                 </step>
             </flow>
             <flow>
+                <decision id="group1Decision" decider="group1Decider">
+                    <next on="EXECUTE" to="group1Step" />
+                    <end on="SKIP" />
+                </decision>
                 <step id="group1Step">
                     <job ref="group1Job" />
                 </step>

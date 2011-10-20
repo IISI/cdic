@@ -31,13 +31,29 @@ public class SkipDecider implements JobExecutionDecider {
     public FlowExecutionStatus decide(JobExecution jobExecution,
             StepExecution stepExecution) {
         // 根據 db 的資料來決定是要回傳 SKIP 或是 EXECUTE
-        CDICFileStatus fileStatus = CDICFileStatusDao.findByFileNo(stepName);
-        if ("1".equals(fileStatus.getStatus())) {
-            fileStatus.setStatus("4");
-            CDICFileStatusDao.update(fileStatus);
-            return new FlowExecutionStatus("EXECUTE");
+        if ("Group1".equals(stepName.name())) {
+            CDICFileStatus f02Status = CDICFileStatusDao.findByFileNo("F02");
+            CDICFileStatus f03Status = CDICFileStatusDao.findByFileNo("F03");
+            CDICFileStatus f04Status = CDICFileStatusDao.findByFileNo("F04");
+            CDICFileStatus f08Status = CDICFileStatusDao.findByFileNo("F08");
+            if ("1".equals(f02Status.getStatus())
+                    && "1".equals(f03Status.getStatus())
+                    && "1".equals(f04Status.getStatus())
+                    && "1".equals(f08Status.getStatus())) {
+                return new FlowExecutionStatus("EXECUTE");
+            } else {
+                return new FlowExecutionStatus("SKIP");
+            }
         } else {
-            return new FlowExecutionStatus("SKIP");
+            CDICFileStatus fileStatus = CDICFileStatusDao
+                    .findByFileNo(stepName);
+            if ("1".equals(fileStatus.getStatus())) {
+                fileStatus.setStatus("4");
+                CDICFileStatusDao.update(fileStatus);
+                return new FlowExecutionStatus("EXECUTE");
+            } else {
+                return new FlowExecutionStatus("SKIP");
+            }
         }
     }
 
