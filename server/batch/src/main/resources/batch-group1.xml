@@ -16,6 +16,9 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM A21"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f02A-a21" next="f02A-b21-init">
@@ -82,6 +85,9 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM A22"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f03A-a22" next="f03A-b22-init">
@@ -100,6 +106,9 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM B22"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f03A-b22" next="f03A-c22-init">
@@ -118,6 +127,9 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM C22"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f03A-c22">
@@ -142,6 +154,9 @@
                             <beans:property name="dataSource" ref="dataSource"></beans:property>
                             <beans:property name="sql" value="DELETE FROM A23"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
                     </tasklet>
                 </step>
                 <step id="f04A">
