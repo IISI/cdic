@@ -73,7 +73,7 @@ public class FileUtil {
             DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(opts, auth);
             fsManager = new OSGiFileSystemManager();
             ((OSGiFileSystemManager) fsManager).init();
-            jcifs.Config.setProperty("jcifs.netbios.wins", config.getProperty("jcifs.netbios.wins"));
+            jcifs.Config.setProperty("jcifs.netbios.wins", NetUtil.getWins());
             init = true;
         } catch (Exception e) {
             e.printStackTrace();
