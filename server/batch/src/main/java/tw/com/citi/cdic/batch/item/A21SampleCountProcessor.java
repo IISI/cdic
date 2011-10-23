@@ -1,7 +1,8 @@
 package tw.com.citi.cdic.batch.item;
 
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.annotation.BeforeStep;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 
@@ -11,7 +12,7 @@ import tw.com.citi.cdic.batch.model.A21;
  * @author Chih-Liang Chang
  * @since 2011/9/22
  */
-public class A21SampleCountProcessor implements ItemProcessor<A21, A21> {
+public class A21SampleCountProcessor implements ItemProcessor<A21, A21>, StepExecutionListener {
 
     private StepExecution stepExecution;
 
@@ -29,9 +30,15 @@ public class A21SampleCountProcessor implements ItemProcessor<A21, A21> {
         return item;
     }
 
-    @BeforeStep
-    public void saveStepExecution(StepExecution stepExecution) {
+    @Override
+    public void beforeStep(StepExecution stepExecution) {
         this.stepExecution = stepExecution;
+    }
+
+    @Override
+    public ExitStatus afterStep(StepExecution stepExecution) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

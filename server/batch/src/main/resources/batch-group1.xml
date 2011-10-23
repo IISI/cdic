@@ -68,6 +68,7 @@
                     <tasklet>
                         <chunk reader="cdicF02RFileReader" processor="compositeC21Processor" writer="c21Writer" commit-interval="500"></chunk>
                         <listeners>
+                            <listener ref="c21SampleCountProcessor"></listener>
                             <listener ref="stepListener" />
                         </listeners>
                     </tasklet>
@@ -137,6 +138,7 @@
                     <tasklet>
                         <chunk reader="cdicF03FileReader" processor="compositeC22Processor" writer="c22Writer" commit-interval="500"></chunk>
                         <listeners>
+                            <listener ref="c22SampleCountProcessor"></listener>
                             <listener ref="stepListener" />
                         </listeners>
                     </tasklet>
