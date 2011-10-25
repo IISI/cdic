@@ -34,7 +34,13 @@ public class A21DaoImpl extends SimpleJdbcDaoSupport implements A21Dao {
 
     @Override
     public List<A21> findByCustomerId(String customerId, String tableName) {
-        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE PBCUSTID = ? AND PBACTBAL > 0", new A21Mapper(), customerId);
+        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE PBCUSTID = ?", new A21Mapper(), customerId);
+    }
+
+    @Override
+    public List<A21> findByCustomerIdAndHasAcctBalIntPayable(String customerId,
+            String tableName) {
+        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE PBCUSTID = ? AND (PBACTBAL > 0 OR PBINTPAYABLE > 0)", new A21Mapper(), customerId);
     }
 
 }

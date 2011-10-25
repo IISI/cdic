@@ -71,9 +71,9 @@ public class SBF18Processor implements ItemProcessor<String, A61> {
          * 利用 customer number 去串 A21, A22, A23
          */
         for (String item : custNumbs) {
-            a21s = a21Dao.findByCustomerId(item, "A21");
-            a22s = a22Dao.findByCustomerId(item, "A22");
-            a23s = a23Dao.findByCustomerId(item);
+            a21s = a21Dao.findByCustomerIdAndHasAcctBalIntPayable(item, "A21");
+            a22s = a22Dao.findByCustomerIdAndHasAmountIntPayable(item, "A22");
+            a23s = a23Dao.findByCustomerIdAndHasAcctBal(item);
             for (A21 a21 : a21s) {
                 if ("1".equals(a21.getJointCode())) { // 2. Summary 台幣聯名戶金額
                     temp11 += a21.getAccountBalance();
@@ -135,8 +135,8 @@ public class SBF18Processor implements ItemProcessor<String, A61> {
          * 利用 customer number 去串 B21, B22
          */
         for (String item : custNumbs) {
-            a21s = a21Dao.findByCustomerId(item, "B21");
-            a22s = a22Dao.findByCustomerId(item, "B22");
+            a21s = a21Dao.findByCustomerIdAndHasAcctBalIntPayable(item, "B21");
+            a22s = a22Dao.findByCustomerIdAndHasAmountIntPayable(item, "B22");
             for (A21 b21 : a21s) {
                 CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(b21.getCurrencyCode());
                 if ("1".equals(b21.getJointCode())) { // 5. Summary 外幣聯名戶金額
@@ -171,8 +171,8 @@ public class SBF18Processor implements ItemProcessor<String, A61> {
          * 利用 customer number 去串 C21, C22
          */
         for (String item : custNumbs) {
-            a21s = a21Dao.findByCustomerId(item, "C21");
-            a22s = a22Dao.findByCustomerId(item, "C22");
+            a21s = a21Dao.findByCustomerIdAndHasAcctBalIntPayable(item, "C21");
+            a22s = a22Dao.findByCustomerIdAndHasAmountIntPayable(item, "C22");
             for (A21 c21 : a21s) { // 7. Summary OBU 要保金額
                 CDICF20 cdicF20 = CDICF20Dao.findByCurrencyCode(c21.getCurrencyCode());
                 temp19 += c21.getAccountBalance() * cdicF20.getTransRate();

@@ -28,12 +28,21 @@ public interface A22Dao {
     A22 findByCustomerIdAndSrNo(String customerId, String srNo, String tableName);
 
     /**
-     * 根據 customerId 為條件，找出 amount > 0 的資料。
+     * 根據 customerId 為條件，找出符合的資料。
      * 
      * @param customerId
      * @param tableName
      * @return
      */
     List<A22> findByCustomerId(String customerId, String tableName);
+
+    /**
+     * 根據 customerId 為條件，找出 amount > 0 or intPayable > 0 的資料。
+     * 
+     * @param customerId
+     * @param tableName
+     * @return
+     */
+    List<A22> findByCustomerIdAndHasAmountIntPayable(String customerId, String tableName);
 
 }

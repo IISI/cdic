@@ -28,12 +28,21 @@ public interface A21Dao {
     A21 findByCustomerIdAndSrNo(String customerId, String srNo, String tableName);
 
     /**
-     * 根據 customerId 為條件，找回 accountBalance > 0 的資料。
+     * 根據 customerId 為條件，找回符合的資料。
      * 
      * @param customerId
      * @param tableName
      * @return
      */
     List<A21> findByCustomerId(String customerId, String tableName);
+
+    /**
+     * 根據 customerId 為條件，找回 accountBalance > 0 或是 intPayable > 0 的資料。
+     * 
+     * @param customerId
+     * @param tableName
+     * @return
+     */
+    List<A21> findByCustomerIdAndHasAcctBalIntPayable(String customerId, String tableName);
 
 }

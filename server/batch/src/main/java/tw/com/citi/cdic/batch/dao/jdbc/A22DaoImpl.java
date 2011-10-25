@@ -34,7 +34,13 @@ public class A22DaoImpl extends SimpleJdbcDaoSupport implements A22Dao {
 
     @Override
     public List<A22> findByCustomerId(String customerId, String tableName) {
-        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE TDCUSTID = ? AND TDAMT > 0", new A22Mapper(), customerId);
+        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE TDCUSTID = ?", new A22Mapper(), customerId);
+    }
+
+    @Override
+    public List<A22> findByCustomerIdAndHasAmountIntPayable(String customerId,
+            String tableName) {
+        return super.getSimpleJdbcTemplate().query("SELECT * FROM " + tableName + " WHERE TDCUSTID = ? AND (TDAMT > 0 OR TDINTPAYABLE > 0)", new A22Mapper(), customerId);
     }
 
 }

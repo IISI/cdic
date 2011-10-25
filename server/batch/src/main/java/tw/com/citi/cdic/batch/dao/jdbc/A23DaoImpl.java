@@ -33,6 +33,11 @@ public class A23DaoImpl extends SimpleJdbcDaoSupport implements A23Dao {
 
     @Override
     public List<A23> findByCustomerId(String customerId) {
+        return super.getSimpleJdbcTemplate().query("SELECT * FROM A23 WHERE CKCUSTID = ?", new A23Mapper(), customerId);
+    }
+
+    @Override
+    public List<A23> findByCustomerIdAndHasAcctBal(String customerId) {
         return super.getSimpleJdbcTemplate().query("SELECT * FROM A23 WHERE CKCUSTID = ? AND CKACTBAL > 0", new A23Mapper(), customerId);
     }
 
