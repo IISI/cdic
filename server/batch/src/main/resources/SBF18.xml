@@ -309,11 +309,21 @@
         </property>
     </bean>
 
-    <bean id="a24DbSumReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+    <bean id="a24DbSumReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="sql" value="SELECT STCUSTID, SUM(STBAL) STBAL, SUM(STINTPAYABLE) STINTPAYABLE FROM A24 LEFT JOIN CIF ON CIF.JOINT_ID = STCUSTID WHERE CIF.JOINT_ID IS NULL GROUP BY STCUSTID ORDER BY STCUSTID"></property>
+        <property name="pageSize" value="100"></property>
+        <property name="saveState" value="false"></property>
         <property name="rowMapper">
             <bean class="tw.com.citi.cdic.batch.A24SumMapper"></bean>
+        </property>
+        <property name="queryProvider">
+            <bean class="tw.com.citi.cdic.batch.utils.GroupBySqlServerPagingQueryProvider">
+                <property name="selectClause" value="SELECT STCUSTID, SUM(STBAL) STBAL, SUM(STINTPAYABLE) STINTPAYABLE"></property>
+                <property name="fromClause" value="FROM A24 LEFT JOIN CIF ON CIF.JOINT_ID = STCUSTID"></property>
+                <property name="whereClause" value="WHERE CIF.JOINT_ID IS NULL"></property>
+                <property name="groupKey" value="STCUSTID"></property>
+                <property name="sortKey" value="STCUSTID"></property>
+            </bean>
         </property>
     </bean>
 
