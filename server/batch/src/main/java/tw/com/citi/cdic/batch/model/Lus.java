@@ -28,6 +28,24 @@ public class Lus {
 
     private String commAdr;
 
+    private String branchCode;
+
+    private String branchName;
+
+    private String currCode;
+
+    private String lcbAccount;
+
+    private String bCode;
+
+    private String legal_adr;
+
+    private String telNo1;
+
+    private String telNo2;
+
+    private String obuDbu;
+
     public String getAcctNo() {
         return acctNo;
     }
@@ -114,6 +132,78 @@ public class Lus {
 
     public void setCommAdr(String commAdr) {
         this.commAdr = commAdr;
+    }
+
+    public String getBranchCode() {
+        return branchCode;
+    }
+
+    public void setBranchCode(String branchCode) {
+        this.branchCode = branchCode;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getCurrCode() {
+        return currCode;
+    }
+
+    public void setCurrCode(String currCode) {
+        this.currCode = currCode;
+    }
+
+    public String getLcbAccount() {
+        return lcbAccount;
+    }
+
+    public void setLcbAccount(String lcbAccount) {
+        this.lcbAccount = lcbAccount;
+    }
+
+    public String getbCode() {
+        return bCode;
+    }
+
+    public void setbCode(String bCode) {
+        this.bCode = bCode;
+    }
+
+    public String getLegal_adr() {
+        return legal_adr;
+    }
+
+    public void setLegal_adr(String legal_adr) {
+        this.legal_adr = legal_adr;
+    }
+
+    public String getTelNo1() {
+        return telNo1;
+    }
+
+    public void setTelNo1(String telNo1) {
+        this.telNo1 = telNo1;
+    }
+
+    public String getTelNo2() {
+        return telNo2;
+    }
+
+    public void setTelNo2(String telNo2) {
+        this.telNo2 = telNo2;
+    }
+
+    public String getObuDbu() {
+        return obuDbu;
+    }
+
+    public void setObuDbu(String obuDbu) {
+        this.obuDbu = obuDbu;
     }
 
 }
