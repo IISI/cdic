@@ -47,4 +47,16 @@
         <property name="dataSource" ref="dataSource"></property>
     </bean>
 
+    <bean id="provisionDao" class="tw.com.citi.cdic.batch.dao.jdbc.ProvisionDaoImpl">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <bean id="guarantorDao" class="tw.com.citi.cdic.batch.dao.jdbc.GuarantorDaoImpl">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <bean id="busDao" class="tw.com.citi.cdic.batch.dao.jdbc.BusDaoImpl">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
 </beans>

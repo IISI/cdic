@@ -425,7 +425,7 @@
                     <next on="EXECUTE" to="f12-sample" />
                     <end on="SKIP" />
                 </decision>
-                <step id="f12-sample" next="f12-copy">
+                <step id="f12-sample" next="f12-a41db-init">
                     <description>產生 f12 sample file</description>
                     <tasklet>
                         <chunk reader="cdicF12FileReader" processor="f12SampleProcessor" writer="a41SampleFileWriter" commit-interval="500"></chunk>
@@ -434,19 +434,7 @@
                         </listeners>
                     </tasklet>
                 </step>
-                <step id="f12-copy" next="f12db-init">
-                    <description>把 host file CDICF12 的資料複製至 A41 file</description>
-                    <tasklet>
-                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF12"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A41"></beans:property>
-                        </beans:bean>
-                        <listeners>
-                            <listener ref="stepListener" />
-                        </listeners>
-                    </tasklet>
-                </step>
-                <step id="f12db-init" next="f12-a41db">
+                <step id="f12-a41db-init" next="f12-a41db">
                     <description>刪除 table A41 的所有資料</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
@@ -458,10 +446,49 @@
                         </listeners>
                     </tasklet>
                 </step>
-                <step id="f12-a41db">
+                <step id="f12-a41db" next="f12-provisionDb-init">
                     <description>CDICF12 寫入 A41</description>
                     <tasklet>
                         <chunk reader="cdicF12FileReader" writer="a41DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f12-provisionDb-init" next="f12-provisionDb-import">
+                    <description>刪除 table provision 的所有資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM PROVISION"></beans:property>
+                        </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f12-provisionDb-import" next="f12-12a-a41db">
+                    <description>把 provision file 的資料抄寫至 provision table</description>
+                    <tasklet>
+                        <chunk reader="provisionFileReader" writer="provisionDbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f12-12a-a41db" next="f12-a41db-a41file">
+                    <description>CDICF12A 寫入 A41，同時產生 f12A 的 sample file</description>
+                    <tasklet>
+                        <chunk reader="cdicF12AFileReader" processor="f12AProcessor" writer="a41AWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f12-a41db-a41file">
+                    <description>用 table A41 的資料產出 A41 檔案</description>
+                    <tasklet>
+                        <chunk reader="a41DbReader" writer="a41FileWriter" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="lastStepListener" />
                         </listeners>
@@ -500,7 +527,7 @@
                     <next on="EXECUTE" to="f15-sample" />
                     <end on="SKIP" />
                 </decision>
-                <step id="f15-sample" next="f15-copy">
+                <step id="f15-sample" next="f15-a44db-init">
                     <description>產生 f15 sample file</description>
                     <tasklet>
                         <chunk reader="cdicF15FileReader" processor="f15SampleProcessor" writer="a44SampleFileWriter" commit-interval="500"></chunk>
@@ -509,13 +536,61 @@
                         </listeners>
                     </tasklet>
                 </step>
-                <step id="f15-copy">
-                    <description>把 host file CDICF15 的資料複製至 A44 file</description>
+                <step id="f15-a44db-init" next="f15-copy">
+                    <description>刪除 A44 table 的資料</description>
                     <tasklet>
-                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.CopyFilesTasklet">
-                            <beans:property name="sourceDir" value="#{systemProperties['FOLDER.PROCESS']}/CDICF15"></beans:property>
-                            <beans:property name="targetDir" value="#{systemProperties['FOLDER.PROCESS.OUT']}/A44"></beans:property>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM A44"></beans:property>
                         </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f15-copy" next="f15-guarantorDb-init">
+                    <description>把 host file CDICF15 的資料複製至 A44 table</description>
+                    <tasklet>
+                        <chunk reader="cdicF15FileReader" writer="a44DbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f15-guarantorDb-init" next="f15-guarantorFile-guarantorDb">
+                    <description>刪除 Guarantor table 的資料</description>
+                    <tasklet>
+                        <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
+                            <beans:property name="dataSource" ref="dataSource"></beans:property>
+                            <beans:property name="sql" value="DELETE FROM GUARANTOR"></beans:property>
+                        </beans:bean>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f15-guarantorFile-guarantorDb" next="f15-f12AFile-a44Db">
+                    <description>把 Guarantor file 的資料寫入 table</description>
+                    <tasklet>
+                        <chunk reader="guarantorFileReader" writer="guarantorDbWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f15-f12AFile-a44Db" next="f15-a44Db-a44File">
+                    <description>把 CDICF12A 串 Guarantor 所得到的資料寫入 A44 table，同時產生 A44A sample file</description>
+                    <tasklet>
+                        <chunk reader="cdicF12AFileReader" processor="f15AProcessor" writer="a44Writer" commit-interval="50"></chunk>
+                        <listeners>
+                            <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f15-a44Db-a44File">
+                    <description>將 A44 table 的資料匯出成 A44 file</description>
+                    <tasklet>
+                        <chunk reader="a44DbReader" writer="a44FileWriter" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="lastStepListener" />
                         </listeners>
