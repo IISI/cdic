@@ -1374,18 +1374,17 @@
                 </step>
                 <step id="f18" next="f18-append-a24">
                     <description>Summarise BUS view 的資料，產生 A61</description>
-                    <tasklet task-executor="asyncTaskExecutor" throttle-limit="20">
-                        <chunk reader="cifDbReader" processor="SBF18Processor" writer="f18Writer" commit-interval="200"></chunk>
+                    <tasklet task-executor="asyncTaskExecutor" throttle-limit="100">
+                        <chunk reader="cifDbReader" processor="SBF18Processor" writer="f18Writer" commit-interval="100"></chunk>
                         <listeners>
                             <listener ref="stepListener" />
-                            <listener ref="promotionListener" />
                         </listeners>
                     </tasklet>
                 </step>
                 <step id="f18-append-a24">
                     <description>把 A24 靜止戶的資料 append 到 A61。</description>
-                    <tasklet>
-                        <chunk reader="a24DbSumReader" processor="SBF18PostProcessor" writer="f18PostWriter" commit-interval="500"></chunk>
+                    <tasklet task-executor="asyncTaskExecutor" throttle-limit="100">
+                        <chunk reader="a24DbSumReader" processor="SBF18PostProcessor" writer="f18PostWriter" commit-interval="100"></chunk>
                         <listeners>
                             <listener ref="lastStepListener" />
                         </listeners>
@@ -1404,10 +1403,6 @@
 
     <beans:bean id="stepListener" class="tw.com.citi.cdic.batch.FileStatusUpdaterInProcess">
         <beans:property name="CDICFileStatusDao" ref="CDICFileStatusDao"></beans:property>
-    </beans:bean>
-
-    <beans:bean id="promotionListener" class="org.springframework.batch.core.listener.ExecutionContextPromotionListener">
-        <beans:property name="keys" value="PROCESSED_ACCOUNT"></beans:property>
     </beans:bean>
 
     <beans:bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry"></beans:bean>

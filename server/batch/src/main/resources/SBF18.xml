@@ -36,28 +36,257 @@
 
     <bean id="cifDbReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="pageSize" value="200"></property>
+        <property name="pageSize" value="100"></property>
         <property name="saveState" value="false"></property>
+        <property name="rowMapper">
+            <bean class="tw.com.citi.cdic.batch.A61Mapper"></bean>
+        </property>
         <property name="queryProvider">
             <bean class="tw.com.citi.cdic.batch.utils.GroupBySqlServerPagingQueryProvider">
-                <property name="selectClause" value="SELECT JOINT_ID"></property>
-                <property name="fromClause" value="FROM CIF"></property>
+                <property name="selectClause">
+                    <value>
+                        <![CDATA[
+                            SELECT 
+                              CIF.JOINT_ID,
+                              SUM( -- 台幣要保金額
+                                CASE
+                                  WHEN (A00.TBLNAME = 'A21' OR A00.TBLNAME = 'A23') AND A00.JOINTCODE <> 1 THEN A00.BAL
+                                  WHEN A00.TBLNAME = 'A22' AND A00.JOINTCODE <> 1 AND NOT (A00.CHAR1 = 'N' OR A00.TDSD1 = 'Y' OR A00.CUR1 = 'N') THEN A00.BAL
+                                  ELSE 0
+                                END
+                              ) TEMP7,
+                              SUM( -- 台幣要保金額利息
+                                CASE
+                                  WHEN A00.TBLNAME = 'A21' AND A00.JOINTCODE <> 1 THEN A00.INT
+                                  WHEN A00.TBLNAME = 'A22' AND A00.JOINTCODE <> 1 AND NOT (A00.CHAR1 = 'N' OR A00.TDSD1 = 'Y' OR A00.CUR1 = 'N') THEN A00.INT
+                                  ELSE 0
+                                END
+                              ) TEMP8,
+                              SUM( -- 台幣非要保金額
+                                CASE
+                                  WHEN A00.TBLNAME = 'A22' AND A00.JOINTCODE <> 1 AND (A00.CHAR1 = 'N' OR A00.TDSD1 = 'Y' OR A00.CUR1 = 'N') THEN A00.BAL
+                                  ELSE 0
+                                END
+                              ) TEMP9,
+                              SUM( -- 台幣非要保金額利息
+                                CASE
+                                  WHEN A00.TBLNAME = 'A22' AND A00.JOINTCODE <> 1 AND (A00.CHAR1 = 'N' OR A00.TDSD1 = 'Y' OR A00.CUR1 = 'N') THEN A00.INT
+                                  ELSE 0
+                                END
+                              ) TEMP10,
+                              SUM( -- 台幣聯名戶金額
+                                CASE
+                                  WHEN A00.TBLNAME LIKE 'A%' AND A00.JOINTCODE = 1 THEN A00.BAL
+                                  ELSE 0
+                                END
+                              ) TEMP11,
+                              SUM( -- 台幣聯名戶金額利息
+                                CASE
+                                  WHEN (A00.TBLNAME = 'A21' OR A00.TBLNAME = 'A22') AND A00.JOINTCODE = 1 THEN A00.INT
+                                  ELSE 0
+                                END
+                              ) TEMP12,
+                              SUM( -- 外幣要保金額
+                                CASE
+                                  WHEN A00.TBLNAME = 'B21' AND A00.JOINTCODE <> 1 THEN A00.BAL * CURR.TRANS_RATE
+                                  WHEN A00.TBLNAME = 'B22' AND A00.JOINTCODE <> 1 AND NOT (A00.CHAR1 = 'N' OR A00.TDSD1 = 'Y' OR A00.CUR1 = 'N') THEN A00.BAL * CURR.TRANS_RATE
+                                  ELSE 0
+                                END
+                              ) TEMP13,
+                              SUM( -- 外幣要保金額利息
+                                CASE
+                                  WHEN A00.TBLNAME = 'B21' AND A00.JOINTCODE <> 1 THEN A00.INT * CURR.TRANS_RATE
+                                  WHEN A00.TBLNAME = 'B22' AND A00.JOINTCODE <> 1 AND NOT (A00.CHAR1 = 'N' OR A00.TDSD1 = 'Y' OR A00.CUR1 = 'N') THEN A00.INT * CURR.TRANS_RATE
+                                  ELSE 0
+                                END
+                              ) TEMP14,
+                              SUM( -- 外幣非要保金額
+                                CASE
+                                  WHEN A00.TBLNAME = 'B22' AND A00.JOINTCODE <> 1 AND (A00.CHAR1 = 'N' OR A00.TDSD1 = 'Y' OR A00.CUR1 = 'N') THEN A00.BAL * CURR.TRANS_RATE
+                                  ELSE 0
+                                END
+                              ) TEMP15,
+                              SUM( -- 外幣非要保金額利息
+                                CASE
+                                  WHEN A00.TBLNAME = 'B22' AND A00.JOINTCODE <> 1 AND (A00.CHAR1 = 'N' OR A00.TDSD1 = 'Y' OR A00.CUR1 = 'N') THEN A00.INT * CURR.TRANS_RATE
+                                  ELSE 0
+                                END
+                              ) TEMP16,
+                              SUM( -- 外幣聯名戶金額
+                                CASE
+                                  WHEN A00.TBLNAME LIKE 'B%' AND A00.JOINTCODE = 1 THEN A00.BAL * CURR.TRANS_RATE
+                                  ELSE 0
+                                END
+                              ) TEMP17,
+                              SUM( -- 外幣聯名戶金額利息
+                                CASE
+                                  WHEN A00.TBLNAME LIKE 'B%' AND A00.JOINTCODE = 1 THEN A00.INT * CURR.TRANS_RATE
+                                  ELSE 0
+                                END
+                              ) TEMP18,
+                              SUM( -- OBU 要保金額
+                                CASE
+                                  WHEN A00.TBLNAME LIKE 'C%' THEN A00.BAL * CURR.TRANS_RATE
+                                  ELSE 0
+                                END
+                              ) TEMP19,
+                              SUM( -- OBU 要保金額利息
+                                CASE
+                                  WHEN A00.TBLNAME LIKE 'C%' THEN A00.INT * CURR.TRANS_RATE
+                                  ELSE 0
+                                END
+                              ) TEMP20
+                        ]]>
+                    </value>
+                </property>
+                <property name="fromClause">
+                    <value>
+                        <![CDATA[
+                            FROM (
+                              SELECT
+                                A21.PBCUSTID AS GRB,
+                                A21.PBSRNO AS SRNO,
+                                A21.PBJOINTCODE AS JOINTCODE,
+                                'A21' AS TBLNAME,
+                                '' AS CHAR1,
+                                '' AS CUR1,
+                                '' AS TDSD1,
+                                A21.PBCURCODE AS CURCODE,
+                                A21.PBACTBAL AS BAL,
+                                A21.PBINTPAYABLE AS INT
+                              FROM A21
+                              WHERE PBACTBAL > 0 OR PBINTPAYABLE > 0
+                              UNION
+                                SELECT
+                                  A22.TDCUSTID AS GRB,
+                                  A22.TDSRNO AS SRNO,
+                                  A22.TDJOINTCODE AS JOINTCODE,
+                                  'A22' AS TBLNAME,
+                                  CASE
+                                    WHEN SUBSTRING(A22.TDCHARCODE, 1, 4) IN ('WNCD', 'WBCD', 'UBCD', 'UNCD') THEN 'N'
+                                    ELSE 'Y'
+                                  END AS CHAR1,
+                                  CASE
+                                    WHEN A22.TDCURCODE = 'XAU' THEN 'N'
+                                    ELSE 'Y'
+                                  END AS CUR1,
+                                  CASE
+                                    WHEN SUBSTRING(A22.TDSDCASE, 1, 4) = '' OR A22.TDSDCASE IS NULL THEN 'N'
+                                    ELSE 'Y'
+                                  END AS TDSD1,
+                                  A22.TDCURCODE AS CURCODE,
+                                  A22.TDAMT AS BAL,
+                                  A22.TDINTPAYABLE AS INT
+                                FROM A22
+                                WHERE TDAMT > 0 OR TDINTPAYABLE > 0
+                              UNION
+                                SELECT
+                                  A23.CKCUSTID AS GRB,
+                                  A23.CKSRNO AS SRNO,
+                                  A23.CKJOINTCODE AS JOINTCODE,
+                                  'A23' AS TBLNAME,
+                                  CASE
+                                    WHEN SUBSTRING(A23.CKCHARCODE, 1, 4) IN ('WNCD', 'WBCD', 'UBCD', 'UNCD') THEN 'N'
+                                    ELSE 'Y'
+                                  END AS CHAR1,
+                                  CASE
+                                    WHEN A23.CKCURCODE = 'XAU' THEN 'N'
+                                    ELSE 'Y'
+                                  END AS CUR1,
+                                  '' AS TDSD1,
+                                  A23.CKCURCODE AS CURCODE,
+                                  A23.CKACTBAL AS BAL,
+                                  0 AS INT
+                                FROM A23
+                                WHERE CKACTBAL > 0
+                              UNION
+                                SELECT
+                                  B21.PBCUSTID AS GRB,
+                                  B21.PBSRNO AS SRNO,
+                                  B21.PBJOINTCODE AS JOINTCODE,
+                                  'B21' AS TBLNAME,
+                                  '' AS CHAR1,
+                                  '' AS CUR1,
+                                  '' AS TDSD1,
+                                  B21.PBCURCODE AS CURCODE,
+                                  B21.PBACTBAL AS BAL,
+                                  B21.PBINTPAYABLE AS INT
+                                FROM B21
+                                WHERE PBACTBAL > 0 OR PBINTPAYABLE > 0
+                              UNION
+                                SELECT
+                                  B22.TDCUSTID AS GRB,
+                                  B22.TDSRNO AS SRNO,
+                                  B22.TDJOINTCODE AS JOINTCODE,
+                                  'B22' AS TBLNAME,
+                                  CASE
+                                    WHEN SUBSTRING(B22.TDCHARCODE, 1, 4) IN ('WNCD', 'WBCD', 'UBCD', 'UNCD') THEN 'N'
+                                    ELSE 'Y'
+                                  END AS CHAR1,
+                                  CASE
+                                    WHEN B22.TDCURCODE = 'XAU' THEN 'N'
+                                    ELSE 'Y'
+                                  END AS CUR1,
+                                  CASE
+                                    WHEN SUBSTRING(B22.TDSDCASE, 1, 4) = '' OR B22.TDSDCASE IS NULL THEN 'N'
+                                    ELSE 'Y'
+                                  END AS TDSD1,
+                                  B22.TDCURCODE AS CURCODE,
+                                  B22.TDAMT AS BAL,
+                                  B22.TDINTPAYABLE AS INT
+                                FROM B22
+                                WHERE TDAMT > 0 OR TDINTPAYABLE > 0
+                              UNION
+                                SELECT
+                                  C21.PBCUSTID AS GRB,
+                                  C21.PBSRNO AS SRNO,
+                                  C21.PBJOINTCODE AS JOINTCODE,
+                                  'C21' AS TBLNAME,
+                                  '' AS CHAR1,
+                                  '' AS CUR1,
+                                  '' AS TDSD1,
+                                  C21.PBCURCODE AS CURCODE,
+                                  C21.PBACTBAL AS BAL,
+                                  C21.PBINTPAYABLE AS INT
+                                FROM C21
+                                WHERE PBACTBAL > 0 OR PBINTPAYABLE > 0
+                              UNION
+                                SELECT
+                                  C22.TDCUSTID AS GRB,
+                                  C22.TDSRNO AS SRNO,
+                                  C22.TDJOINTCODE AS JOINTCODE,
+                                  'C22' AS TBLNAME,
+                                  CASE
+                                    WHEN SUBSTRING(C22.TDCHARCODE, 1, 4) IN ('WNCD', 'WBCD', 'UBCD', 'UNCD') THEN 'N'
+                                    ELSE 'Y'
+                                  END AS CHAR1,
+                                  CASE
+                                    WHEN C22.TDCURCODE = 'XAU' THEN 'N'
+                                    ELSE 'Y'
+                                  END AS CUR1,
+                                  CASE
+                                    WHEN SUBSTRING(C22.TDSDCASE, 1, 4) = '' OR C22.TDSDCASE IS NULL THEN 'N'
+                                    ELSE 'Y'
+                                  END AS TDSD1,
+                                  C22.TDCURCODE AS CURCODE,
+                                  C22.TDAMT AS BAL,
+                                  C22.TDINTPAYABLE AS INT
+                                FROM C22
+                                WHERE TDAMT > 0 OR TDINTPAYABLE > 0
+                            ) A00
+                            INNER JOIN CDICF20 CURR ON A00.CURCODE = CURR.CURRENCY_CODE
+                            INNER JOIN CIF ON CIF.CUST_NUMB = A00.GRB
+                        ]]>
+                    </value>
+                </property>
                 <property name="groupKey" value="JOINT_ID"></property>
                 <property name="sortKey" value="JOINT_ID"></property>
             </bean>
         </property>
-        <property name="rowMapper">
-            <bean class="org.springframework.jdbc.core.simple.ParameterizedSingleColumnRowMapper"></bean>
-        </property>
     </bean>
 
     <bean id="SBF18Processor" class="tw.com.citi.cdic.batch.item.SBF18Processor">
-        <property name="a21Dao" ref="a21Dao"></property>
-        <property name="a22Dao" ref="a22Dao"></property>
-        <property name="a23Dao" ref="a23Dao"></property>
         <property name="a24Dao" ref="a24Dao"></property>
-        <property name="CDICF20Dao" ref="CDICF20Dao"></property>
-        <property name="cifDao" ref="cifDao"></property>
         <property name="tableFlowDao" ref="tableFlowDao"></property>
     </bean>
 
@@ -80,11 +309,21 @@
         </property>
     </bean>
 
-    <bean id="a24DbSumReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+    <bean id="a24DbSumReader" class="org.springframework.batch.item.database.JdbcPagingItemReader">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="sql" value="SELECT STCUSTID, SUM(STBAL) STBAL, SUM(STINTPAYABLE) STINTPAYABLE FROM A24 GROUP BY STCUSTID ORDER BY STCUSTID"></property>
+        <property name="pageSize" value="100"></property>
+        <property name="saveState" value="false"></property>
         <property name="rowMapper">
             <bean class="tw.com.citi.cdic.batch.A24SumMapper"></bean>
+        </property>
+        <property name="queryProvider">
+            <bean class="tw.com.citi.cdic.batch.utils.GroupBySqlServerPagingQueryProvider">
+                <property name="selectClause" value="SELECT STCUSTID, SUM(STBAL) STBAL, SUM(STINTPAYABLE) STINTPAYABLE"></property>
+                <property name="fromClause" value="FROM A24 LEFT JOIN CIF ON CIF.JOINT_ID = STCUSTID"></property>
+                <property name="whereClause" value="WHERE CIF.JOINT_ID IS NULL"></property>
+                <property name="groupKey" value="STCUSTID"></property>
+                <property name="sortKey" value="STCUSTID"></property>
+            </bean>
         </property>
     </bean>
 
