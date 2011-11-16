@@ -100,7 +100,7 @@
     <bean id="cdicF12AFileReader" parent="cdicF12FileReader">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF12A"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/LCB_CDICF12"></constructor-arg>
             </bean>
         </property>
     </bean>
