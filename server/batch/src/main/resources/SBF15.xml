@@ -140,10 +140,21 @@
         </property>
     </bean>
 
-    <bean id="a44FileWriter" parent="a44SampleFileWriter">
+    <bean id="a44FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A44.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A44"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="ms950"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="%-3s%-4s%-30s%-16s%-11s%-11s%-60s%-1s%-2s%-3s%015.2f%8s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,brNo,srNo,srSubNo,custId,arantId,arantName,charCode,relCode,curCode,amt,effDate"></property>
+                    </bean>
+                </property>
             </bean>
         </property>
     </bean>

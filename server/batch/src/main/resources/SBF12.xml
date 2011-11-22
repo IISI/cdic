@@ -134,10 +134,21 @@
         </property>
     </bean>
 
-    <bean id="a41FileWriter" parent="a41SampleFileWriter">
+    <bean id="a41FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
         <property name="resource">
             <bean class="org.springframework.core.io.FileSystemResource">
-                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A41.csv"></constructor-arg>
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A41"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="ms950"></property>
+        <property name="lineAggregator">
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="%-3s%-4s%-30s%-16s%-12s%-1s%-8s%-2s%-11s%-2s%-16s%-8s%-8s%-8s%-3s%015.2f%015.2f%-16s%-1s%08.5f%08.5f%-1s%-3s%-8s%-8s%-2s%-8s%-30s%015.2f%-1s%015.2f%015.2f%015.2f%015.2f%-1s%-8s%-8s%015.2f"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,branchNo,srNo,srSubNo,apNo,cola,charCode,status,custId,govCode,replyNo,firstLoanDate,loanBeginDate,dueDate,currencyCode,amt,currentBalance,rateType,rateAdjustSign,rateAdjust,currentRate,intKind,intCycle,lastInt,nextInt,payIntType,patStart,payAcctNo,intReceivable,overCode,oweInt,penalty,oweLawFee,tempAmt,evlRank,overdueDate,writeOffDate,writeOffAmt"></property>
+                    </bean>
+                </property>
             </bean>
         </property>
     </bean>
