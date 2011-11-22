@@ -26,9 +26,9 @@ public class BusDaoImpl extends SimpleJdbcDaoSupport implements BusDao {
         Bus bus = null;
         try {
             bus = DataAccessUtils.requiredUniqueResult(buses);
+            logger.warn("Find BUS. [CUST_NUMB = {}]", new Object[] { customerNo });
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("Can't find BUS. [CUST_NUMB = {}]", new Object[] { customerNo });
+            logger.error("Can't find BUS. [CUST_NUMB = {}]", new Object[] { customerNo });
         }
         return bus;
     }

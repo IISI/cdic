@@ -27,8 +27,7 @@ public class ProvisionDaoImpl extends SimpleJdbcDaoSupport implements ProvisionD
         try {
             provision = DataAccessUtils.requiredUniqueResult(provisions);
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("Can't find provision. [CONTRACT_REFERENCE_NO = {}]", new Object[] { referenceNo });
+            logger.error("Can't find provision. [CONTRACT_REFERENCE_NO = {}]", new Object[] { referenceNo });
         }
         return provision;
     }
