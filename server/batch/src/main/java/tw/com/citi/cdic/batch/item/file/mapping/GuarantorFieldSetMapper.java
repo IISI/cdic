@@ -1,5 +1,6 @@
 package tw.com.citi.cdic.batch.item.file.mapping;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;
@@ -136,6 +137,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
         } catch (NumberFormatException e) {
             return null;
         }
+        customerNo = StringUtils.rightPad(customerNo, 9, "0");
         return customerNo;
     }
 
