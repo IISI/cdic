@@ -83,7 +83,7 @@ public class FileStatusUpdater {
             CDICFileStatus fileStatus = this.CDICFileStatusDao.findByFileNo(fileStep);
             if (ExitStatus.COMPLETED.compareTo(entry.getValue()) == 0) {
                 // 執行成功且狀態不為已確認的檔案，狀態更新為成功。
-                if(!"3".equals(fileStatus.getStatus())) {
+                if (!"3".equals(fileStatus.getStatus())) {
                     fileStatus.setStatus("2");
                 }
             } else {
@@ -98,7 +98,7 @@ public class FileStatusUpdater {
             logger.debug("update step status, step name = {}, status = {}", entry.getKey(), entry.getValue()
                     .getExitCode());
         }
-        
+
         // Group處理，若fileStatus有Group，且ExitStatus不為COMPLETED，則，同Group的狀態都設為失敗
         for (String group : failGroup) {
             List<CDICFileStatus> files = this.CDICFileStatusDao.findByGroup(group);
@@ -107,18 +107,21 @@ public class FileStatusUpdater {
                 this.CDICFileStatusDao.update(file);
             }
         }
-        
-        /*
-         * 若 split1 有任何一支程式失敗的話，就要把 split2 中的全部狀態設成 0
-         * 若 split1 全部都成功，但 split2 的 F07 失敗，就要把 F99 狀態設成 0
-         */
+        boolean group1Fail = failFile.contains("F02") || failFile.contains("F03") || failFile.contains("F04")
+                || failFile.contains("F08");
         Set<String> resetStatus = new HashSet<String>();
-        if (!stepResults.containsKey("F07") && !stepResults.containsKey("F18") && !stepResults.containsKey("F99")
-                && !failFile.isEmpty()) {
+        // 1. 若 Group1 fail，reset F07's Status 為 '0'
+        if (group1Fail) {
             resetStatus.add("F07");
+        }
+        // 2. 若 Group1 fail or F01 fail or F05 fail，reset F18's Status 為 '0'
+        if (group1Fail || failFile.contains("F01") || failFile.contains("F05")) {
             resetStatus.add("F18");
-            resetStatus.add("F99");
-        } else if (failFile.contains("F07")) {
+        }
+        // 3. 若 Group1 fail or F05 fail or F07 fail or F10 fail or F12 fail
+        // or F24 fail，reset F99's Status 為 '0'
+        if (group1Fail || failFile.contains("F05") || failFile.contains("F07") || failFile.contains("F10")
+                || failFile.contains("F12") || failFile.contains("F24")) {
             resetStatus.add("F99");
         }
         if (!resetStatus.isEmpty()) {
