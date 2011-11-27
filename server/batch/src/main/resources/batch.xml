@@ -1384,7 +1384,7 @@
                 <step id="f18-append-a24">
                     <description>把 A24 靜止戶的資料 append 到 A61。</description>
                     <tasklet task-executor="asyncTaskExecutor" throttle-limit="100">
-                        <chunk reader="a24DbSumReader" processor="SBF18PostProcessor" writer="f18PostWriter" commit-interval="100"></chunk>
+                        <chunk reader="a24DbSumReader" writer="f18PostWriter" commit-interval="100"></chunk>
                         <listeners>
                             <listener ref="lastStepListener" />
                         </listeners>

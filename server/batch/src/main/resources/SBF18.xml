@@ -42,22 +42,30 @@
             <bean class="tw.com.citi.cdic.batch.A61Mapper"></bean>
         </property>
         <property name="queryProvider">
-            <bean class="tw.com.citi.cdic.batch.utils.GroupBySqlServerPagingQueryProvider">
+            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
                 <property name="selectClause">
                     <value>
                         <![CDATA[
+                            SELECT CONVERT(VARCHAR(8),T.CUSTDATE, 112) AS DATE, D.*
+                        ]]>
+                    </value>
+                </property>
+                <property name="fromClause">
+                    <value>
+                        <![CDATA[
+                            FROM TABLEFLOW T, (
                             SELECT 
                               CIF.JOINT_ID,
                               SUM( -- 台幣要保金額
                                 CASE
-                                  WHEN (A00.TBLNAME = 'A21' OR A00.TBLNAME = 'A23') AND A00.JOINTCODE <> 1 THEN A00.BAL
+                                  WHEN (A00.TBLNAME = 'A21' OR A00.TBLNAME = 'A23' OR A00.TBLNAME = 'A24') AND A00.JOINTCODE <> 1 THEN A00.BAL
                                   WHEN A00.TBLNAME = 'A22' AND A00.JOINTCODE <> 1 AND NOT (A00.CHAR1 = 'N' OR A00.TDSD1 = 'Y' OR A00.CUR1 = 'N') THEN A00.BAL
                                   ELSE 0
                                 END
                               ) TEMP7,
                               SUM( -- 台幣要保金額利息
                                 CASE
-                                  WHEN A00.TBLNAME = 'A21' AND A00.JOINTCODE <> 1 THEN A00.INT
+                                  WHEN (A00.TBLNAME = 'A21' OR A00.TBLNAME = 'A24') AND A00.JOINTCODE <> 1 THEN A00.INT
                                   WHEN A00.TBLNAME = 'A22' AND A00.JOINTCODE <> 1 AND NOT (A00.CHAR1 = 'N' OR A00.TDSD1 = 'Y' OR A00.CUR1 = 'N') THEN A00.INT
                                   ELSE 0
                                 END
@@ -136,12 +144,6 @@
                                   ELSE 0
                                 END
                               ) TEMP20
-                        ]]>
-                    </value>
-                </property>
-                <property name="fromClause">
-                    <value>
-                        <![CDATA[
                             FROM (
                               SELECT
                                 A21.PBCUSTID AS GRB,
@@ -156,7 +158,7 @@
                                 A21.PBINTPAYABLE AS INT
                               FROM A21
                               WHERE PBACTBAL > 0 OR PBINTPAYABLE > 0
-                              UNION
+                              UNION ALL
                                 SELECT
                                   A22.TDCUSTID AS GRB,
                                   A22.TDSRNO AS SRNO,
@@ -179,7 +181,7 @@
                                   A22.TDINTPAYABLE AS INT
                                 FROM A22
                                 WHERE TDAMT > 0 OR TDINTPAYABLE > 0
-                              UNION
+                              UNION ALL
                                 SELECT
                                   A23.CKCUSTID AS GRB,
                                   A23.CKSRNO AS SRNO,
@@ -199,7 +201,20 @@
                                   0 AS INT
                                 FROM A23
                                 WHERE CKACTBAL > 0
-                              UNION
+                              UNION ALL
+                                SELECT
+                                  A24.STCUSTID AS GRB,
+                                  A24.STSRNO AS SRNO,
+                                  '0' AS JOINTCODE,
+                                  'A24' AS TBLNAME,
+                                  '' AS CHAR1,
+                                  '' AS CUR1,
+                                  '' AS TDSD1,
+                                  A24.STCURCODE AS CURCODE,
+                                  A24.STBAL AS BAL,
+                                  A24.STINTPAYABLE AS INT
+                                FROM A24
+                              UNION ALL
                                 SELECT
                                   B21.PBCUSTID AS GRB,
                                   B21.PBSRNO AS SRNO,
@@ -213,7 +228,7 @@
                                   B21.PBINTPAYABLE AS INT
                                 FROM B21
                                 WHERE PBACTBAL > 0 OR PBINTPAYABLE > 0
-                              UNION
+                              UNION ALL
                                 SELECT
                                   B22.TDCUSTID AS GRB,
                                   B22.TDSRNO AS SRNO,
@@ -236,7 +251,7 @@
                                   B22.TDINTPAYABLE AS INT
                                 FROM B22
                                 WHERE TDAMT > 0 OR TDINTPAYABLE > 0
-                              UNION
+                              UNION ALL
                                 SELECT
                                   C21.PBCUSTID AS GRB,
                                   C21.PBSRNO AS SRNO,
@@ -250,7 +265,7 @@
                                   C21.PBINTPAYABLE AS INT
                                 FROM C21
                                 WHERE PBACTBAL > 0 OR PBINTPAYABLE > 0
-                              UNION
+                              UNION ALL
                                 SELECT
                                   C22.TDCUSTID AS GRB,
                                   C22.TDSRNO AS SRNO,
@@ -276,18 +291,17 @@
                             ) A00
                             INNER JOIN CDICF20 CURR ON A00.CURCODE = CURR.CURRENCY_CODE
                             INNER JOIN CIF ON CIF.CUST_NUMB = A00.GRB
+                            GROUP BY JOINT_ID
+                            ) AS D
                         ]]>
                     </value>
                 </property>
-                <property name="groupKey" value="JOINT_ID"></property>
                 <property name="sortKey" value="JOINT_ID"></property>
             </bean>
         </property>
     </bean>
 
     <bean id="SBF18Processor" class="tw.com.citi.cdic.batch.item.SBF18Processor">
-        <property name="a24Dao" ref="a24Dao"></property>
-        <property name="tableFlowDao" ref="tableFlowDao"></property>
     </bean>
 
     <bean id="a61FileWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
@@ -317,18 +331,22 @@
             <bean class="tw.com.citi.cdic.batch.A24SumMapper"></bean>
         </property>
         <property name="queryProvider">
-            <bean class="tw.com.citi.cdic.batch.utils.GroupBySqlServerPagingQueryProvider">
-                <property name="selectClause" value="SELECT STCUSTID, SUM(STBAL) STBAL, SUM(STINTPAYABLE) STINTPAYABLE"></property>
-                <property name="fromClause" value="FROM A24 LEFT JOIN CIF ON CIF.JOINT_ID = STCUSTID"></property>
-                <property name="whereClause" value="WHERE CIF.JOINT_ID IS NULL"></property>
-                <property name="groupKey" value="STCUSTID"></property>
+            <bean class="org.springframework.batch.item.database.support.SqlServerPagingQueryProvider">
+                <property name="selectClause" value="SELECT CONVERT(VARCHAR(8),T.CUSTDATE, 112) AS DATE, A24T.*"></property>
+                <property name="fromClause">
+                    <value>
+                        <![CDATA[
+                            FROM TABLEFLOW T, (
+                                SELECT STCUSTID, SUM(STBAL) STBAL, SUM(STINTPAYABLE) STINTPAYABLE
+                                FROM A24 LEFT JOIN CIF ON CIF.JOINT_ID = STCUSTID
+                                WHERE CIF.JOINT_ID IS NULL
+                                GROUP BY STCUSTID) AS A24T
+                        ]]>
+                    </value>
+                </property>
                 <property name="sortKey" value="STCUSTID"></property>
             </bean>
         </property>
-    </bean>
-
-    <bean id="SBF18PostProcessor" class="tw.com.citi.cdic.batch.item.SBF18PostProcessor">
-        <property name="tableFlowDao" ref="tableFlowDao"></property>
     </bean>
 
     <bean id="f18PostWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">

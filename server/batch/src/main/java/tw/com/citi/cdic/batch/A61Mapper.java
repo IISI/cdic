@@ -12,6 +12,9 @@ public class A61Mapper implements RowMapper<A61> {
     @Override
     public A61 mapRow(ResultSet rs, int rowNum) throws SQLException {
         A61 a61 = new A61();
+        a61.setUnit("021");
+        a61.setBranchNo("0000");
+        a61.setDate(rs.getString("DATE"));
         a61.setCustId(rs.getString("JOINT_ID"));
         a61.setAcctBalance(rs.getDouble("TEMP7"));
         a61.setAcctInt(rs.getDouble("TEMP8"));
