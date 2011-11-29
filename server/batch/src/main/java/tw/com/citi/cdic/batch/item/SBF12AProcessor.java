@@ -28,26 +28,20 @@ public class SBF12AProcessor implements ItemProcessor<A41, A41> {
         } else {
             Provision provision = provisionDao.findByReferenceNo(item.getSrNo().substring(0, 14));
             if (provision != null) {
-                if ("-1".equals(item.getSrNo().substring(14, 16))) {
-                    if (provision.getProvision5Secured() != null) {
-                        item.setEvlRank("5");
-                    } else if (provision.getProvision4Secured() != null) {
-                        item.setEvlRank("4");
-                    } else if (provision.getProvision32Secured() != null || provision.getProvision31Secured() != null) {
-                        item.setEvlRank("3");
-                    } else if (provision.getProvision2Secured() != null) {
-                        item.setEvlRank("2");
-                    }
-                } else if ("-2".equals(item.getSrNo().substring(14, 16))) {
-                    if (provision.getProvision5Clean() != null) {
-                        item.setEvlRank("5");
-                    } else if (provision.getProvision4Clean() != null) {
-                        item.setEvlRank("4");
-                    } else if (provision.getProvision32Clean() != null || provision.getProvision31Clean() != null) {
-                        item.setEvlRank("3");
-                    } else if (provision.getProvision2Clean() != null) {
-                        item.setEvlRank("2");
-                    }
+                if ((provision.getProvision5Secured() != null && provision.getProvision5Secured() > 0)
+                        || (provision.getProvision5Clean() != null && provision.getProvision5Clean() > 0)) {
+                    item.setEvlRank("5");
+                } else if ((provision.getProvision4Secured() != null && provision.getProvision4Secured() > 0)
+                        || (provision.getProvision4Clean() != null && provision.getProvision4Clean() > 0)) {
+                    item.setEvlRank("4");
+                } else if ((provision.getProvision32Secured() != null && provision.getProvision32Secured() > 0)
+                        || (provision.getProvision31Secured() != null && provision.getProvision31Secured() > 0)
+                        || (provision.getProvision32Clean() != null && provision.getProvision32Clean() > 0)
+                        || (provision.getProvision31Clean() != null && provision.getProvision31Clean() > 0)) {
+                    item.setEvlRank("3");
+                } else if ((provision.getProvision2Secured() != null && provision.getProvision2Secured() > 0)
+                        || (provision.getProvision2Clean() != null && provision.getProvision2Clean() > 0)) {
+                    item.setEvlRank("2");
                 }
             }
         }
