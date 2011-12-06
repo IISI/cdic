@@ -81,22 +81,13 @@ public class FileStatusUpdater {
         for (Map.Entry<String, ExitStatus> entry : stepResults.entrySet()) {
             FileStep fileStep = FileStep.valueOf(entry.getKey());
             CDICFileStatus fileStatus = this.CDICFileStatusDao.findByFileNo(fileStep);
-            if (ExitStatus.COMPLETED.compareTo(entry.getValue()) == 0) {
-                // 執行成功且狀態不為已確認的檔案，狀態更新為成功。
-                if (!"3".equals(fileStatus.getStatus())) {
-                    fileStatus.setStatus("2");
-                }
-            } else {
-                fileStatus.setStatus("5");
+            if (ExitStatus.COMPLETED.compareTo(entry.getValue()) != 0) {
                 failFile.add(fileStatus.getFileNo());
                 String group = fileStatus.getFileGroup();
                 if (group != null && !"".equals(group.trim())) {
                     failGroup.add(group);
                 }
             }
-            this.CDICFileStatusDao.update(fileStatus);
-            logger.debug("update step status, step name = {}, status = {}", entry.getKey(), entry.getValue()
-                    .getExitCode());
         }
 
         // Group處理，若fileStatus有Group，且ExitStatus不為COMPLETED，則，同Group的狀態都設為失敗
