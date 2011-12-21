@@ -23,13 +23,13 @@ public class BusDaoImpl extends SimpleJdbcDaoSupport implements BusDao {
     @Override
     public Bus findByCustNumb(String customerNo) {
         List<Bus> buses = getSimpleJdbcTemplate().query("SELECT * FROM BUS WHERE CUST_NUMB = ?", new BusMapper(),
-                StringUtils.rightPad(customerNo, 9, "0"));
+                StringUtils.leftPad(customerNo, 9, "0"));
         Bus bus = null;
         try {
             bus = DataAccessUtils.requiredUniqueResult(buses);
-            logger.warn("Find BUS. [CUST_NUMB = {}]", new Object[] { StringUtils.rightPad(customerNo, 9, "0") });
+            logger.warn("Find BUS. [CUST_NUMB = {}]", new Object[] { StringUtils.leftPad(customerNo, 9, "0") });
         } catch (Exception e) {
-            logger.error("Can't find BUS. [CUST_NUMB = {}]", new Object[] { StringUtils.rightPad(customerNo, 9, "0") });
+            logger.error("Can't find BUS. [CUST_NUMB = {}]", new Object[] { StringUtils.leftPad(customerNo, 9, "0") });
         }
         return bus;
     }

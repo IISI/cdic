@@ -196,7 +196,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
         } catch (NumberFormatException e) {
             return null;
         }
-        customerNo = StringUtils.rightPad(customerNo, 9, "0");
+        customerNo = StringUtils.leftPad(customerNo, 9, "0");
         return customerNo;
     }
 
