@@ -2,6 +2,7 @@ package tw.com.citi.cdic.batch.dao.jdbc;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.DataAccessUtils;
@@ -22,13 +23,13 @@ public class BusDaoImpl extends SimpleJdbcDaoSupport implements BusDao {
     @Override
     public Bus findByCustNumb(String customerNo) {
         List<Bus> buses = getSimpleJdbcTemplate().query("SELECT * FROM BUS WHERE CUST_NUMB = ?", new BusMapper(),
-                customerNo);
+                StringUtils.rightPad(customerNo, 9, "0"));
         Bus bus = null;
         try {
             bus = DataAccessUtils.requiredUniqueResult(buses);
-            logger.warn("Find BUS. [CUST_NUMB = {}]", new Object[] { customerNo });
+            logger.warn("Find BUS. [CUST_NUMB = {}]", new Object[] { StringUtils.rightPad(customerNo, 9, "0") });
         } catch (Exception e) {
-            logger.error("Can't find BUS. [CUST_NUMB = {}]", new Object[] { customerNo });
+            logger.error("Can't find BUS. [CUST_NUMB = {}]", new Object[] { StringUtils.rightPad(customerNo, 9, "0") });
         }
         return bus;
     }
