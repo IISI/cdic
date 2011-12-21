@@ -108,15 +108,11 @@
             </bean>
         </property>
         <property name="lineAggregator">
-            <bean class="org.springframework.batch.item.file.transform.RecursiveCollectionLineAggregator">
-                <property name="delegate">
-                    <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
-                        <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,'%s"></property>
-                        <property name="fieldExtractor">
-                            <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-                                <property name="names" value="unit,brNo,srNo,srSubNo,custId,arantId,arantName,charCode,relCode,curCode,amt,effDate"></property>
-                            </bean>
-                        </property>
+            <bean class="tw.com.citi.cdic.batch.item.Big5FormatterLineAggregator">
+                <property name="format" value="'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,'%s,%s,'%s"></property>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="unit,brNo,srNo,srSubNo,custId,arantId,arantName,charCode,relCode,curCode,amt,effDate"></property>
                     </bean>
                 </property>
             </bean>
