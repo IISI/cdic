@@ -38,6 +38,11 @@ public class FileStatusUpdaterInProcess {
                 CDICFileStatus fileStatus = this.CDICFileStatusDao.findByFileNo(stepName);
                 fileStatus.setStatus("5");
                 this.CDICFileStatusDao.update(fileStatus);
+                if ("F12".equals(stepName) || "F15".equals(stepName)) {
+                    CDICFileStatus lcb = this.CDICFileStatusDao.findByFileNo(stepName + " LCB");
+                    lcb.setStatus(fileStatus.getStatus());
+                    this.CDICFileStatusDao.update(lcb);
+                }
                 logger.debug("update step status, step name = {}, status = {}", stepName, status.getExitCode());
             }
         }

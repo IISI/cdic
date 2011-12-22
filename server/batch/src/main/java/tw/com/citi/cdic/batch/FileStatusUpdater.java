@@ -50,6 +50,12 @@ public class FileStatusUpdater {
                 fileStatus.setStatus("5");
             }
             this.CDICFileStatusDao.update(fileStatus);
+            // F12A, F15A 處理
+            if ("F12".equals(stepName) || "F15".equals(stepName)) {
+                CDICFileStatus lcb = this.CDICFileStatusDao.findByFileNo(stepName + " LCB");
+                lcb.setStatus(fileStatus.getStatus());
+                this.CDICFileStatusDao.update(lcb);
+            }
             logger.debug("update step status, step name = {}, status = {}", stepName, status.getExitCode());
         }
     }
