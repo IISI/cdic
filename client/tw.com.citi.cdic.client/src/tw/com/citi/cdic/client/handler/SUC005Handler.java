@@ -256,7 +256,7 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
             throw new IllegalStateException(Messages.SUC005Handler_InitFirst);
         }
         List<String> readyFiles = getReadyFiles();
-        List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
+        List<CDICFileSts> cdicFileList = getDao().query("SUC005_QRY_CDICFILESTS", CDICFileSts.class, new Object());
         if (cdicFileList != null && cdicFileList.size() > 0) {
             JsonArray result = new JsonArray();
             Map<String, BatchDto> batchMap = new TreeMap<String, BatchDto>();
