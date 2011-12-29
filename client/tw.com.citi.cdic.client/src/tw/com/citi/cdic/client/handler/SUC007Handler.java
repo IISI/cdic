@@ -101,7 +101,7 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
             for (CDICFileSts cdicFile : cdicFileList) {
                 ConfirmDto dto = new ConfirmDto();
                 StringBuffer fileSet = new StringBuffer();
-                fileSet = fileSet.append(cdicFile.getFileNo()).append("(")
+                fileSet = fileSet.append(cdicFile.getFileNo().trim()).append("(")
                         .append(cdicFile.getSubFile() == null ? "" : cdicFile.getSubFile().trim()).append(")");
                 dto.setFileSet(fileSet.toString());
                 dto.setGroup(cdicFile.getFileGroup());
@@ -113,9 +113,9 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                         color = "green";
                         dto.setConfirmer(cdicFile.getConfirmer());
                         // F12 LCB/F15 LCB 處理
-                        if ("F12".equalsIgnoreCase(cdicFile.getFileNo())
-                                || "F15".equalsIgnoreCase(cdicFile.getFileNo())) {
-                            String lcbFileNo = cdicFile.getFileNo() + " LCB";
+                        if ("F12".equalsIgnoreCase(cdicFile.getFileNo().trim())
+                                || "F15".equalsIgnoreCase(cdicFile.getFileNo().trim())) {
+                            String lcbFileNo = cdicFile.getFileNo().trim() + " LCB";
                             Map<String, Object> queryParams = new HashMap<String, Object>();
                             queryParams.put("fileNo", lcbFileNo);
                             List<CDICFileSts> cdicFiles = getDao().query("SUC006_QRY_CDICFILESTS_BY_FILENO",
