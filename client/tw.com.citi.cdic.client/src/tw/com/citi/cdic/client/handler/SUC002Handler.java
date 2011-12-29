@@ -19,6 +19,7 @@ import tw.com.citi.cdic.client.model.CDICFileSts;
 import tw.com.citi.cdic.client.model.HostFileSts;
 import tw.com.citi.cdic.client.model.LocalFileSts;
 import tw.com.citi.cdic.client.model.TableFlow;
+import tw.com.citi.cdic.utils.FileUtil;
 import tw.com.citi.cdic.utils.Messages;
 
 import com.google.gson.Gson;
@@ -122,6 +123,9 @@ public class SUC002Handler extends AquariusAjaxDaoHandler {
         
         jobOperator.start("copyViewJob", "schedule.timestamp(long)=" + new Date().getTime());
 
+        //清空 out folder
+        FileUtil.renameOutFolder();
+        
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("yyyy/MM/dd HH:mm"); //$NON-NLS-1$
         Gson gson = gsonBuilder.create();

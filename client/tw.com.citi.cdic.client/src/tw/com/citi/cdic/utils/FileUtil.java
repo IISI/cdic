@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -73,7 +75,8 @@ public class FileUtil {
             DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(opts, auth);
             fsManager = new OSGiFileSystemManager();
             ((OSGiFileSystemManager) fsManager).init();
-            jcifs.Config.setProperty("jcifs.netbios.wins", NetUtil.getWins());
+            // jcifs.Config.setProperty("jcifs.netbios.wins",
+            // NetUtil.getWins());
             init = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -276,5 +279,17 @@ public class FileUtil {
 
     public static boolean isInit() {
         return init;
+    }
+
+    public static void renameOutFolder() throws FileSystemException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+        FolderType target = FolderType.PROCESS_OUT;
+        FileObject sourceFolder = fsManager.resolveFile("smb://" + config.getProperty(target.getKey() + ".host")
+                + config.getProperty(target.getKey() + ".path"), opts);
+        FileObject folder = fsManager.resolveFile(
+                "smb://" + config.getProperty(target.getKey() + ".host")
+                        + config.getProperty(target.getKey() + ".path") + "_" + sdf.format(new Date()) + "bk", opts);
+        folder.createFolder();
+        sourceFolder.moveTo(folder);
     }
 }
