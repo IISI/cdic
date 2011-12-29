@@ -1,7 +1,9 @@
 package tw.com.citi.cdic.client.handler;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.vfs.FileSystemException;
@@ -52,7 +54,8 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
         }
         if (custDate != null) {
             // 取得 CDIC File
-            List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
+            List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS_FOR_OUTPUT", CDICFileSts.class,
+                    new Object());
             if (cdicFileList != null && cdicFileList.size() > 0) {
                 for (CDICFileSts cdicFile : cdicFileList) {
                     String subFiles = cdicFile.getSubFile();
@@ -63,8 +66,8 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                             if ("3".equals(cdicFile.getStatus())) {
                                 try {
                                     // copy file to icg folder
-                                    FileUtil.copyFile(FolderType.PROCESS_OUT, FolderType.ICG, "0210000", "." + custDate,
-                                            new String[] { file });
+                                    FileUtil.copyFile(FolderType.PROCESS_OUT, FolderType.ICG, "0210000",
+                                            "." + custDate, new String[] { file });
                                 } catch (FileSystemException e) {
                                     e.printStackTrace();
                                     throw new SecurityException(Messages.bind(Messages.COPY_CDIC_File_Error,
@@ -91,7 +94,8 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
     }
 
     private Object getInitInfo() {
-        List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
+        List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS_FOR_OUTPUT", CDICFileSts.class,
+                new Object());
         if (cdicFileList != null && cdicFileList.size() > 0) {
             JsonArray result = new JsonArray();
             for (CDICFileSts cdicFile : cdicFileList) {
@@ -101,32 +105,33 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
                         .append(cdicFile.getSubFile() == null ? "" : cdicFile.getSubFile().trim()).append(")");
                 dto.setFileSet(fileSet.toString());
                 dto.setGroup(cdicFile.getFileGroup());
-                if (cdicFile.getStatus() != null) {
+                String status = cdicFile.getStatus();
+                if (status != null) {
                     String statusShow = null;
                     String color = "red";
-                    switch (Integer.parseInt(cdicFile.getStatus())) {
-                    case 0:
-                        statusShow = Messages.STATUS_0;
-                        break;
-                    case 1:
-                        statusShow = Messages.STATUS_1;
-                        break;
-                    case 2:
-                        statusShow = Messages.STATUS_2;
-                        break;
-                    case 3:
+                    if (Integer.parseInt(status) == 3) {
                         color = "green";
-                        statusShow = Messages.STATUS_3;
                         dto.setConfirmer(cdicFile.getConfirmer());
-                        break;
-                    case 4:
-                        statusShow = Messages.STATUS_4;
-                        break;
-                    case 5:
-                        statusShow = Messages.STATUS_5;
-                        break;
+                        // F12 LCB/F15 LCB 處理
+                        if ("F12".equalsIgnoreCase(cdicFile.getFileNo())
+                                || "F15".equalsIgnoreCase(cdicFile.getFileNo())) {
+                            String lcbFileNo = cdicFile.getFileNo() + " LCB";
+                            Map<String, Object> queryParams = new HashMap<String, Object>();
+                            queryParams.put("fileNo", lcbFileNo);
+                            List<CDICFileSts> cdicFiles = getDao().query("SUC006_QRY_CDICFILESTS_BY_FILENO",
+                                    CDICFileSts.class, queryParams);
+                            if (cdicFiles != null && cdicFiles.size() > 0) {
+                                CDICFileSts lcbFile = cdicFiles.get(0);
+                                if (Integer.parseInt(lcbFile.getStatus()) != 3) {
+                                    status = lcbFile.getStatus();
+                                    color = "red";
+                                    dto.setConfirmer(null);
+                                }
+                            }
+                        }
                     }
-                    dto.setStatus(cdicFile.getStatus());
+                    statusShow = getStatusMsg(Integer.parseInt(status));
+                    dto.setStatus(status);
                     dto.setStatusShow("<font color='" + color + "'>" + statusShow + "</font>");
                 }
                 dto.setFileDesc(cdicFile.getFileDesc());
@@ -138,5 +143,30 @@ public class SUC007Handler extends AquariusAjaxDaoHandler {
         } else {
             return null;
         }
+    }
+
+    private String getStatusMsg(int status) {
+        String statusShow = "UNKNOW";
+        switch (status) {
+        case 0:
+            statusShow = Messages.STATUS_0;
+            break;
+        case 1:
+            statusShow = Messages.STATUS_1;
+            break;
+        case 2:
+            statusShow = Messages.STATUS_2;
+            break;
+        case 3:
+            statusShow = Messages.STATUS_3;
+            break;
+        case 4:
+            statusShow = Messages.STATUS_4;
+            break;
+        case 5:
+            statusShow = Messages.STATUS_5;
+            break;
+        }
+        return statusShow;
     }
 }

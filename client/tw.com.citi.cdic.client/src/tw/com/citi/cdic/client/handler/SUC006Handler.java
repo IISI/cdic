@@ -119,14 +119,14 @@ public class SUC006Handler extends AquariusAjaxDaoHandler {
     }
 
     private Object getInitInfo() {
-        List<CDICFileSts> cdicFileList = getDao().query("SUC007_QRY_CDICFILESTS", CDICFileSts.class, new Object());
+        List<CDICFileSts> cdicFileList = getDao().query("SUC005_QRY_CDICFILESTS_ALL", CDICFileSts.class, new Object());
         if (cdicFileList != null && cdicFileList.size() > 0) {
             JsonArray result = new JsonArray();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
             for (CDICFileSts cdicFile : cdicFileList) {
                 ConfirmDto dto = new ConfirmDto();
                 StringBuffer fileSet = new StringBuffer();
-                fileSet = fileSet.append(cdicFile.getFileNo()).append("(")
+                fileSet = fileSet.append(cdicFile.getFileNo().trim()).append("(")
                         .append(cdicFile.getSubFile() != null ? cdicFile.getSubFile().trim() : "").append(")");
                 dto.setFileSet(fileSet.toString());
                 dto.setGroup(cdicFile.getFileGroup());
