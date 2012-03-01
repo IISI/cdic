@@ -15,7 +15,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
     @Override
     public Guarantor mapFieldSet(FieldSet fieldSet) {
         Guarantor item = new Guarantor();
-        item.setCustNo(fieldSet.readString("custNo"));
+        item.setCustNo(customerNoTransformer(fieldSet.readString("custNo")));
         item.setUdf6(fieldSet.readString("udf6"));
         item.setUdf7(fieldSet.readString("udf7"));
         item.setUdf8(fieldSet.readString("udf8"));
@@ -27,7 +27,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf11(0D);
         }
         item.setUdf12(fieldSet.readString("udf12"));
-        item.setUdf13(fieldSet.readString("udf13"));
+        item.setUdf13(charCodeTransformer(fieldSet.readString("udf13")));
         item.setUdf14(fieldSet.readString("udf14"));
         item.setUdf15(customerNoTransformer(fieldSet.readString("udf15")));
         item.setUdf16(fieldSet.readString("udf16"));
@@ -38,7 +38,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf18(0D);
         }
         item.setUdf19(fieldSet.readString("udf19"));
-        item.setUdf20(fieldSet.readString("udf20"));
+        item.setUdf20(charCodeTransformer(fieldSet.readString("udf20")));
         item.setUdf21(fieldSet.readString("udf21"));
         item.setUdf22(customerNoTransformer(fieldSet.readString("udf22")));
         item.setUdf23(fieldSet.readString("udf23"));
@@ -49,7 +49,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf25(0D);
         }
         item.setUdf26(fieldSet.readString("udf26"));
-        item.setUdf27(fieldSet.readString("udf27"));
+        item.setUdf27(charCodeTransformer(fieldSet.readString("udf27")));
         item.setUdf28(fieldSet.readString("udf28"));
         item.setUdf29(customerNoTransformer(fieldSet.readString("udf29")));
         item.setUdf30(fieldSet.readString("udf30"));
@@ -60,7 +60,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf32(0D);
         }
         item.setUdf33(fieldSet.readString("udf33"));
-        item.setUdf34(fieldSet.readString("udf34"));
+        item.setUdf34(charCodeTransformer(fieldSet.readString("udf34")));
         item.setUdf35(fieldSet.readString("udf35"));
         item.setUdf36(customerNoTransformer(fieldSet.readString("udf36")));
         item.setUdf37(fieldSet.readString("udf37"));
@@ -71,7 +71,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf39(0D);
         }
         item.setUdf40(fieldSet.readString("udf40"));
-        item.setUdf41(fieldSet.readString("udf41"));
+        item.setUdf41(charCodeTransformer(fieldSet.readString("udf41")));
         item.setUdf42(fieldSet.readString("udf42"));
         item.setUdf43(customerNoTransformer(fieldSet.readString("udf43")));
         item.setUdf44(fieldSet.readString("udf44"));
@@ -82,7 +82,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf46(0D);
         }
         item.setUdf47(fieldSet.readString("udf47"));
-        item.setUdf48(fieldSet.readString("udf48"));
+        item.setUdf48(charCodeTransformer(fieldSet.readString("udf48")));
         item.setUdf49(fieldSet.readString("udf49"));
         item.setUdf51(customerNoTransformer(fieldSet.readString("udf51")));
         item.setUdf52(fieldSet.readString("udf52"));
@@ -93,7 +93,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf54(0D);
         }
         item.setUdf55(fieldSet.readString("udf55"));
-        item.setUdf56(fieldSet.readString("udf56"));
+        item.setUdf56(charCodeTransformer(fieldSet.readString("udf56")));
         item.setUdf57(fieldSet.readString("udf57"));
         item.setUdf58(customerNoTransformer(fieldSet.readString("udf58")));
         item.setUdf59(fieldSet.readString("udf59"));
@@ -104,7 +104,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf61(0D);
         }
         item.setUdf62(fieldSet.readString("udf62"));
-        item.setUdf63(fieldSet.readString("udf63"));
+        item.setUdf63(charCodeTransformer(fieldSet.readString("udf63")));
         item.setUdf64(fieldSet.readString("udf64"));
         item.setUdf65(customerNoTransformer(fieldSet.readString("udf65")));
         item.setUdf66(fieldSet.readString("udf66"));
@@ -115,7 +115,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf68(0D);
         }
         item.setUdf69(fieldSet.readString("udf69"));
-        item.setUdf70(fieldSet.readString("udf70"));
+        item.setUdf70(charCodeTransformer(fieldSet.readString("udf70")));
         item.setUdf71(fieldSet.readString("udf71"));
         item.setUdf72(customerNoTransformer(fieldSet.readString("udf72")));
         item.setUdf73(fieldSet.readString("udf73"));
@@ -126,7 +126,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf75(0D);
         }
         item.setUdf76(fieldSet.readString("udf76"));
-        item.setUdf77(fieldSet.readString("udf77"));
+        item.setUdf77(charCodeTransformer(fieldSet.readString("udf77")));
         item.setUdf78(fieldSet.readString("udf78"));
         item.setUdf79(customerNoTransformer(fieldSet.readString("udf79")));
         item.setUdf80(fieldSet.readString("udf80"));
@@ -137,7 +137,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf82(0D);
         }
         item.setUdf83(fieldSet.readString("udf83"));
-        item.setUdf84(fieldSet.readString("udf84"));
+        item.setUdf84(charCodeTransformer(fieldSet.readString("udf84")));
         item.setUdf85(fieldSet.readString("udf85"));
         item.setUdf86(customerNoTransformer(fieldSet.readString("udf86")));
         item.setUdf87(fieldSet.readString("udf87"));
@@ -148,7 +148,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf89(0D);
         }
         item.setUdf90(fieldSet.readString("udf90"));
-        item.setUdf91(fieldSet.readString("udf91"));
+        item.setUdf91(charCodeTransformer(fieldSet.readString("udf91")));
         item.setUdf92(fieldSet.readString("udf92"));
         item.setUdf93(customerNoTransformer(fieldSet.readString("udf93")));
         item.setUdf94(fieldSet.readString("udf94"));
@@ -159,7 +159,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf96(0D);
         }
         item.setUdf97(fieldSet.readString("udf97"));
-        item.setUdf98(fieldSet.readString("udf98"));
+        item.setUdf98(charCodeTransformer(fieldSet.readString("udf98")));
         item.setUdf99(fieldSet.readString("udf99"));
         item.setUdf100(customerNoTransformer(fieldSet.readString("udf100")));
         item.setUdf101(fieldSet.readString("udf101"));
@@ -170,7 +170,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
             item.setUdf103(0D);
         }
         item.setUdf104(fieldSet.readString("udf104"));
-        item.setUdf105(fieldSet.readString("udf105"));
+        item.setUdf105(charCodeTransformer(fieldSet.readString("udf105")));
         item.setUdf106(fieldSet.readString("udf106"));
         item.setUdf107(customerNoTransformer(fieldSet.readString("udf107")));
         item.setUdf108(fieldSet.readString("udf108"));
@@ -198,6 +198,14 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
         }
         customerNo = StringUtils.leftPad(customerNo, 9, "0");
         return customerNo;
+    }
+
+    private String charCodeTransformer(String charCode) {
+        String result = charCode;
+        if ("NA".equalsIgnoreCase(charCode)) {
+            result = null;
+        }
+        return result;
     }
 
 }
