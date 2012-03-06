@@ -203,7 +203,7 @@ public class GuarantorFieldSetMapper implements FieldSetMapper<Guarantor> {
     private String charCodeTransformer(String charCode) {
         String result = charCode;
         if ("NA".equalsIgnoreCase(charCode)) {
-            result = null;
+            result = " ";
         }
         return result;
     }
