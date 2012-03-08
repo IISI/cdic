@@ -590,6 +590,9 @@
                                 <include class="org.springframework.dao.DuplicateKeyException" />
                             </skippable-exception-classes>
                         </chunk>
+                        <no-rollback-exception-classes>
+                            <include class="org.springframework.dao.DuplicateKeyException"/>
+                        </no-rollback-exception-classes>
                         <listeners>
                             <listener ref="stepListener" />
                         </listeners>
