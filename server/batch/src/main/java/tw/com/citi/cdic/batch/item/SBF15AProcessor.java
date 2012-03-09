@@ -29,6 +29,9 @@ public class SBF15AProcessor implements ItemProcessor<A41, List<A44>> {
     @Override
     public List<A44> process(A41 item) throws Exception {
         List<A44> a44List = new ArrayList<A44>();
+        if (item.getSrNo().startsWith("85")) {
+            return null;
+        }
         List<Guarantor> guarantors = guarantorDao.findByCustomerNo(item.getCustId());
         if (guarantors == null || guarantors.isEmpty())
             return null;
