@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Aquarius Platform" id="platform.aquarius.product" application="platform.aquarius.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Aquarius Platform" id="platform.aquarius.product" application="platform.aquarius.application" version="1.0.0" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
