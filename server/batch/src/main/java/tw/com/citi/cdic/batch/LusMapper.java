@@ -27,6 +27,15 @@ public class LusMapper implements RowMapper<Lus> {
         lus.setPersonType(rs.getString("PERSON_TYPE"));
         lus.setCompany(rs.getString("COMPANY"));
         lus.setCommAdr(rs.getString("COMM_ADR"));
+        lus.setBranchCode(rs.getString("BRANCH_CODE"));
+        lus.setBranchName(rs.getString("BRANCH_NAME"));
+        lus.setCurrCode(rs.getString("CURR_CODE"));
+        lus.setLcbAccount(rs.getString("LCB_ACCOUNT"));
+        lus.setbCode(rs.getString("B_CODE"));
+        lus.setLegal_adr(rs.getString("LEGAL_ADR"));
+        lus.setTelNo1(rs.getString("TEL_NO_1"));
+        lus.setTelNo2(rs.getString("TEL_NO_2"));
+        lus.setObuDbu(rs.getString("OBU_DBU"));
         return lus;
     }
 
