@@ -34,7 +34,7 @@ public class Lus {
 
     private String currCode;
 
-    private String lcbAccount;
+    private String closedBy;
 
     private String bCode;
 
@@ -158,14 +158,6 @@ public class Lus {
         this.currCode = currCode;
     }
 
-    public String getLcbAccount() {
-        return lcbAccount;
-    }
-
-    public void setLcbAccount(String lcbAccount) {
-        this.lcbAccount = lcbAccount;
-    }
-
     public String getbCode() {
         return bCode;
     }
@@ -198,12 +190,20 @@ public class Lus {
         this.telNo2 = telNo2;
     }
 
-    public String getObuDbu() {
-        return obuDbu;
+    public void setClosedBy(String closedBy) {
+        this.closedBy = closedBy;
+    }
+
+    public String getClosedBy() {
+        return closedBy;
     }
 
     public void setObuDbu(String obuDbu) {
         this.obuDbu = obuDbu;
+    }
+
+    public String getObuDbu() {
+        return obuDbu;
     }
 
 }

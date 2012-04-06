@@ -37,7 +37,7 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
             address = item.getCommAdr();
         }
         a24.setAddress(new String(address.getBytes("ms950"), "ms950") + "ＸＸ路ＸＸ巷ＸＸ號ＸＸ樓");
-        if (!item.getLcbAccount().equals("Y")) {
+        if (!"LCB".equalsIgnoreCase(item.getClosedBy())) {
             a24.setBranchNo("0018");
             if ("DESA".equals(item.getProdName())) {
                 a24.setApNo("2200119000");
@@ -70,11 +70,16 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
             a24.setCustomerBusinessCode(item.getbCode());
             a24.setCustomerType(item.getCompany());
             a24.setCurrencyCode(item.getCurrCode());
-            a24.setOriginalAddress(new String(item.getLegal_adr().getBytes("ms950"), "ms950"));
+            if (item.getLegal_adr() != null && item.getLegal_adr().length() > 6) {
+                address = item.getLegal_adr().substring(0, 6);
+            } else {
+                address = item.getLegal_adr();
+            }
+            a24.setOriginalAddress(new String(address.getBytes("ms950"), "ms950") + "ＸＸ路ＸＸ巷ＸＸ號ＸＸ樓");
             a24.setTel1(item.getTelNo1());
             a24.setTel2(item.getTelNo2());
         }
-        
+
         ExecutionContext stepContext = this.stepExecution.getExecutionContext();
         long processCount = stepContext.getLong("PROCESS_COUNT", 0);
         processCount++;
@@ -82,7 +87,7 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
         if (processCount % writeSampleFrequency == 1) {
             a24.setSample(true);
         }
-        
+
         return a24;
     }
 

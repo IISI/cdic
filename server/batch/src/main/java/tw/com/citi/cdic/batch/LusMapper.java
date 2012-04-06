@@ -30,7 +30,7 @@ public class LusMapper implements RowMapper<Lus> {
         lus.setBranchCode(rs.getString("BRANCH_CODE"));
         lus.setBranchName(rs.getString("BRANCH_NAME"));
         lus.setCurrCode(rs.getString("CURR_CODE"));
-        lus.setLcbAccount(rs.getString("LCB_ACCOUNT"));
+        lus.setClosedBy(rs.getString("CLOSED_BY"));
         lus.setbCode(rs.getString("B_CODE"));
         lus.setLegal_adr(rs.getString("LEGAL_ADR"));
         lus.setTelNo1(rs.getString("TEL_NO_1"));
