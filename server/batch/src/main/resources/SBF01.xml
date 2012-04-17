@@ -84,4 +84,50 @@
         </property>
     </bean>
 
+    <bean id="cdicf01FileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS']}/CDICF01.csv"></constructor-arg>
+            </bean>
+        </property>
+        <property name="encoding" value="ms950"></property>
+        <property name="strict" value="false"></property>
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="tw.com.citi.cdic.batch.model.CDICF01"></property>
+                        <property name="strict" value="false"></property>
+                    </bean>
+                </property>
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <property name="names" value="id,headId,cName,accountNo,birthday,ceoCode,ceoName,busCode,address"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f01A1Processor" class="tw.com.citi.cdic.batch.item.SBF01A1Processor"></bean>
+    
+    <bean id="f01A2Processor" class="tw.com.citi.cdic.batch.item.SBF01A2Processor"></bean>
+    
+    <bean id="a11ASampleFileWriter" parent="a11SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/A11A_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="a11AWriter" class="org.springframework.batch.item.support.CompositeItemWriter">
+        <property name="delegates">
+            <list>
+                <ref bean="a11DbWriter" />
+                <ref bean="a11ASampleFileWriter" />
+            </list>
+        </property>
+    </bean>
+
 </beans>

@@ -128,7 +128,7 @@
                         }
                     }
                     // 設定是否開放勾選
-                    checkDep["F07"] = deps["Group1"] || (deps["F02"] && deps["F03"] && deps["F04"] && deps["F08"]);
+                    checkDep["F07"] = deps["F01"] && (deps["Group1"] || (deps["F02"] && deps["F03"] && deps["F04"] && deps["F08"]));
                     checkDep["F18"] = deps["F01"] && (deps["Group1"] || (deps["F02"] && deps["F03"] && deps["F04"] && deps["F08"])) && deps["F05"];
                     checkDep["F99"] = (deps["Group1"] || (deps["F02"] && deps["F03"] && deps["F04"] && deps["F08"])) && deps["F05"] && deps["F07"] && deps["F10"] && deps["F12"] && deps["F24"];
                     // 設定 deps
@@ -299,7 +299,7 @@
                                 var source = "<B>" + sourceReady + "</B><font color='red'><I>" + sourceNotReady + "</I></font>";
                                 batchName == 'F01' && (source = source + "<br><font color='gray'>(BUS)</font></br>");
                                 batchName == 'F05' && (source = source + "<font color='gray'>(LUS)</font>");
-                                batchName == 'F07' && (source = source + "<br><font color='gray'>(F02, F03, F04)</font></br>");
+                                batchName == 'F07' && (source = source + "<br><font color='gray'>(F01, F02, F03, F04)</font></br>");
                                 batchName == 'F18' && (source = source + "<br><font color='gray'>(F01, F02, F03, F04, F05)</font></br>");
                                 batchName == 'F99' && (source = source + "<font color='gray'>(F02, F03, F04, F05, F07, F10, F12, F24)</font>");
                                 batchList.setCell(ids[i], "source", source);
