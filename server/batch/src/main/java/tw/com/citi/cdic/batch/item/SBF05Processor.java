@@ -2,6 +2,7 @@ package tw.com.citi.cdic.batch.item;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.ExecutionContext;
@@ -37,7 +38,7 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
             address = item.getCommAdr();
         }
         a24.setAddress(new String(address.getBytes("ms950"), "ms950") + "ＸＸ路ＸＸ巷ＸＸ號ＸＸ樓");
-        if (!"LCB".equalsIgnoreCase(item.getClosedBy())) {
+        if (StringUtils.isBlank(item.getClosedBy())) {
             a24.setBranchNo("0018");
             if ("DESA".equals(item.getProdName())) {
                 a24.setApNo("2200119000");
@@ -71,7 +72,7 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
                 a24.setType(A24.Type.C);
             } else {
                 apNo = config2.getString(currName + ".dbu");
-                if("TWD".equals(currName)) {
+                if ("TWD".equals(currName)) {
                     a24.setType(A24.Type.A);
                 } else {
                     a24.setType(A24.Type.B);
