@@ -34,6 +34,8 @@ public class Lus {
 
     private String currCode;
 
+    private String currName;
+
     private String closedBy;
 
     private String bCode;
@@ -204,6 +206,14 @@ public class Lus {
 
     public String getObuDbu() {
         return obuDbu;
+    }
+
+    public void setCurrName(String currName) {
+        this.currName = currName;
+    }
+
+    public String getCurrName() {
+        return currName;
     }
 
 }

@@ -61,18 +61,22 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
             Configuration config = new HierarchicalINIConfiguration("branch_mappings.ini");
             a24.setBranchNo(config.getString(item.getBranchCode() + ".branchNo"));
             Configuration config2 = new HierarchicalINIConfiguration("account_mappings.ini");
+            String currName = item.getCurrName() == null ? "" : item.getCurrName().trim();
+            if ("NTD".equals(currName)) {
+                currName = "TWD";
+            }
             String apNo = "";
             if ("obu".equalsIgnoreCase(item.getObuDbu())) {
-                apNo = config2.getString(item.getCurrCode() + ".obu");
+                apNo = config2.getString(currName + ".obu");
                 a24.setType(A24.Type.C);
             } else {
-                apNo = config2.getString(item.getCurrCode() + ".dbu");
+                apNo = config2.getString(currName + ".dbu");
                 a24.setType(A24.Type.B);
             }
             a24.setApNo(apNo);
             a24.setCustomerBusinessCode(item.getbCode());
             a24.setCustomerType(item.getCompany());
-            a24.setCurrencyCode(item.getCurrCode());
+            a24.setCurrencyCode(currName);
             if (item.getLegal_adr() != null && item.getLegal_adr().length() > 6) {
                 address = item.getLegal_adr().substring(0, 6);
             } else {
