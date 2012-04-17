@@ -44,15 +44,15 @@ public class F05FileWriter implements ItemWriter<A24> {
         c24ItemWriter.write(c24Items);
     }
 
-    public void setA26ItemWriter(ItemWriter<A24> a24ItemWriter) {
+    public void setA24ItemWriter(ItemWriter<A24> a24ItemWriter) {
         this.a24ItemWriter = a24ItemWriter;
     }
 
-    public void setB26ItemWriter(ItemWriter<A24> b24ItemWriter) {
+    public void setB24ItemWriter(ItemWriter<A24> b24ItemWriter) {
         this.b24ItemWriter = b24ItemWriter;
     }
 
-    public void setC26ItemWriter(ItemWriter<A24> c24ItemWriter) {
+    public void setC24ItemWriter(ItemWriter<A24> c24ItemWriter) {
         this.c24ItemWriter = c24ItemWriter;
     }
 
