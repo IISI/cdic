@@ -6,6 +6,12 @@ package tw.com.citi.cdic.batch.model;
  */
 public class A24 {
 
+    public enum Type {
+
+        A, B, C
+
+    }
+
     private String unit;
 
     private String branchNo;
@@ -51,6 +57,8 @@ public class A24 {
     private String tel1;
 
     private String tel2;
+
+    private transient Type type;
 
     private boolean sample;
 
@@ -244,6 +252,14 @@ public class A24 {
 
     public void setSample(boolean sample) {
         this.sample = sample;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Type getType() {
+        return type;
     }
 
 }

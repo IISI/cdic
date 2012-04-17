@@ -56,6 +56,7 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
             a24.setCustomerType("000");
             a24.setCurrencyCode("TWD");
             a24.setIntPayable(item.getInterest());
+            a24.setType(A24.Type.A);
         } else {
             Configuration config = new HierarchicalINIConfiguration("branch_mappings.ini");
             a24.setBranchNo(config.getString(item.getBranchCode() + ".branchNo"));
@@ -63,8 +64,10 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
             String apNo = "";
             if ("obu".equalsIgnoreCase(item.getObuDbu())) {
                 apNo = config2.getString(item.getCurrCode() + ".obu");
+                a24.setType(A24.Type.C);
             } else {
                 apNo = config2.getString(item.getCurrCode() + ".dbu");
+                a24.setType(A24.Type.B);
             }
             a24.setApNo(apNo);
             a24.setCustomerBusinessCode(item.getbCode());
@@ -76,14 +79,14 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
                 address = item.getLegal_adr();
             }
             a24.setOriginalAddress(new String(address.getBytes("ms950"), "ms950") + "ＸＸ路ＸＸ巷ＸＸ號ＸＸ樓");
-            a24.setTel1(item.getTelNo1());
-            a24.setTel2(item.getTelNo2());
         }
 
         ExecutionContext stepContext = this.stepExecution.getExecutionContext();
-        long processCount = stepContext.getLong("PROCESS_COUNT", 0);
+
+        String countKey = "PROCESS_COUNT_" + a24.getType().toString();
+        long processCount = stepContext.getLong(countKey, 0);
         processCount++;
-        stepContext.putLong("PROCESS_COUNT", processCount);
+        stepContext.putLong(countKey, processCount);
         if (processCount % writeSampleFrequency == 1) {
             a24.setSample(true);
         }

@@ -61,12 +61,56 @@
         </property>
     </bean>
 
+    <bean id="b24FileWriter" parent="a24FileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B24"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="b24SampleFileWriter" parent="a24SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/B24_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="c24FileWriter" parent="a24FileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/C24"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="c24SampleFileWriter" parent="a24SampleFileWriter">
+        <property name="resource">
+            <bean class="org.springframework.core.io.FileSystemResource">
+                <constructor-arg value="#{systemProperties['FOLDER.PROCESS.OUT']}/C24_sample.csv"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="f05FileWriter" class="tw.com.citi.cdic.batch.item.file.F05FileWriter">
+        <property name="a24ItemWriter" ref="a24FileWriter"></property>
+        <property name="b24ItemWriter" ref="b24FileWriter"></property>
+        <property name="c24ItemWriter" ref="c24FileWriter"></property>
+    </bean>
+
+    <bean id="f05SampleFileWriter" class="tw.com.citi.cdic.batch.item.file.F05FileWriter">
+        <property name="a24ItemWriter" ref="a24SampleFileWriter"></property>
+        <property name="b24ItemWriter" ref="b24SampleFileWriter"></property>
+        <property name="c24ItemWriter" ref="c24SampleFileWriter"></property>
+    </bean>
+
     <bean id="a24Writer" class="org.springframework.batch.item.support.CompositeItemWriter">
         <property name="delegates">
             <list>
                 <ref bean="a24DbWriter" />
-                <ref bean="a24FileWriter" />
-                <ref bean="a24SampleFileWriter" />
+                <ref bean="f05FileWriter" />
+                <ref bean="f05SampleFileWriter" />
             </list>
         </property>
     </bean>
