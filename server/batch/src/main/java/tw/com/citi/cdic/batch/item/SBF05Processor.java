@@ -71,7 +71,11 @@ public class SBF05Processor implements ItemProcessor<Lus, A24> {
                 a24.setType(A24.Type.C);
             } else {
                 apNo = config2.getString(currName + ".dbu");
-                a24.setType(A24.Type.B);
+                if("TWD".equals(currName)) {
+                    a24.setType(A24.Type.A);
+                } else {
+                    a24.setType(A24.Type.B);
+                }
             }
             a24.setApNo(apNo);
             a24.setCustomerBusinessCode(item.getbCode());
