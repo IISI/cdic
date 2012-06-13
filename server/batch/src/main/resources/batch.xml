@@ -146,7 +146,7 @@
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
                             <beans:property name="dataSource" ref="dataSource" />
-                            <beans:property name="sql" value="DELETE FROM A11" />
+                            <beans:property name="sql" value="DELETE FROM A11; DELETE FROM A11A;" />
                         </beans:bean>
                         <listeners>
                             <listener ref="stepListener" />
@@ -268,7 +268,7 @@
                         </listeners>
                     </tasklet>
                 </step>
-                <step id="f01-copy-non-joint-data" next="f01-file">
+                <step id="f01-copy-non-joint-data" next="f01a">
                     <description>把 CIF table 中的資料新增至 A11 table</description>
                     <tasklet>
                         <beans:bean class="tw.com.citi.cdic.batch.step.tasklet.SqlCommandTasklet">
@@ -308,6 +308,24 @@
                         </beans:bean>
                         <listeners>
                             <listener ref="stepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f01a" next="f01a-f01">
+                    <description>把 local file CDICF01 的資料寫入 A11A table</description>
+                    <tasklet>
+                        <chunk reader="cdicf01FileReader" processor="f01A1Processor" writer="a11AWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="lastStepListener" />
+                        </listeners>
+                    </tasklet>
+                </step>
+                <step id="f01a-f01" next="f01-file">
+                    <description>把 local file CDICF01 的資料寫入 A11 table</description>
+                    <tasklet>
+                        <chunk reader="cdicf01FileReader" processor="f01A2Processor" writer="a11DBWriter" commit-interval="500"></chunk>
+                        <listeners>
+                            <listener ref="lastStepListener" />
                         </listeners>
                     </tasklet>
                 </step>

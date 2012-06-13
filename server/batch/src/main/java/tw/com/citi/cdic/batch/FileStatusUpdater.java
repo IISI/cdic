@@ -107,8 +107,8 @@ public class FileStatusUpdater {
         boolean group1Fail = failFile.contains("F02") || failFile.contains("F03") || failFile.contains("F04")
                 || failFile.contains("F08");
         Set<String> resetStatus = new HashSet<String>();
-        // 1. 若 Group1 fail，reset F07's Status 為 '0'
-        if (group1Fail) {
+        // 1. 若 Group1 fail or F01 fail，reset F07's Status 為 '0'
+        if (group1Fail || failFile.contains("F01")) {
             resetStatus.add("F07");
         }
         // 2. 若 Group1 fail or F01 fail or F05 fail，reset F18's Status 為 '0'
