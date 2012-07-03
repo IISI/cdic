@@ -29,6 +29,7 @@
     </bean>
 
     <bean id="f07Processor" class="tw.com.citi.cdic.batch.item.SBF07Processor">
+        <property name="a11ADao" ref="a11ADao"></property>
         <property name="a21Dao" ref="a21Dao"></property>
         <property name="a22Dao" ref="a22Dao"></property>
         <property name="a23Dao" ref="a23Dao"></property>

@@ -1,5 +1,6 @@
 package tw.com.citi.cdic.batch.item;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.batch.item.ItemProcessor;
 
 import tw.com.citi.cdic.batch.model.A11;
@@ -16,7 +17,7 @@ public class SBF01A1Processor implements ItemProcessor<CDICF01, A11> {
         A11 a11 = new A11();
         a11.setUnit("021");
         a11.setBranchNo("0000");
-        a11.setId(item.getId());
+        a11.setId(StringUtils.leftPad(item.getId(), 9, '0'));
         a11.setIdNo("");
         a11.setHeadId(item.getHeadId());
         a11.setCName(new String(item.getCName().getBytes("ms950"), "ms950"));
@@ -41,6 +42,7 @@ public class SBF01A1Processor implements ItemProcessor<CDICF01, A11> {
         a11.setTel1("");
         a11.setTel2("");
         a11.setEmail("");
+        a11.setSample(true);
         return a11;
     }
 }

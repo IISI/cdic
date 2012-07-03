@@ -1,5 +1,6 @@
 package tw.com.citi.cdic.batch.item;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.batch.item.ItemProcessor;
 
 import tw.com.citi.cdic.batch.dao.A11Dao;
@@ -16,13 +17,13 @@ public class SBF01A2Processor implements ItemProcessor<CDICF01, A11> {
 
     @Override
     public A11 process(CDICF01 item) throws Exception {
-        A11 tmp = a11Dao.findById(item.getId());
+        A11 tmp = a11Dao.findById(StringUtils.leftPad(item.getId(), 9, '0'));
         A11 a11 = null;
         if (tmp == null) {
             a11 = new A11();
             a11.setUnit("021");
             a11.setBranchNo("0000");
-            a11.setId(item.getId());
+            a11.setId(StringUtils.leftPad(item.getId(), 9, '0'));
             a11.setIdNo("");
             a11.setHeadId(item.getHeadId());
             a11.setCName(new String(item.getCName().getBytes("ms950"), "ms950"));

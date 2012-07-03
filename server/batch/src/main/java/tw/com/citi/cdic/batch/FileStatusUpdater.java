@@ -33,6 +33,7 @@ public class FileStatusUpdater {
     @AfterStep
     public void updateStatus(StepExecution stepExecution) {
         String stepName = stepExecution.getStepName();
+        logger.debug("record step status @AfterStep, step name = {}", stepName);
         stepName = stepName.toUpperCase().substring(0, 3);
         if (stepName.startsWith("F") || stepName.startsWith("T")) {
             ExitStatus status = stepExecution.getExitStatus();
@@ -66,6 +67,7 @@ public class FileStatusUpdater {
         Collection<StepExecution> stepExecutions = jobExecution.getStepExecutions();
         for (StepExecution stepExecution : stepExecutions) {
             String stepName = stepExecution.getStepName();
+            logger.debug("record step status @AfterJob, step name = {}", stepName);
             stepName = stepName.toUpperCase().substring(0, 3);
             if (stepName.startsWith("F") || stepName.startsWith("T")) {
                 ExitStatus status = stepResults.get(stepName);
@@ -88,7 +90,7 @@ public class FileStatusUpdater {
             FileStep fileStep = FileStep.valueOf(entry.getKey());
             CDICFileStatus fileStatus = this.CDICFileStatusDao.findByFileNo(fileStep);
             if (ExitStatus.COMPLETED.compareTo(entry.getValue()) != 0) {
-                failFile.add(fileStatus.getFileNo());
+                failFile.add(fileStatus.getFileNo().trim());
                 String group = fileStatus.getFileGroup();
                 if (group != null && !"".equals(group.trim())) {
                     failGroup.add(group);
@@ -109,6 +111,7 @@ public class FileStatusUpdater {
         Set<String> resetStatus = new HashSet<String>();
         // 1. 若 Group1 fail or F01 fail，reset F07's Status 為 '0'
         if (group1Fail || failFile.contains("F01")) {
+            logger.debug("record step status, reset F07");
             resetStatus.add("F07");
         }
         // 2. 若 Group1 fail or F01 fail or F05 fail，reset F18's Status 為 '0'

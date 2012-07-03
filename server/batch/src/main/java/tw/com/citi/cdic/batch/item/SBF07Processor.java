@@ -55,16 +55,7 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
 
     private String getA11AId(String id) {
         String result = "";
-        A11 a11 = a11ADao.findById(id);
-        if (a11 != null) {
-            result = a11.getId();
-        }
-        return result;
-    }
-
-    private String getA11AIdByAccountNo(String accountNo) {
-        String result = "";
-        A11 a11 = a11ADao.findByAccountNo(accountNo);
+        A11 a11 = a11ADao.findByHeadId(id);
         if (a11 != null) {
             result = a11.getId();
         }
@@ -73,15 +64,9 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
 
     private void createA26(CDICF07H item, A26 a26) {
         boolean isDRCOrCLS = false;
+        logger.debug(item.getDescription());
         if (item.getDescription().startsWith("DRC#") || item.getDescription().startsWith("CLS#")) {
             isDRCOrCLS = true;
-            A23 a23 = a23Dao.findBySrNo(item.getDescription().substring(4, 14));
-            if (a23 != null) {
-                a26.setSrNo(a23.getSrNo());
-                a26.setCustomerId(a23.getCustomerId());
-                a26.setBranchNo(a23.getBranchNo());
-                return;
-            }
         } else if (item.getDescription().length() >= 10
                 && StringUtils.isNumeric(item.getDescription().substring(0, 10))) {
             String srNo = item.getDescription().substring(0, 10);
@@ -144,12 +129,15 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
         }
 
         a26.setSrNo("");
+        a26.setCustomerId("");
         if (isDRCOrCLS) {
             a26.setCustomerId(getA11AId(item.getDescription().substring(4, 14)));
         } else {
-            a26.setCustomerId(getA11AIdByAccountNo(item.getDescription().substring(0, 10)));
+            if (item.getDescription().length() >= 10) {
+                a26.setCustomerId(getA11AId(item.getDescription().substring(0, 10)));
+            }
         }
-        a26.setCustomerId("");
+        logger.debug("Is exist in A11A ? " + a26.getCustomerId());
         a26.setBranchNo("0018");
     }
 

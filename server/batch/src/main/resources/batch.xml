@@ -312,20 +312,20 @@
                     </tasklet>
                 </step>
                 <step id="f01a" next="f01a-f01">
-                    <description>把 local file CDICF01 的資料寫入 A11A table</description>
+                    <description>把 local file CDICF01 的資料寫入 A11A table 和 A11A sample file</description>
                     <tasklet>
                         <chunk reader="cdicf01FileReader" processor="f01A1Processor" writer="a11AWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="lastStepListener" />
+                            <listener ref="stepListener" />
                         </listeners>
                     </tasklet>
                 </step>
                 <step id="f01a-f01" next="f01-file">
                     <description>把 local file CDICF01 的資料寫入 A11 table</description>
                     <tasklet>
-                        <chunk reader="cdicf01FileReader" processor="f01A2Processor" writer="a11DBWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicf01FileReader" processor="f01A2Processor" writer="a11DbWriter" commit-interval="500"></chunk>
                         <listeners>
-                            <listener ref="lastStepListener" />
+                            <listener ref="stepListener" />
                         </listeners>
                     </tasklet>
                 </step>
