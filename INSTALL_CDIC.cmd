@@ -1,1 +1,1 @@
-xcopy \\APACCITITWAP110\Project\ACGSAP\CDIC\execution\client\*.* C:\CDIC\ /e /y
+xcopy \\APACCITITWAP110\Project\ACGSAP\CDIC\execution\client\CDIC\*.* C:\CDIC\ /e /y
