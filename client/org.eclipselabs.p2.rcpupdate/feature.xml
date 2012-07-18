@@ -2,7 +2,7 @@
 <feature
       id="org.eclipselabs.p2.rcpupdate"
       label="RCP Update"
-      version="1.0.0.v20110124-1007"
+      version="1.0.0"
       provider-name="Ralf Ebert">
 
    <description url="http://www.example.com/description">
