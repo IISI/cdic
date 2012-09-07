@@ -1,5 +1,9 @@
 package tw.com.citi.cdic.batch.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
@@ -24,7 +28,7 @@ import tw.com.citi.cdic.batch.model.CDICF07H;
  * @author Chih-Liang Chang
  * @since 2010/10/7
  */
-public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
+public class SBF07Processor implements ItemProcessor<CDICF07H, List<A26>> {
 
     protected static final Logger logger = LoggerFactory.getLogger(SBF07Processor.class);
 
@@ -53,16 +57,8 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
         return a26;
     }
 
-    private String getA11AId(String id) {
-        String result = "";
-        A11 a11 = a11ADao.findByHeadId(id);
-        if (a11 != null) {
-            result = a11.getId();
-        }
-        return result;
-    }
-
-    private void createA26(CDICF07H item, A26 a26) {
+    private List<A26> createA26(CDICF07H item, A26 a26) {
+        List<A26> a26s = new ArrayList<A26>();
         boolean isDRCOrCLS = false;
         logger.debug(item.getDescription());
         if (item.getDescription().startsWith("DRC#") || item.getDescription().startsWith("CLS#")) {
@@ -76,7 +72,8 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setSrNo(a21.getSrNo());
                 a26.setCustomerId(a21.getCustomerId());
                 a26.setBranchNo(a21.getBranchNo());
-                return;
+                a26s.add(a26);
+                return a26s;
             }
 
             A21 b21 = a21Dao.findBySrNo(srNo, "B21");
@@ -84,7 +81,8 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setSrNo(b21.getSrNo());
                 a26.setCustomerId(b21.getCustomerId());
                 a26.setBranchNo(b21.getBranchNo());
-                return;
+                a26s.add(a26);
+                return a26s;
             }
 
             A21 c21 = a21Dao.findBySrNo(srNo, "C21");
@@ -92,7 +90,8 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setSrNo(c21.getSrNo());
                 a26.setCustomerId(c21.getCustomerId());
                 a26.setBranchNo(c21.getBranchNo());
-                return;
+                a26s.add(a26);
+                return a26s;
             }
 
             A22 a22 = a22Dao.findBySrNo(srNo, "A22");
@@ -100,7 +99,8 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setSrNo(a22.getSrNo());
                 a26.setCustomerId(a22.getCustomerId());
                 a26.setBranchNo(a22.getBranchNo());
-                return;
+                a26s.add(a26);
+                return a26s;
             }
 
             A22 b22 = a22Dao.findBySrNo(srNo, "B22");
@@ -108,7 +108,8 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setSrNo(b22.getSrNo());
                 a26.setCustomerId(b22.getCustomerId());
                 a26.setBranchNo(b22.getBranchNo());
-                return;
+                a26s.add(a26);
+                return a26s;
             }
 
             A22 c22 = a22Dao.findBySrNo(srNo, "C22");
@@ -116,7 +117,8 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setSrNo(c22.getSrNo());
                 a26.setCustomerId(c22.getCustomerId());
                 a26.setBranchNo(c22.getBranchNo());
-                return;
+                a26s.add(a26);
+                return a26s;
             }
 
             A23 a23 = a23Dao.findBySrNo(srNo);
@@ -124,38 +126,60 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
                 a26.setSrNo(a23.getSrNo());
                 a26.setCustomerId(a23.getCustomerId());
                 a26.setBranchNo(a23.getBranchNo());
-                return;
+                a26s.add(a26);
+                return a26s;
             }
         }
 
-        a26.setSrNo("");
-        a26.setCustomerId("");
+        // 執行到此代表 A21、A22、A23 都 mapping 不到資料。
+        // 如果是 DRC/CLS，用 4,14 去 mapping CDICF01 的 HEADID，取 GRB、AccountNo
+        // 否則用 0,10 去 mapping CDICF01 的 AccountNo 取 GRB、AccountNo
+
         if (isDRCOrCLS) {
-            a26.setCustomerId(getA11AId(item.getDescription().substring(4, 14)));
+            List<A11> a11as = a11ADao.findByHeadId(item.getDescription().substring(4, 14));
+            for (A11 a11a : a11as) {
+                try {
+                    A26 a26n = (A26) BeanUtils.cloneBean(a26);
+                    a26n.setSrNo(a11a.getSrNo());
+                    a26n.setCustomerId(a11a.getId());
+                    a26n.setBranchNo("0018");
+                    a26s.add(a26n);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return a26s;
+
         } else {
             if (item.getDescription().length() >= 10) {
-                a26.setCustomerId(getA11AId(item.getDescription().substring(0, 10)));
+                A11 a11a = a11ADao.findByAccountNo(item.getDescription().substring(0, 10));
+                if (a11a != null) {
+                    a26.setSrNo(a11a.getSrNo());
+                    a26.setCustomerId(a11a.getId());
+                    a26.setBranchNo("0018");
+                    a26s.add(a26);
+                    return a26s;
+                }
             }
         }
-        logger.debug("Is exist in A11A ? " + a26.getCustomerId());
-        a26.setBranchNo("0018");
+        return a26s;
     }
 
     @Override
-    public A26 process(CDICF07H item) throws Exception {
+    public List<A26> process(CDICF07H item) throws Exception {
         if (item.getRefNo() == null || item.getRefNo().trim().length() == 0) {
             logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}], [RC code = {}]",
                     new Object[] { item.getGl(), item.getCompany(), item.getRefNo(), item.getRc() });
             return null;
         }
-
+        List<A26> a26s = new ArrayList<A26>();
         A26 a26 = prepareA26Instance(item);
 
         if ("8600".equals(item.getCompany())) {
             if (item.getGl().endsWith("000")) {
                 // prepare data for a26
                 a26.setType(Type.A);
-                createA26(item, a26);
+                a26s.addAll(createA26(item, a26));
             } else {
                 logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}], [RC code = {}]",
                         new Object[] { item.getGl(), item.getCompany(), item.getRefNo(), item.getRc() });
@@ -164,12 +188,12 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
         } else if (item.getCompany().startsWith("86")) {
             // prepare data for b26
             a26.setType(Type.B);
-            createA26(item, a26);
+            a26s.addAll(createA26(item, a26));
         } else if ("6900".equals(item.getCompany())) {
             if (item.getGl().endsWith("000")) {
                 // prepare data for c26
                 a26.setType(Type.C);
-                createA26(item, a26);
+                a26s.addAll(createA26(item, a26));
             } else {
                 logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}], [RC code = {}]",
                         new Object[] { item.getGl(), item.getCompany(), item.getRefNo(), item.getRc() });
@@ -178,14 +202,14 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, A26> {
         } else if (item.getCompany().startsWith("69")) {
             // prepare data for c26
             a26.setType(Type.C);
-            createA26(item, a26);
+            a26s.addAll(createA26(item, a26));
         } else {
             logger.info("Ignore CDICF07. [GL = {}], [Company code = {}], [Reference number = {}], [RC code = {}]",
                     new Object[] { item.getGl(), item.getCompany(), item.getRefNo(), item.getRc() });
             return null;
         }
 
-        return a26;
+        return a26s;
     }
 
     public void setA21Dao(A21Dao a21Dao) {

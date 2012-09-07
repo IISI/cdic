@@ -43,6 +43,7 @@ public class SBF01A1Processor implements ItemProcessor<CDICF01, A11> {
         a11.setTel2("");
         a11.setEmail("");
         a11.setSample(true);
+        a11.setSrNo(StringUtils.leftPad(item.getAccountNo(), 10, '0'));
         return a11;
     }
 }

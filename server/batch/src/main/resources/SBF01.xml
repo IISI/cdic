@@ -21,7 +21,7 @@
 
     <bean id="a11ADbWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="sql" value="INSERT INTO A11A(CUSTUNIT, CUSTBRNO, CUSTID, CUSTIDNO, CUSTHEADID, CUSTCNAME, CUSTBIRDATE, CUSTCEOCODE, CUSTCEONAME, CUSTSTACODE, CUSTBUSCODE, CUSTCRTDATE, CUSTOADDRESS, CUSTADDRESS, CUSTTEL1, CUSTTEL2, CUSTEMAILADD) VALUES(:unit, :branchNo, :id, :idNo, :headId, :CName, :birthDate, :ceoCode, :ceoName, :statusCode, :businessCode, :createDate, :originalAddress, :address, :tel1, :tel2, :email)"></property>
+        <property name="sql" value="INSERT INTO A11A(CUSTUNIT, CUSTBRNO, CUSTID, CUSTIDNO, CUSTHEADID, CUSTCNAME, CUSTBIRDATE, CUSTCEOCODE, CUSTCEONAME, CUSTSTACODE, CUSTBUSCODE, CUSTCRTDATE, CUSTOADDRESS, CUSTADDRESS, CUSTTEL1, CUSTTEL2, CUSTEMAILADD, CUSTSRNO) VALUES(:unit, :branchNo, :id, :idNo, :headId, :CName, :birthDate, :ceoCode, :ceoName, :statusCode, :businessCode, :createDate, :originalAddress, :address, :tel1, :tel2, :email, :srNo)"></property>
         <property name="itemSqlParameterSourceProvider" ref="itemSqlParameterSourceProvider"></property>
     </bean>
 

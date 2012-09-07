@@ -13,6 +13,16 @@ import tw.com.citi.cdic.batch.model.A11;
  */
 public class A11Mapper implements RowMapper<A11> {
 
+    private boolean isA11A;
+
+    public A11Mapper() {
+        this(false);
+    }
+
+    public A11Mapper(boolean isA11A) {
+        this.isA11A = isA11A;
+    }
+
     @Override
     public A11 mapRow(ResultSet rs, int rowNum) throws SQLException {
         A11 a11 = new A11();
@@ -33,6 +43,9 @@ public class A11Mapper implements RowMapper<A11> {
         a11.setTel1(rs.getString("CUSTTEL1"));
         a11.setTel2(rs.getString("CUSTTEL2"));
         a11.setEmail(rs.getString("CUSTEMAILADD"));
+        if (isA11A) {
+            a11.setSrNo(rs.getString("CUSTSRNO"));
+        }
         return a11;
     }
 

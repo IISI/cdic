@@ -40,6 +40,8 @@ public class A11 {
     private String tel2;
 
     private String email;
+    
+    private String srNo;
 
     private transient boolean sample;
 
@@ -185,6 +187,14 @@ public class A11 {
 
     public void setSample(boolean sample) {
         this.sample = sample;
+    }
+
+    public void setSrNo(String srNo) {
+        this.srNo = srNo;
+    }
+
+    public String getSrNo() {
+        return srNo;
     }
 
 }

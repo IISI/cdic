@@ -11,7 +11,7 @@ import tw.com.citi.cdic.batch.model.A26;
  * @author Chih-Liang Chang
  * @since 2010/12/30
  */
-public class A26JdbcWriter implements ItemWriter<A26> {
+public class A26JdbcWriter implements ItemWriter<List<A26>> {
 
     private ItemWriter<A26> a26ItemWriter;
 
@@ -20,25 +20,27 @@ public class A26JdbcWriter implements ItemWriter<A26> {
     private ItemWriter<A26> c26ItemWriter;
 
     @Override
-    public void write(List<? extends A26> items) throws Exception {
+    public void write(List<? extends List<A26>> items) throws Exception {
         List<A26> a26Items = new ArrayList<A26>();
         List<A26> b26Items = new ArrayList<A26>();
         List<A26> c26Items = new ArrayList<A26>();
-        
-        for (A26 a26 : items) {
-            switch (a26.getType()) {
-            case A:
-                a26Items.add(a26);
-                break;
-            case B:
-                b26Items.add(a26);
-                break;
-            case C:
-                c26Items.add(a26);
-                break;
+
+        for (List<A26> a26s : items) {
+            for (A26 a26 : a26s) {
+                switch (a26.getType()) {
+                case A:
+                    a26Items.add(a26);
+                    break;
+                case B:
+                    b26Items.add(a26);
+                    break;
+                case C:
+                    c26Items.add(a26);
+                    break;
+                }
             }
         }
-        
+
         a26ItemWriter.write(a26Items);
         b26ItemWriter.write(b26Items);
         c26ItemWriter.write(c26Items);

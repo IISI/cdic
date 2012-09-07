@@ -11,9 +11,15 @@ import tw.com.citi.cdic.batch.model.A11;
 public class A11ADaoImpl extends SimpleJdbcDaoSupport implements A11ADao {
 
     @Override
-    public A11 findByHeadId(String headId) {
+    public List<A11> findByHeadId(String headId) {
         String sql = "SELECT * FROM A11A WHERE CUSTHEADID=?";
-        List<A11> a11s = getSimpleJdbcTemplate().query(sql, new A11Mapper(), headId);
+        return getSimpleJdbcTemplate().query(sql, new A11Mapper(true), headId);
+    }
+
+    @Override
+    public A11 findByAccountNo(String srNo) {
+        String sql = "SELECT * FROM A11A WHERE CUSTSRNO=?";
+        List<A11> a11s = getSimpleJdbcTemplate().query(sql, new A11Mapper(true), srNo);
         if (a11s != null && a11s.size() > 0) {
             return a11s.get(0);
         } else {
