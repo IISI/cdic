@@ -28,7 +28,7 @@ public class SBF01A1Processor implements ItemProcessor<CDICF01, A11> {
         a11.setBirthDate(birthday);
         a11.setCeoCode(item.getCeoCode());
         a11.setCeoName(item.getCeoName());
-        a11.setStatusCode("");
+        a11.setStatusCode("0004");
         a11.setBusinessCode(item.getBusCode());
         a11.setCreateDate("00000000");
         a11.setOriginalAddress("");

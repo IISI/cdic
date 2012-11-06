@@ -2,6 +2,7 @@ package tw.com.citi.cdic.batch.dao.jdbc;
 
 import java.util.List;
 
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
 
 import tw.com.citi.cdic.batch.A11Mapper;
@@ -18,6 +19,23 @@ public class A11DaoImpl extends SimpleJdbcDaoSupport implements A11Dao {
             return a11s.get(0);
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public String getSeqHeadId(String headId) {
+        String sql = "SELECT CUSTID FROM A11 WHERE CUSTID LIKE ? ORDER BY CUSTID DESC";
+        List<String> headIds = getSimpleJdbcTemplate().query(sql, new SingleColumnRowMapper<String>(), headId + "%");
+        if (headIds != null && headIds.size() > 0) {
+            String lastId = headIds.get(0);
+            if (lastId.trim().length() > 10) {
+                char idx = lastId.charAt(10);
+                return headId + String.valueOf(new char[] { (char) (idx + 1) });
+            } else {
+                return headId + "1";
+            }
+        } else {
+            return headId;
         }
     }
 

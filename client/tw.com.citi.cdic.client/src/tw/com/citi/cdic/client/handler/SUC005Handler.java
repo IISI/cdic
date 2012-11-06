@@ -141,6 +141,15 @@ public class SUC005Handler extends AquariusAjaxDaoHandler {
             try {
                 jobOperator.start("convertJob", "schedule.timestamp(long)=" + new Date().getTime());
             } catch (Exception e) {
+                // 失敗時還原狀態
+                for (String name : batches) {
+                    CDICFileSts pojo = new CDICFileSts();
+                    pojo.setFileNo(name);
+                    pojo.setStatus("0");
+                    pojo.setExecutor(executor);
+                    pojo.setExecuteDateTime(now);
+                    getDao().update("SUC005_UPD_CDICFILESTS_STATUS_BY_FILENO", pojo);
+                }
                 e.printStackTrace();
                 throw new UnsupportedOperationException(Messages.Start_Batch_Error, e);
             }

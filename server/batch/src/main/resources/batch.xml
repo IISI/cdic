@@ -323,7 +323,7 @@
                 <step id="f01a-f01" next="f01-file">
                     <description>把 local file CDICF01 的資料寫入 A11 table</description>
                     <tasklet>
-                        <chunk reader="cdicf01FileReader" processor="f01A2Processor" writer="a11DbWriter" commit-interval="500"></chunk>
+                        <chunk reader="cdicf01FileReader" processor="f01A2Processor" writer="a11ListDbWriter" commit-interval="500"></chunk>
                         <listeners>
                             <listener ref="stepListener" />
                         </listeners>

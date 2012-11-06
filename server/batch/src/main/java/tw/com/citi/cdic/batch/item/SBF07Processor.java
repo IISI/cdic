@@ -162,6 +162,11 @@ public class SBF07Processor implements ItemProcessor<CDICF07H, List<A26>> {
                 }
             }
         }
+        // 全部都 mapping 不到
+        a26.setSrNo("");
+        a26.setCustomerId("");
+        a26.setBranchNo("0018");
+        a26s.add(a26);
         return a26s;
     }
 
